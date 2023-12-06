@@ -6,6 +6,7 @@ import ListSubheader from "@mui/material/ListSubheader";
 import IconButton from "@mui/material/IconButton";
 import InfoIcon from "@mui/icons-material/Info";
 import { Box } from "@mui/material";
+import { Link } from "react-router-dom";
 
 export default function Galery() {
   return (
@@ -22,7 +23,10 @@ export default function Galery() {
       <ImageList sx={{ width: "100%", height: "100%" }} cols={4}>
         
         {itemData.map((item) => (
-          <ImageListItem key={item.img}>
+          <ImageListItem key={item.img}
+          component={Link}
+          // to={`galery/${item.title}`}
+          >
             <img
               srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
               src={`${item.img}?w=248&fit=crop&auto=format`}
@@ -51,7 +55,7 @@ export default function Galery() {
 const itemData = [
   {
     img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
-    title: "Breakfast",
+    title: "newBorn",
     author: "@bkristastucchio",
     rows: 2,
     cols: 2,
