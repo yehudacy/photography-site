@@ -25,7 +25,7 @@ export default function Galery() {
         {itemData.map((item) => (
           <ImageListItem key={item.img}
           component={Link}
-          // to={`galery/${item.title}`}
+          to={`${item.title}`}
           >
             <img
               srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
