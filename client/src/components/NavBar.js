@@ -91,7 +91,7 @@ const NavBar = () => {
               {pages.map((page) => (
                 <MenuItem
                   component={Link}
-                  to={page !== "Home" ? `/${page}` : '/'}
+                  to={page !== "Home" ? `/${page.replaceAll(' ', '')}` : '/'}
                   onClick={handleCloseNavMenu}
                   key={page}
                 >
@@ -124,7 +124,7 @@ const NavBar = () => {
               <Button
                 key={page}
                 component={Link}
-                to={page !== "Home" ? `/${page}` : '/'}
+                to={page !== "Home" ? `/${page.replaceAll(' ', '')}` : '/'}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
