@@ -15,7 +15,7 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router-dom";
 
 const pages = ["Home", "About", "Galery", "Pricing", "Contact me"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = [ "Account", "Dashboard", "Logout" ];
 
 const NavBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
