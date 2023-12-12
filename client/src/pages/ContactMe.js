@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { TextField, Button, Typography, Grid, Box } from "@mui/material";
 
 const ContactMe = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -42,17 +41,9 @@ const ContactMe = () => {
                 <Grid item xs={12} md={6}>
                   <TextField
                     fullWidth
-                    label="First Name"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    margin="normal"
-                    required
-                  />
-                  <TextField
-                    fullWidth
-                    label="Last Name"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
+                    label="Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     margin="normal"
                     required
                   />
