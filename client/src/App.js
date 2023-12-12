@@ -9,10 +9,14 @@ import About from "./pages/About";
 import Pricing from "./pages/Pricing";
 import ContactMe from "./pages/ContactMe";
 import Order from "./pages/Order";
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import 'dayjs/locale/en-gb';
 
 function App() {
   return (
     <>
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='en-gb'>
       <NavBar />  
       <Routes>
         <Route path="/" element={<Home />}></Route>
@@ -24,6 +28,7 @@ function App() {
         <Route path="/contactme" element={<ContactMe />}></Route>
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
+      </LocalizationProvider>
     </>
   );
 }

@@ -76,7 +76,7 @@ const Pricing = () => {
                 </PricingList>
               </CardContent>
               <CardActions>
-                <Button fullWidth variant={tier.buttonVariant} component={Link} to={'order'}>
+                <Button fullWidth variant={tier.buttonVariant} component={Link} to={'order'} state={{packagePrice: tier.price}}>
                   {tier.buttonText}
                 </Button>
               </CardActions>

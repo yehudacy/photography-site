@@ -1,12 +1,19 @@
 import React, { useState } from "react";
 import { TextField, Button, Typography, Grid, Box } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
+import { useLocation } from "react-router-dom";
 
 const Order = () => {
+  const { state : {packagePrice}} = useLocation();
 
-  const [name, setName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+
+  const [orderDate, setOrderDate] = useState(dayjs());
+  const [actionDate, setActionDate] = useState(dayjs());
+  // const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [price, setPrice] = useState(packagePrice);
+  const [remarks, setRemarks] = useState("");
 
 
   const handleSubmit = (e) => {
@@ -26,36 +33,42 @@ const Order = () => {
         <Grid item xs={12} md={4}>
           <Box sx={{ p: 2 }}>
             <Typography variant="h4" align="center" mb={2}>
-              Contact Us
+              Order details
             </Typography>
             <form onSubmit={handleSubmit}>
               <Grid container spacing={2}>
-                <Grid item xs={12} md={6}>
+                {/* <Grid item xs={12} md={6}>
                   
-                  {/* <Box sx={{ display: "flex", justifyContent: "center" }}>
-                    <img
-                      src="https://cdn.pixabay.com/photo/2023/04/24/03/16/camping-7947056__340.jpg"
-                      alt="Contact"
-                      style={{ maxWidth: "100%" }}
-                    />
-                  </Box> */}
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <TextField
+                </Grid> */}
+                <Grid item  xs={12} md={6} sx={{m: 'auto'}} >
+                  {/* <TextField
                     fullWidth
-                    label="Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    label="Order Date"
+                    value={orderDate}
+                    onChange={(e) => setOrderDate(e.target.value)}
                     margin="normal"
                     required
-                  />
-                  <TextField
+                  /> */}
+                  {/* <TextField
                     fullWidth
                     label="Phone Number"
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                     margin="normal"
                     required
+                  /> */}
+                  <DatePicker 
+                    sx={{width: '100%', marginY: 2}}
+                    label='order date'
+                    value={orderDate}
+                    readOnly
+                  />
+                  <DatePicker 
+                    sx={{width: '100%', marginY: 2}}
+                    label='action date'
+                    disablePast
+                    value={actionDate}
+                    onChange={(newDate) => setActionDate(newDate)}
                   />
                   <TextField
                     fullWidth
@@ -68,16 +81,25 @@ const Order = () => {
                   />
                   <TextField
                     fullWidth
-                    label="Message"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
+                    label="Price"
+                    value={`${price} NIS`}
+                    // onChange={(e) => setEmail(e.target.value)}
+                    margin="normal"
+                    required
+                    type="text"
+                  />
+                  <TextField
+                    fullWidth
+                    label="Remarks"
+                    value={remarks}
+                    onChange={(e) => setRemarks(e.target.value)}
                     margin="normal"
                     required
                     multiline
                     rows={4}
                   />
-                  <Button variant="contained" type="submit" sx={{ mt: 2 }}>
-                    Submit
+                  <Button variant="contained" type="submit" sx={{ mt: 2 }} fullWidth>
+                    Place order
                   </Button>
                 </Grid>
               </Grid>
