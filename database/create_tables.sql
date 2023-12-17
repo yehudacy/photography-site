@@ -91,7 +91,16 @@ CREATE TABLE `payments` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
-
+DROP TABLE IF EXISTS `contact_me`;
+CREATE TABLE `contact_me` (
+  `contact_me_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `phone_number` varchar(45) NOT NULL,
+  `email` varchar(45) NOT NULL,
+  `message` varchar(45) NOT NULL,
+  `status` tinyint NOT NULL,
+  PRIMARY KEY (`contact_me_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 
