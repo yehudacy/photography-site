@@ -3,7 +3,7 @@ const express = require("express");
 const galleryRouter = express.Router();
 
 //route for getting all the category images for the gallery page
-galleryRouter.get("/", (req, res) => {
+galleryRouter.get("/", async (req, res) => {
   // mock to send of all category images
   const itemData = [
     {
@@ -95,7 +95,7 @@ galleryRouter.get("/", (req, res) => {
 
 //route for getting all the images foe a certain category
 
-galleryRouter.get("/:category", (req, res) => {
+galleryRouter.get("/:category", async (req, res) => {
   try {
     const category = req.params.category;
     //mock of all images to filter and send back only for a certain category

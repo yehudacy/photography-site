@@ -10,7 +10,7 @@ const ContactMe = () => {
   const [message, setMessage] = useState("");
 
   const [dialog, setDialog] = useState(false);
-  const [alert, setAlert] = useState("Error");
+  const [alert, setAlert] = useState("");
   const dialogText = {
     dialogContent: "Are you sure you want to send the request",
     dialogBtn1Text: "agree",
@@ -22,9 +22,14 @@ const ContactMe = () => {
     try {
       const body = { name, phoneNumber, email, message };
       const { data } = await axiosInstance.post("/contactme", body);
-      console.log(data);
       setDialog(false);
-    } catch (error) {}
+      setAlert("success");
+      setTimeout( () => setAlert(""), 5000);
+    } catch (error) {
+      setDialog(false);
+      setAlert("error");
+      setTimeout( () => setAlert(""), 5000);
+    }
   };
 
   const handleCloseDialog = () => {
@@ -108,10 +113,14 @@ const ContactMe = () => {
                     <Button variant="contained" type="submit" sx={{ marginY: 2 }}>
                       Submit
                     </Button>
-                    {alert && <Alert severity="error">
+                    {alert && (alert === 'error' ? <Alert severity="error">
                       <AlertTitle>{alert}</AlertTitle>
-                      This is an error alert — <strong>check it out!</strong>
-                    </Alert>}
+                      It didn't work out — <strong>please try again!</strong>
+                    </Alert> : 
+                    <Alert severity="success">
+                    <AlertTitle>{alert}</AlertTitle>
+                    It went as planed — <strong>Thank you! we will be in touch</strong>
+                  </Alert>)}
                   </Grid>
                 </Grid>
               </form>
