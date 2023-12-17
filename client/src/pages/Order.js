@@ -3,20 +3,22 @@ import { TextField, Button, Typography, Grid, Box } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import dayjs from "dayjs";
-import { useLocation } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 const Order = () => {
-  const { state : {packagePrice}} = useLocation();
-
+  const { state} = useLocation();
+  
 
   const [orderDate] = useState(dayjs());
   const [actionDate, setActionDate] = useState(dayjs());
   const [time, setTime] = useState("");
   // const [phoneNumber, setPhoneNumber] = useState("");
   // const [email, setEmail] = useState("");
-  const [price] = useState(packagePrice);
+  const [price] = useState(state?.packagePrice);
   const [remarks, setRemarks] = useState("");
-
+  if(!state)  {
+    return <Navigate to={'/pricing'}/>
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();

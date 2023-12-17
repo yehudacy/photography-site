@@ -3,13 +3,13 @@ const cors = require('cors');
 
 const app = express();
 
+//import routes
+const {galleryRouter} = require('./routes/galleryRoute');
+
 app.use(express.json());
 app.use(cors());
 
-
-app.get('/', (req, res) => {
-    res.send('connected!')
-})
+app.use('/gallery', galleryRouter);
 
 
 

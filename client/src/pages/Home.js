@@ -20,9 +20,9 @@ const Home = () => {
         <Typography>
             Welcome to the home page!
         </Typography>
-        <Link to={'/galery'}>
+        <Link to={'/gallery'}>
             <Button variant='contained' sx={{bgcolor: secondary, m: 2}}>
-                Galery
+                Gallery
             </Button>
         </Link>
     </Box>
