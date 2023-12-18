@@ -33,7 +33,9 @@ const Order = () => {
 
 
   const handlepayments = () => {
-    console.log("got to go t payments page!")
+    console.log("got to go t payments page!");
+    //redirect to payments page
+    setDialog(false);
   }
 
   const handleCloseDialog = () => {
