@@ -15,7 +15,7 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router-dom";
 
 const pages = ["Home", "About", "Gallery", "Pricing", "Contact me"];
-const settings = [ "Account", "Dashboard", "Logout" ];
+const settings = [ "Login", "Dashboard", "Logout" ];
 
 const NavBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -156,7 +156,7 @@ const NavBar = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={handleCloseUserMenu} component={Link} to={"login"}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}

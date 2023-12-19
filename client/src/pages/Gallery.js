@@ -18,7 +18,7 @@ export default function Gallery() {
   const getCategoryImages = async () => {
     try{
       const {data} = await axiosInstance.get('gallery');
-      console.log(data)
+      // console.log(data)
       setCategoryImages(data)
     } catch (error) {
       //need to edit the error handling
