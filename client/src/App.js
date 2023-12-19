@@ -13,6 +13,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import 'dayjs/locale/en-gb';
 import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/login" element={<Login />}></Route>
+        <Route path="/signup" element={<SignUp />}></Route>
         <Route path="/about" element={<About />}></Route>
         <Route path="/gallery" element={<Gallery />}></Route>
         <Route path="/gallery/:category" element={<SingleCategoryGallery />}></Route>

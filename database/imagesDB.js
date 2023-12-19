@@ -163,7 +163,7 @@ const itemData = [
       title: "Honey",
     },
   ];
-  //add all images
+  // add all images
   // const add2 = () => {
   //   itemData2.forEach(async (item, i) => {
   //     const categoryId = await getCategoryIdByName(item.title);

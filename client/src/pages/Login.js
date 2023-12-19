@@ -129,7 +129,7 @@ const Login = () => {
             Forgot Password?
           </Link>
           <Box mt={1}>
-            <Link href="#" variant="body2">
+            <Link href="/signup" variant="body2">
               Don't have an account? Sign Up
             </Link>
           </Box>
