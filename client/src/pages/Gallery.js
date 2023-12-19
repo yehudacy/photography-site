@@ -18,6 +18,7 @@ export default function Gallery() {
   const getCategoryImages = async () => {
     try{
       const {data} = await axiosInstance.get('gallery');
+      console.log(data)
       setCategoryImages(data)
     } catch (error) {
       //need to edit the error handling
@@ -38,24 +39,24 @@ export default function Gallery() {
       <ImageList sx={{ width: "100%", height: "100%" }} cols={4}>
         
         {categoryImages.map((item) => (
-          <ImageListItem key={item.img}
+          <ImageListItem key={item.category_id}
           component={Link}
-          to={`${item.title}`}
+          to={`${item.name}`}
           // state={{categoryId: item.categoryId}}
           >
             <img
-              srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-              src={`${item.img}?w=248&fit=crop&auto=format`}
-              alt={item.title}
+              srcSet={`${item.src}?w=248&fit=crop&auto=format&dpr=2 2x`}
+              src={`${item.src}?w=248&fit=crop&auto=format`}
+              alt={item.name}
               loading="lazy"
             />
             <ImageListItemBar
-              title={item.title}
+              title={item.name}
               subtitle={item.author}
               actionIcon={
                 <IconButton
                   sx={{ color: "rgba(255, 255, 255, 0.54)" }}
-                  aria-label={`info about ${item.title}`}
+                  aria-label={`info about ${item.name}`}
                 >
                   <InfoIcon />
                 </IconButton>

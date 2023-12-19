@@ -17,15 +17,24 @@ const getCategoryIdByName = async (categoryName) => {
     SELECT category_id 
     FROM categories 
     WHERE name = ?;`
-    const [categoryId] = await pool.query(getCategoryIdQuery, [categoryName]);
-    // console.log(categoryId)
-    return categoryId;
+    const  [[{category_id}]]  = await pool.query(getCategoryIdQuery, [categoryName]);
+    // console.log(category_id)
+    return category_id;
 }
 
 
 //get all images of citrin category
-const getallImagesOfACategory = async () => {
-
+const getallImagesOfACategory = async (categoryName) => {
+    let categoryId = await getCategoryIdByName(categoryName);
+    if ( categoryId === undefined ) {
+        throw new Error(`Category ${categoryName} does not exist` )
+    }
+    const getallImagesOfACategoryQuery = `
+    SELECT * FROM images i
+	WHERE i.category_id = ?`;
+    const [imagesOfACategory] = await pool.query(getallImagesOfACategoryQuery, [categoryId]);
+    // console.log(imagesOfACategory)
+    return imagesOfACategory;
 }
 
 //get all category images
@@ -35,7 +44,7 @@ const getAllCategoryImages = async () => {
     INNER JOIN categories 
     ON images.image_id = categories.category_image_id`;
     const allCategoryImages = await pool.query(getAllCategoryImagesQuery);
-    console.log(allCategoryImages);
+    // console.log(allCategoryImages);
     return allCategoryImages;
 }
 
@@ -142,5 +151,7 @@ const getAllCategoryImages = async () => {
         
 // getAllCategoryImages();
 
+// getCategoryIdByName('new_born');
 
-module.exports = { addCategory, getCategoryIdByName, getAllCategoryImages }
+getallImagesOfACategory('new_born');
+module.exports = { addCategory, getCategoryIdByName, getAllCategoryImages, getallImagesOfACategory }
