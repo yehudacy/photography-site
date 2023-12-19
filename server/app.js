@@ -32,7 +32,7 @@ const startServer = async () => {
             throw new Error(`The connection failed`);
         }
     } catch (error) {
-        console.log(`cannot connect to data base -> ${err.message}`);
+        console.log(`cannot connect to data base -> ${error.message}`);
     }
 }
 startServer();

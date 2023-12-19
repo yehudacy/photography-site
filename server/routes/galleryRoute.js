@@ -1,4 +1,5 @@
 const express = require("express");
+const { getAllCategoryImages } = require("../../database/categoryDB");
 
 const galleryRouter = express.Router();
 
@@ -90,7 +91,8 @@ galleryRouter.get("/", async (req, res) => {
       categoryId: 12,
     },
   ];
-  res.status(200).json(itemData);
+  const categoryImages = await getAllCategoryImages();
+  res.status(200).json(categoryImages);
 });
 
 //route for getting all the images foe a certain category
