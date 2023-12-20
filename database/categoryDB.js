@@ -6,8 +6,9 @@ const addCategory = async (categoryName, categoryImageId) => {
     const addCategoryQuery = `
     INSERT INTO categories (name, category_image_id) 
     VALUES (?, ?)`;
-    const [addedCategories] = await pool.query(addCategoryQuery, [categoryName, categoryImageId]);
-    console.log(addedCategories);
+    const [{insertId}] = await pool.query(addCategoryQuery, [categoryName, categoryImageId]);
+    console.log(insertId);
+    return insertId;
 }
 
 
