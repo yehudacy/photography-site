@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Grid, Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Link, CircularProgress, IconButton } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon, Details as DetailsIcon } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
+import axiosInstance from '../axiosInstance';
 
 const AdminDashboard = () => {
  const [orders, setOrders] = useState([]);
@@ -12,8 +13,9 @@ const AdminDashboard = () => {
  }, []);
 
  const fetchOrders = async () => {
-    const response = await fetch('api/orders');
-    const data = await response.json();
+    // const response = await fetch('api/orders');
+    // const data = await response.json();
+    const {data} = await axiosInstance.get('order');
     setOrders(data);
  };
 
@@ -27,7 +29,7 @@ const AdminDashboard = () => {
 
  return (
     <Grid container spacing={3}>
-      <Grid item xs={12} md={3}>
+      <Grid item xs={12} md={2}>
         <Paper>
           <Typography variant="h6" gutterBottom>
             Admin Panel
@@ -59,11 +61,11 @@ const AdminDashboard = () => {
             <TableBody>
               {orders.length > 0 ? (
                 orders.map((order) => (
-                 <TableRow key={order.id} onClick={() => handleSelectOrder(order)}>
-                    <TableCell>{order.id}</TableCell>
-                    <TableCell>{order.clientId}</TableCell>
-                    <TableCell>{order.orderDate}</TableCell>
-                    <TableCell>{order.actionDate}</TableCell>
+                 <TableRow key={order.order_id} onClick={() => handleSelectOrder(order)}>
+                    <TableCell>{order.order_id}</TableCell>
+                    <TableCell>{order.client_id}</TableCell>
+                    <TableCell>{order.order_date}</TableCell>
+                    <TableCell>{order.action_date}</TableCell>
                     <TableCell>{order.time}</TableCell>
                     <TableCell>{order.price}</TableCell>
                     <TableCell>{order.remarks}</TableCell>
