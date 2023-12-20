@@ -14,6 +14,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import 'dayjs/locale/en-gb';
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import Payment from "./pages/Payment";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
@@ -28,7 +30,9 @@ function App() {
         <Route path="/gallery" element={<Gallery />}></Route>
         <Route path="/gallery/:category" element={<SingleCategoryGallery />}></Route>
         <Route path="/pricing" element={<Pricing />}></Route>
-        <Route path="pricing/order" element={<Order />}></Route>
+        <Route path="/pricing/order" element={<Order />}></Route>
+        <Route path="/pay" element={<Payment />}></Route>
+        <Route path="/admin" element={<AdminDashboard />}></Route>
         <Route path="/contactme" element={<ContactMe />}></Route>
         <Route path="*" element={<NotFound />}></Route>
       </Routes>

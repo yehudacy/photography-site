@@ -3,12 +3,12 @@ import { TextField, Button, Typography, Grid, Box, Alert, AlertTitle } from "@mu
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import dayjs from "dayjs";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import MyDialog from "../components/MyDialog";
 
 const Order = () => {
   const { state } = useLocation();
-
+  const navigate = useNavigate();
 
   const [orderDate] = useState(dayjs());
   const [actionDate, setActionDate] = useState(dayjs());
@@ -31,11 +31,23 @@ const Order = () => {
     dialogBtn2Text: "back",
   }
 
+  const createOrderFromFields = () => {
+    const newOrder = {
+      orderDate:orderDate.format('YYYY-MM-DD'), 
+      actionDate:actionDate.format('YYYY-MM-DD'),
+      time,
+      price,
+      remarks,
+    }
+    return newOrder;
+  }
+
 
   const handlepayments = () => {
-    console.log("got to go t payments page!");
-    //redirect to payments page
+    const newOrder = createOrderFromFields();
+    // console.log(newOrder);
     setDialog(false);
+    navigate('/admin', {state: newOrder});
   }
 
   const handleCloseDialog = () => {
