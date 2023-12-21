@@ -6,8 +6,12 @@ import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import { Grid } from "@mui/material";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Login = () => {
+
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -45,6 +49,7 @@ const Login = () => {
     if (validateForm()) {
       // Add your login logic here
       console.log("Login successful");
+      navigate('/client');
     } else {
       console.log("Login failed");
     }

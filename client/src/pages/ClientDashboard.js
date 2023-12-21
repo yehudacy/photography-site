@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Link, CircularProgress, IconButton } from '@mui/material';
+import { Grid, Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Link, CircularProgress, IconButton, Button } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon, Details as DetailsIcon } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
 import axiosInstance from '../axiosInstance';
 import TableOfOrders from '../components/TableOfOrders';
 
-const AdminDashboard = () => {
+const ClientDashboard = () => {
  const [orders, setOrders] = useState([]);
  const [selectedOrder, setSelectedOrder] = useState(null);
 
-
+ useEffect(() => {
+ }, []);
 
 
 
@@ -18,7 +19,7 @@ const AdminDashboard = () => {
  };
 
  const handleOrderUpdated = () => {
-    
+  
  };
 
  return (
@@ -26,11 +27,34 @@ const AdminDashboard = () => {
       <Grid item xs={12} md={2}>
         <Paper>
           <Typography variant="h6" gutterBottom>
-            Admin Panel
+            client Panel
           </Typography>
+          
           <Link component={RouterLink} to="/admin/orders" color="primary">
-            View all orders
+            <Button fullWidth>
+            my orders
+          </Button>
           </Link>
+         
+          
+          <Button fullWidth>
+          <Link component={RouterLink} to="/admin/orders" color="primary">
+            my invoices
+          </Link>
+          </Button>
+       
+          
+          <Button fullWidth>
+          <Link component={RouterLink} to="/admin/orders" color="primary">
+            my images
+          </Link>
+          </Button>
+       
+          <Button fullWidth>
+          <Link component={RouterLink} to="/admin/orders" color="primary">
+            edit info
+          </Link>
+          </Button>
         </Paper>
       </Grid>
       {/* <Grid item xs={12} md={9}>
@@ -94,9 +118,9 @@ const AdminDashboard = () => {
         )} */}
         {/* Display order details here */}
       {/* </Grid> */}
-      <TableOfOrders  type="admin"/>
+      <TableOfOrders type="client"/>
     </Grid>
  );
 };
 
-export default AdminDashboard;
+export default ClientDashboard;

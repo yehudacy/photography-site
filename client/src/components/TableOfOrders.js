@@ -1,39 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import { Grid, Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Link, CircularProgress, IconButton } from '@mui/material';
-import { Edit as EditIcon, Delete as DeleteIcon, Details as DetailsIcon } from '@mui/icons-material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Grid, Table, TableCell, TableContainer, TableHead, TableRow, Typography, Paper, TableBody, IconButton, CircularProgress } from '@mui/material';
+import DetailsIcon from '@mui/icons-material/Details';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import React, { useEffect, useState } from 'react'
 import axiosInstance from '../axiosInstance';
-import TableOfOrders from '../components/TableOfOrders';
 
-const AdminDashboard = () => {
- const [orders, setOrders] = useState([]);
- const [selectedOrder, setSelectedOrder] = useState(null);
+const TableOfOrders = ({type}) => {
 
+    const [orders, setOrders] = useState([]);
 
 
+    const fetchOrders = async (type) => {
+        // const response = await fetch('api/orders');
+        // const data = await response.json();
+        if(type === "admin"){
+            const {data} = await axiosInstance.get('order');
+            setOrders(data);
+        }
+        if(type === "client"){
+            const {data} = await axiosInstance.get('order/client/1');
+            console.log(data)
+            setOrders(data);
+        }
 
+     };
 
- const handleSelectOrder = (order) => {
-    setSelectedOrder(order);
- };
+     useEffect(() => {
+        type === "admin" && fetchOrders(type);
+        type === "client" && fetchOrders(type);
+        // fetchOrders()
+     }, []);
 
- const handleOrderUpdated = () => {
-    
- };
+    const handleSelectOrder = () => {
 
- return (
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={2}>
-        <Paper>
-          <Typography variant="h6" gutterBottom>
-            Admin Panel
-          </Typography>
-          <Link component={RouterLink} to="/admin/orders" color="primary">
-            View all orders
-          </Link>
-        </Paper>
-      </Grid>
-      {/* <Grid item xs={12} md={9}>
+    }
+
+  return (
+    <Grid item xs={12} md={9}>
         <Typography variant="h4" gutterBottom>
           Orders
         </Typography>
@@ -86,17 +89,9 @@ const AdminDashboard = () => {
               )}
             </TableBody>
           </Table>
-        </TableContainer>
-        {selectedOrder && (
-          <Typography variant="h5" gutterBottom>
-            Order Details
-          </Typography>
-        )} */}
-        {/* Display order details here */}
-      {/* </Grid> */}
-      <TableOfOrders  type="admin"/>
-    </Grid>
- );
-};
+          </TableContainer>
+          </Grid>
+  )
+}
 
-export default AdminDashboard;
+export default TableOfOrders

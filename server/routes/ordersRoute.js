@@ -1,5 +1,5 @@
 const express = require("express");
-const { getAllOrders, getOrder, addOrder } = require("../../database/orderDB");
+const { getAllOrders, getOrder, addOrder, getOrderOfSingleClient } = require("../../database/orderDB");
 
 const ordersRouter = express.Router();
 
@@ -22,6 +22,20 @@ ordersRouter.post('/', async (req, res) => {
 ordersRouter.get('/', async (req, res) => {
     try{
         const orders = await getAllOrders();
+        res.status(200).json(orders);
+    } catch (error) {
+        res.status(500).json({message: "The server is down please try later"});
+    }
+})
+
+ordersRouter.get('/client/:clientId', async (req, res) => {
+    try{
+        const clientId = req.params.clientId;
+        const orders = await getOrderOfSingleClient(clientId);
+        // if(!order) {
+        //     res.status(404).json({message: `An order with id of ${orderId} doesn't exist`});
+        // }
+        // console.log(orders)
         res.status(200).json(orders);
     } catch (error) {
         res.status(500).json({message: "The server is down please try later"});

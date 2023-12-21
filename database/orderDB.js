@@ -29,6 +29,15 @@ const getOrder = async (orderId) => {
     // console.log(order)
     return order;
 };
+//get orders of a client  by client id
+const getOrderOfSingleClient = async (clientId) => {
+    const getOrderOfSingleClientQuery = `
+    SELECT * FROM orders
+    WHERE client_id = ?`;
+    const [orders] = await pool.query(getOrderOfSingleClientQuery, [clientId]);
+    // console.log(orders)
+    return orders;
+};
 
 //edit a order
 const editOrder = async (orderId, {clientId, orderDate, actionDate, price, status}) => {
@@ -72,4 +81,4 @@ const newOrder = {
 // deleteOrder(1)
 
 
-module.exports = { addOrder, getAllOrders, getOrder, editOrder, deleteOrder };
+module.exports = { addOrder, getAllOrders, getOrder, editOrder, deleteOrder, getOrderOfSingleClient };
