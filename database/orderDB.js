@@ -70,8 +70,10 @@ const newOrder = {
     clientId: 3,
     orderDate: '2023-12-20',
     actionDate: '2024-08-20',
-    price: 1000,
-    status: "done"
+    time: '12:54',
+    price: 1650,
+    remarks: "some remarks2",
+    status: "waiting"
 }
 
 // addOrder(newOrder);
