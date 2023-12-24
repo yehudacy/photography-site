@@ -1,12 +1,8 @@
 import { useState } from "react";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Box from "@mui/material/Box";
-import { Grid } from "@mui/material";
-import { Navigate, useNavigate } from "react-router-dom";
+import {TextField, Button, FormControlLabel, Checkbox, Link, Box, Grid } from "@mui/material";
+import {  useNavigate } from "react-router-dom";
+import { Link as RouterLink} from 'react-router-dom';
+import axiosInstance from "../axiosInstance";
 
 const Login = () => {
 
@@ -44,10 +40,12 @@ const Login = () => {
     return valid;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
       // Add your login logic here
+      // const {data} = await axiosInstance.post('users', formData);
+      // console.log(data)
       console.log("Login successful");
       navigate('/client');
     } else {
@@ -112,7 +110,7 @@ const Login = () => {
           control={
             <Checkbox
               checked={formData.rememberMe}
-              onChange={handleChange}
+              onChange={handleChange}  
               name="rememberMe"
               color="primary"
             />
@@ -134,7 +132,7 @@ const Login = () => {
             Forgot Password?
           </Link>
           <Box mt={1}>
-            <Link href="/signup" variant="body2">
+            <Link component={RouterLink} to={'/signup'} variant="body2">
               Don't have an account? Sign Up
             </Link>
           </Box>
