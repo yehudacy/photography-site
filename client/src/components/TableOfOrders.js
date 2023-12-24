@@ -19,7 +19,7 @@ const TableOfOrders = ({type}) => {
         }
         if(type === "client"){
             const {data} = await axiosInstance.get('order/client/1');
-            console.log(data)
+            // console.log(data)
             setOrders(data);
         }
 
@@ -29,7 +29,7 @@ const TableOfOrders = ({type}) => {
         type === "admin" && fetchOrders(type);
         type === "client" && fetchOrders(type);
         // fetchOrders()
-     }, []);
+     }, [type]);
 
     const handleSelectOrder = () => {
 
