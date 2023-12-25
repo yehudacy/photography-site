@@ -11,8 +11,8 @@ const {contactMeRouter} = require('./routes/contactMeRoute');
 const {ordersRouter} = require('./routes/ordersRoute');
 const {usersRouter} = require('./routes/usersRoute');
 
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 
 app.use('/gallery', galleryRouter);
 app.use('/contactme', contactMeRouter);

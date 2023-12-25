@@ -1,12 +1,37 @@
 const express = require('express');
-const { addUser, getUser } = require('../../database/usersDB');
+const { addUser, getUser, login } = require('../../database/usersDB');
 
 const usersRouter = express.Router();
 
 //get all users route
 usersRouter.get('/', (req, res) => {
     res.status(200).json({message: "This route works!"})
-})
+});
+
+//get a user for login clients or administrators
+usersRouter.post('/login', async (req, res) => {
+  try{
+    const credentials = req.body;
+    if(!credentials.email || !credentials.password){
+      return res.status(401).json({ message: 'Missing email and/or password' });
+    } 
+    const user = await login(credentials, 'clients');
+    // console.log(user)
+    if(user){
+      user.isAdmin = false;
+      res.status(200).json(user);
+    } else {
+      const admin = await login(credentials, 'administrators');
+      if(admin){
+        admin.isAdmin = true;
+        return res.status(200).json(admin);
+      } 
+      return res.status(404).json({ message: 'No account found with the provided email address or the provided password.'});
+    }
+  }catch(error) {
+    console.log(error)
+  }
+});
 
 //get a specific user by id
 usersRouter.get('/:clientId', (req, res) => {
