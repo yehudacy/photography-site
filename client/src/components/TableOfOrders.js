@@ -9,7 +9,6 @@ import {
   Paper,
   TableBody,
   IconButton,
-  CircularProgress,
 } from "@mui/material";
 import DetailsIcon from "@mui/icons-material/Details";
 import EditIcon from "@mui/icons-material/Edit";
