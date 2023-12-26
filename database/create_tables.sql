@@ -12,7 +12,6 @@ CREATE TABLE `administrators` (
 
 
 
-
 DROP TABLE IF EXISTS `categories`;
 CREATE TABLE `categories` (
   `category_id` bigint unsigned NOT NULL AUTO_INCREMENT,

@@ -22,8 +22,10 @@ const ContactMe = () => {
     try {
       const body = { name, phoneNumber, email, message };
       const { data } = await axiosInstance.post("/contactme", body);
+      // console.log(data);
       setDialog(false);
       setAlert("success");
+      resetFields();
       setTimeout( () => setAlert(""), 5000);
     } catch (error) {
       setDialog(false);
@@ -31,6 +33,13 @@ const ContactMe = () => {
       setTimeout( () => setAlert(""), 5000);
     }
   };
+
+  const resetFields = () => {
+    setName("");
+    setPhoneNumber("");
+    setEmail("");
+    setMessage("");
+  }
 
   const handleCloseDialog = () => {
     setDialog(false);

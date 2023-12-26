@@ -5,6 +5,7 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import dayjs from "dayjs";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import MyDialog from "../components/MyDialog";
+import axiosInstance from "../axiosInstance";
 
 const Order = () => {
   const { state } = useLocation();
@@ -13,8 +14,6 @@ const Order = () => {
   const [orderDate] = useState(dayjs());
   const [actionDate, setActionDate] = useState(dayjs());
   const [time, setTime] = useState("");
-  // const [phoneNumber, setPhoneNumber] = useState("");
-  // const [email, setEmail] = useState("");
   const [price] = useState(state?.packagePrice);
   const [remarks, setRemarks] = useState("");
   const [dialog, setDialog] = useState(false);
@@ -33,21 +32,29 @@ const Order = () => {
 
   const createOrderFromFields = () => {
     const newOrder = {
+      clientId: 1,
       orderDate:orderDate.format('YYYY-MM-DD'), 
       actionDate:actionDate.format('YYYY-MM-DD'),
       time,
       price,
       remarks,
+      status: "waiting"
     }
+    console.log(newOrder)
     return newOrder;
   }
 
 
-  const handlepayments = () => {
+  const handlepayments = async () => {
     const newOrder = createOrderFromFields();
-    // console.log(newOrder);
-    setDialog(false);
-    navigate('/admin', {state: newOrder});
+    try{
+      setDialog(false);
+      const { data } = await axiosInstance.post("/order", newOrder);
+      console.log(data);
+      navigate('/client');
+    } catch(error){
+      console.log(error);
+    }
   }
 
   const handleCloseDialog = () => {
@@ -84,26 +91,7 @@ const Order = () => {
               </Typography>
               <form onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
-                  {/* <Grid item xs={12} md={6}>
-                  
-                </Grid> */}
                   <Grid item xs={12} md={6} sx={{ m: 'auto' }} >
-                    {/* <TextField
-                    fullWidth
-                    label="Order Date"
-                    value={orderDate}
-                    onChange={(e) => setOrderDate(e.target.value)}
-                    margin="normal"
-                    required
-                  /> */}
-                    {/* <TextField
-                    fullWidth
-                    label="Phone Number"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    margin="normal"
-                    required
-                  /> */}
                     <DatePicker
                       sx={{ width: '100%', marginY: 2 }}
                       label='order date'
@@ -121,19 +109,9 @@ const Order = () => {
                       sx={{ width: '100%', marginY: 2 }}
                       label="execution time"
                       ampm={false}
-                      disablePast
                       value={time}
                       onChange={(newTime) => setTime(newTime)}
                     />
-                    {/* <TextField
-                    fullWidth
-                    label="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    margin="normal"
-                    required
-                    type="email"
-                  /> */}
                     <TextField
                       fullWidth
                       label="Price"

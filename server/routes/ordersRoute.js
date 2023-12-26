@@ -7,9 +7,9 @@ const ordersRouter = express.Router();
 ordersRouter.post('/', async (req, res) => {
     try {
         const newOrder = req.body;
-        console.log(newOrder)
         //validation if failed send with status 400(bad request)
         const addedOrder = await addOrder(newOrder);
+        console.log(addedOrder)
         //handle sending me an email
         res.status(201).json(addedOrder);
     } catch (error) {
