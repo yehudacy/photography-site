@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon --env-file=.env app.js",
+    "server": "nodemon --watch ../server --watch ../database --env-file=.env app.js",
     "client": "npm run start --prefix ../client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
@@ -17,3 +17,4 @@
     "express": "^4.18.2"
   }
 }
+
