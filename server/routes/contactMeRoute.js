@@ -34,7 +34,6 @@ contactMeRouter.delete("/:contactMeId", async (req, res) => {
     const contactMeId = req.params.contactMeId;
     try{
         const deletedContactMe = await deleteContactMe(contactMeId);
-        console.log(deletedContactMe)
         return res.status(200).json(deletedContactMe); 
     } catch(error){
         let errorCode; 

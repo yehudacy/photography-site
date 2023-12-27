@@ -37,7 +37,6 @@ const getContactMe = async (contactMeId) => {
 //delete a contact me form
 const deleteContactMe = async (contactMeId) => {
   const contactMeToDelete = await getContactMe(contactMeId);
-  console.log(contactMeToDelete)
   if (!contactMeToDelete) {
     throw new Error(`No Contact Me with the Id of ${contactMeId}`);
   }
