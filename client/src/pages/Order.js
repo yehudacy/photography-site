@@ -33,8 +33,8 @@ const Order = () => {
   const createOrderFromFields = () => {
     const newOrder = {
       clientId: 1,
-      orderDate:orderDate.format('YYYY-MM-DD'), 
-      actionDate:actionDate.format('YYYY-MM-DD'),
+      orderDate: orderDate.format('YYYY-MM-DD'),
+      actionDate: actionDate.format('YYYY-MM-DD'),
       time,
       price,
       remarks,
@@ -47,12 +47,12 @@ const Order = () => {
 
   const handlepayments = async () => {
     const newOrder = createOrderFromFields();
-    try{
+    try {
       setDialog(false);
       const { data } = await axiosInstance.post("/order", newOrder);
       console.log(data);
       navigate('/client');
-    } catch(error){
+    } catch (error) {
       console.log(error);
     }
   }
@@ -116,7 +116,6 @@ const Order = () => {
                       fullWidth
                       label="Price"
                       value={`${price} NIS`}
-                      // onChange={(e) => setEmail(e.target.value)}
                       margin="normal"
                       required
                       type="text"
@@ -137,11 +136,11 @@ const Order = () => {
                     {alert && (alert === 'error' ? <Alert severity="error">
                       <AlertTitle>{alert}</AlertTitle>
                       It didn't work out — <strong>please try again!</strong>
-                    </Alert> : 
-                    <Alert severity="success">
-                    <AlertTitle>{alert}</AlertTitle>
-                    order has been placed! — <strong>Thank you! we will be in touch if there is any problems</strong>
-                  </Alert>)}
+                    </Alert> :
+                      <Alert severity="success">
+                        <AlertTitle>{alert}</AlertTitle>
+                        order has been placed! — <strong>Thank you! we will be in touch if there is any problems</strong>
+                      </Alert>)}
                   </Grid>
                 </Grid>
               </form>
