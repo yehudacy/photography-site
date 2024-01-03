@@ -10,6 +10,7 @@ const {galleryRouter} = require('./routes/galleryRoute');
 const {contactMeRouter} = require('./routes/contactMeRoute');
 const {ordersRouter} = require('./routes/ordersRoute');
 const {usersRouter} = require('./routes/usersRoute');
+const {categoryRouter} = require('./routes/categoryRoute');
 
 app.use(cors());
 app.use(express.json());
@@ -18,6 +19,7 @@ app.use('/gallery', galleryRouter);
 app.use('/contactme', contactMeRouter);
 app.use('/order', ordersRouter);
 app.use('/users', usersRouter);
+app.use('/category', categoryRouter);
 
 
 

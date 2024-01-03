@@ -1,7 +1,11 @@
 const express = require("express");
+const multer = require('multer');
 const { getAllCategoryImages, getallImagesOfACategory } = require("../../database/categoryDB");
 
 const galleryRouter = express.Router();
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 //route for getting all the category images for the gallery page
 galleryRouter.get("/", async (req, res) => {
@@ -160,5 +164,18 @@ galleryRouter.get("/:category", async (req, res) => {
     console.log(error)
   }
 });
+
+
+//add a new image to database
+galleryRouter.post("/image", upload.single('file'), async (req, res) => {
+  try{
+    // console.log(req.file)
+    console.log(req.body)
+
+  } catch(error){
+    console.log(error)
+    console.log("Error posting Image");
+  }
+})
 
 module.exports = { galleryRouter };

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axiosInstance from '../axiosInstance';
 import {
   TextField,
   Button,
@@ -12,19 +13,36 @@ import {
   Grid,
 } from "@mui/material";
 
-const ImageUploadForm = ({ uploadToServer }) => {
+const ImageUploadForm = () => {
+  //state for the category options
+  const [options, setOptions] = useState([]);
+  //fields state
   const [category, setCategory] = useState("");
-  const [clientName, setClientName] = useState("");
+  const [clientEmail, setClientEmail] = useState("");
   const [isMainImage, setIsMainImage] = useState(false);
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+
+
+ useEffect(() => {
+    const fetchCategoryNames = async () => {
+      try{
+        const {data} = await axiosInstance.get('category');
+        // console.log(data);
+        setOptions(data);
+      } catch(error){
+        console.log('Error:', error);
+      }
+    }
+    fetchCategoryNames();
+ }, []);
 
   const handleCategoryChange = (event) => {
     setCategory(event.target.value);
   };
 
-  const handleClientNameChange = (event) => {
-    setClientName(event.target.value);
+  const handleClientEmailChange = (event) => {
+    setClientEmail(event.target.value);
   };
 
   const handleIsMainImageChange = (event) => {
@@ -33,20 +51,16 @@ const ImageUploadForm = ({ uploadToServer }) => {
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
-
     // If user cancels file selection, do nothing
     if (!selectedFile) {
       return;
     }
-
     // Revoke the previous object URL before creating a new one
     if (previewUrl) {
       URL.revokeObjectURL(previewUrl);
     }
-
     // Create a preview URL for the selected file
     const newPreviewUrl = URL.createObjectURL(selectedFile);
-
     setFile(selectedFile);
     setPreviewUrl(newPreviewUrl);
   };
@@ -56,30 +70,38 @@ const ImageUploadForm = ({ uploadToServer }) => {
     if (previewUrl) {
       URL.revokeObjectURL(previewUrl);
     }
-
     setFile(null);
     setPreviewUrl(null);
   };
 
+  const uploadToServer = async (formData) => {
+    try {
+      const result = await axiosInstance.post('/gallery/image' ,formData);
+      console.log(result)
+      }catch(error){
+
+    }
+  }
+
   const handleSave = () => {
     const formData = new FormData();
     formData.append("category", category);
-    formData.append("clientName", clientName);
+    formData.append("clientEmail", clientEmail);
     formData.append("isMainImage", isMainImage);
     formData.append("file", file);
-
+   
     uploadToServer(formData);
-
+  
     // Revoke the object URL after saving
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl);
-    }
+    // if (previewUrl) {
+    //   URL.revokeObjectURL(previewUrl);
+    // }
 
-    setCategory("");
-    setClientName("");
-    setIsMainImage(false);
-    setFile(null);
-    setPreviewUrl(null);
+    // setCategory("");
+    // setClientEmail("");
+    // setIsMainImage(false);
+    // setFile(null);
+    // setPreviewUrl(null);
   };
 
   const buttonStyle = {
@@ -92,8 +114,6 @@ const ImageUploadForm = ({ uploadToServer }) => {
     height: "50px",
     textTransform: "none",
     marginTop: previewUrl ? "8px" : "16px",
-    // backgroundColor: "transparent", // Set background color to transparent
-    // color: "#1976D2", // Set text color
   };
 
   const clearButtonStyle = {
@@ -124,19 +144,17 @@ const ImageUploadForm = ({ uploadToServer }) => {
             value={category}
             onChange={handleCategoryChange}
           >
-            <MenuItem value="option1">Option 1</MenuItem>
-            <MenuItem value="option2">Option 2</MenuItem>
-            <MenuItem value="option3">Option 3</MenuItem>
-            <MenuItem value="option4">Option 4</MenuItem>
-            <MenuItem value="option5">Option 5</MenuItem>
+            {options.map((name, index) => {
+              return <MenuItem key={index} value={name}>{name}</MenuItem>;
+            })}
           </Select>
         </FormControl>
 
         <TextField
-          label="Client Name"
+          label="Client Email"
           fullWidth
-          value={clientName}
-          onChange={handleClientNameChange}
+          value={clientEmail}
+          onChange={handleClientEmailChange}
           style={{ marginBottom: "16px" }}
         />
 
