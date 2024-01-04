@@ -28,11 +28,11 @@ const getCategoryIdByName = async (categoryName) => {
     SELECT category_id 
     FROM categories 
     WHERE name = ?;`;
-  const [[{ category_id }]] = await pool.query(getCategoryIdQuery, [
+  const [[ result ]] = await pool.query(getCategoryIdQuery, [
     categoryName,
   ]);
-  // console.log(category_id)
-  return category_id;
+  // console.log(result)
+  return result?.category_id;
 };
 
 //get all images of citrin category
@@ -81,9 +81,9 @@ const getAllCategoryImages = async () => {
 
 // getCategoryIdByName('new_born');
 
-getAllCategoriesNames()
+// getAllCategoriesNames()
 
-getallImagesOfACategory("new_born");
+// getallImagesOfACategory("new_born");
 module.exports = {
   addCategory,
   getCategoryIdByName,

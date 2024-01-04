@@ -26,9 +26,6 @@ const addUser = async ({
   return await getUser(insertId);
 };
 
-//get all users
-const getAllUsers = async () => {};
-
 //get a user by id
 const getUser = async (clientId) => {
   const getClientByIdQuery = `
@@ -39,6 +36,17 @@ const getUser = async (clientId) => {
   return client;
 };
 
+//get client id by client email
+const getClientByEmail = async (email) => {
+  const getClientByEmailQuery = "SELECT client_id FROM clients WHERE email=?";
+  const [[result]] = await pool.query(getClientByEmailQuery, [email]);
+  // console.log(result?.client_id);
+  return result?.client_id
+};
+
+//get all users
+const getAllUsers = async () => {};
+
 //get user by email and password
 const login = async ({ email, password }, tableName) => {
   const loginQuery = `
@@ -47,7 +55,7 @@ const login = async ({ email, password }, tableName) => {
     }, first_name, last_name, email FROM ${tableName}
     WHERE email = ? AND password = ?;`;
   const [[user]] = await pool.query(loginQuery, [email, password]);
-    // console.log(user);
+  // console.log(user);
   return user;
 };
 
@@ -57,9 +65,10 @@ const editUser = async () => {};
 //delete a user
 const deleteUser = async () => {};
 
-module.exports = { addUser, getUser, login };
+module.exports = { addUser, getUser, login, getClientByEmail };
 
 // addUser({firstName:"yehuda", lastName:"cywiak", email:"yc0527183008@gmail.com", password:"yc@123456", city:"BB", street:"beeri", buildingNumber:"17"});
 // getUser(1);
 
 // login({ email: "yc0527183008@gmail.com", password: "yc@123456" }, "clients");
+getClientByEmail('ecy4959@gmail.com');

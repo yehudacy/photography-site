@@ -171,3 +171,5 @@ const itemData = [
   //   })
   // }
   // add2();
+
+  module.exports = {addImage}

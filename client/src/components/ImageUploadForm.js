@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axiosInstance from '../axiosInstance';
+import axiosInstance from "../axiosInstance";
 import {
   TextField,
   Button,
@@ -11,6 +11,8 @@ import {
   FormControlLabel,
   Typography,
   Grid,
+  Alert,
+  AlertTitle,
 } from "@mui/material";
 
 const ImageUploadForm = () => {
@@ -22,20 +24,21 @@ const ImageUploadForm = () => {
   const [isMainImage, setIsMainImage] = useState(false);
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [alert, setAlert] = useState("");
+  const [alertMsg, setAlertMsg] = useState("");
 
-
- useEffect(() => {
+  useEffect(() => {
     const fetchCategoryNames = async () => {
-      try{
-        const {data} = await axiosInstance.get('category');
+      try {
+        const { data } = await axiosInstance.get("category");
         // console.log(data);
         setOptions(data);
-      } catch(error){
-        console.log('Error:', error);
+      } catch (error) {
+        console.log("Error:", error);
       }
-    }
+    };
     fetchCategoryNames();
- }, []);
+  }, []);
 
   const handleCategoryChange = (event) => {
     setCategory(event.target.value);
@@ -76,12 +79,35 @@ const ImageUploadForm = () => {
 
   const uploadToServer = async (formData) => {
     try {
-      const result = await axiosInstance.post('/gallery/image' ,formData);
-      console.log(result)
-      }catch(error){
+      const {data} = await axiosInstance.post("/gallery/image", formData);
+      console.log(data);
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
 
+      setCategory("");
+      setClientEmail("");
+      setIsMainImage(false);
+      setFile(null);
+      setPreviewUrl(null);
+
+      setAlert("success");
+      setAlertMsg(data.message);
+
+      setTimeout(() => {
+        setAlert("");
+      setAlertMsg("");
+      }, 5000);
+    } catch (error) {
+      console.log(error.message);
+      setAlert("error");
+      setAlertMsg(error.message);
+      setTimeout(() => {
+        setAlert("");
+        setAlertMsg("");
+      }, 5000);
     }
-  }
+  };
 
   const handleSave = () => {
     const formData = new FormData();
@@ -89,19 +115,10 @@ const ImageUploadForm = () => {
     formData.append("clientEmail", clientEmail);
     formData.append("isMainImage", isMainImage);
     formData.append("file", file);
-   console.log("file", file)
+    // console.log("file", formData.get('file'))
     uploadToServer(formData);
-  
-    // Revoke the object URL after saving
-    // if (previewUrl) {
-    //   URL.revokeObjectURL(previewUrl);
-    // }
 
-    // setCategory("");
-    // setClientEmail("");
-    // setIsMainImage(false);
-    // setFile(null);
-    // setPreviewUrl(null);
+    // Revoke the object URL after saving
   };
 
   const buttonStyle = {
@@ -145,7 +162,11 @@ const ImageUploadForm = () => {
             onChange={handleCategoryChange}
           >
             {options.map((name, index) => {
-              return <MenuItem key={index} value={name}>{name}</MenuItem>;
+              return (
+                <MenuItem key={index} value={name}>
+                  {name}
+                </MenuItem>
+              );
             })}
           </Select>
         </FormControl>
@@ -217,6 +238,18 @@ const ImageUploadForm = () => {
           Save
         </Button>
       </div>
+      {alert &&
+        (alert === "error" ? (
+          <Alert severity="error">
+            <AlertTitle>{alert}</AlertTitle>
+            {alertMsg}
+          </Alert>
+        ) : (
+          <Alert severity="success">
+            <AlertTitle>{alert}</AlertTitle>
+            {alertMsg}
+          </Alert>
+        ))}
     </Grid>
   );
 };
