@@ -1,5 +1,6 @@
 const express = require("express");
 const multer = require('multer');
+const uniqid = require('uniqid');
 const {uploadImage} = require('../cloudinary/cloudinary')
 const { getAllCategoryImages, getallImagesOfACategory, getCategoryIdByName } = require("../../database/categoryDB");
 const { getClientByEmail } = require("../../database/usersDB");
@@ -36,9 +37,11 @@ galleryRouter.post("/image", upload.single('file'), async (req, res) => {
     if (!req.file) {
       return res.status(400).send('No file uploaded.');
     }
-    console.log(req.file)
-    console.log(req.body)
-    const imageUrl = await uploadImage(req.file.buffer, req.file.originalname);
+    // console.log(req.file)
+    // console.log(req.body)
+
+    const fileName = `${uniqid()}${req.file.originalname}`
+    const imageUrl = await uploadImage(req.file.buffer, fileName);
     // console.log(imageUrl)
     const categoryId = await getCategoryIdByName(req.body.category);
     if(!categoryId){
