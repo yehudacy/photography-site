@@ -9,7 +9,16 @@ const addImage = async (categoryId, src, clientId = null) => {
         const [addedImage] = await pool.query(addImageQuery, [categoryId, clientId, src]);
         // console.log(addedImage);
         return addedImage;
-}
+};
+
+//get all images
+const getAllImages = async () => {
+  const getImagesQuery = `
+  SELECT * FROM images`;
+  const [images] = await pool.query(getImagesQuery);
+  console.log(images)
+  return images;
+};
 
 
 //get an image by id
@@ -171,5 +180,5 @@ const itemData = [
   //   })
   // }
   // add2();
-
-  module.exports = {addImage}
+  // getAllImages();
+  module.exports = {addImage, getAllImages}

@@ -6,6 +6,7 @@ import axiosInstance from '../axiosInstance';
 import TableOfOrders from '../components/TableOfOrders';
 import ContactRequestsTable from '../components/ContactRequestsTable';
 import ImageUploadForm from '../components/ImageUploadForm';
+import AdminImagesGallery from '../components/AdminImagesGallery';
 
 const AdminDashboard = () => {
   const [orders, setOrders] = useState([]);
@@ -34,7 +35,7 @@ const AdminDashboard = () => {
       <Grid item xs={12} md={2}>
         <Paper style={{ padding: '16px' }}>
           <Typography variant="h6" gutterBottom>
-            Admin Panel
+            Admin Panel 
           </Typography>
           <Button fullWidth onClick={() => setComponentToRender('orders')} style={buttonStyle} color="primary">
             View all orders
@@ -45,11 +46,15 @@ const AdminDashboard = () => {
           <Button fullWidth onClick={() => setComponentToRender('upload')} style={buttonStyle} color="primary">
             Upload images
           </Button>
+          <Button fullWidth onClick={() => setComponentToRender('viewImg')} style={buttonStyle} color="primary">
+            View images
+          </Button>
         </Paper>
       </Grid>
       {componentToRender === "orders" && <TableOfOrders type="admin" />}
       {componentToRender === "contactMe" && <ContactRequestsTable />}
       {componentToRender === "upload" && <ImageUploadForm />}
+      {componentToRender === "viewImg" && <AdminImagesGallery />}
     </Grid>
   );
 };
