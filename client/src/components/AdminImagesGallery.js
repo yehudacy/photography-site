@@ -197,7 +197,6 @@ const AdminImagesGallery = () => {
 
         {selectedImage && (
           <>
-          {selectedImage}
             <IconButton
               sx={{ position: 'absolute', top: '50%', left: 8, transform: 'translateY(-50%)' }}
               onClick={() => handleNavigate('prev')}
