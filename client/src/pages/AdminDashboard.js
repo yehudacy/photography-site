@@ -1,8 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Grid, Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Link, CircularProgress, IconButton, Button } from '@mui/material';
-import { Edit as EditIcon, Delete as DeleteIcon, Details as DetailsIcon } from '@mui/icons-material';
-import { Link as RouterLink } from 'react-router-dom';
-import axiosInstance from '../axiosInstance';
 import TableOfOrders from '../components/TableOfOrders';
 import ContactRequestsTable from '../components/ContactRequestsTable';
 import ImageUploadForm from '../components/ImageUploadForm';
