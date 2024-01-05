@@ -79,25 +79,30 @@ const ImageUploadForm = () => {
 
   const uploadToServer = async (formData) => {
     try {
-      const {data} = await axiosInstance.post("/gallery/image", formData);
-      console.log(data);
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl);
+      const {data, status} = await axiosInstance.post("/gallery/image", formData);
+      console.log(data, status);
+      if(status === 201) {
+
+        if (previewUrl) {
+          URL.revokeObjectURL(previewUrl);
+        }
+        
+        setCategory("");
+        setClientEmail("");
+        setIsMainImage(false);
+        setFile(null);
+        setPreviewUrl(null);
+        
+        setAlert("success");
+        setAlertMsg(data.message);
+        
+        setTimeout(() => {
+          setAlert("");
+          setAlertMsg("");
+        }, 5000);
+      } else {
+        throw data;
       }
-
-      setCategory("");
-      setClientEmail("");
-      setIsMainImage(false);
-      setFile(null);
-      setPreviewUrl(null);
-
-      setAlert("success");
-      setAlertMsg(data.message);
-
-      setTimeout(() => {
-        setAlert("");
-        setAlertMsg("");
-      }, 5000);
     } catch (error) {
       console.log(error.message);
       setAlert("error");

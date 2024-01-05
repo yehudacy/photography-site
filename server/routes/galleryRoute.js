@@ -5,6 +5,7 @@ const {uploadImage} = require('../cloudinary/cloudinary')
 const { getAllCategoryImages, getallImagesOfACategory, getCategoryIdByName } = require("../../database/categoryDB");
 const { getClientByEmail } = require("../../database/usersDB");
 const { addImage } = require("../../database/imagesDB");
+const {addImageTransaction} = require('../../database/transactions')
 
 const galleryRouter = express.Router();
 
@@ -38,7 +39,7 @@ galleryRouter.post("/image", upload.single('file'), async (req, res) => {
       return res.status(400).send('No file uploaded.');
     }
     // console.log(req.file)
-    // console.log(req.body)
+    console.log(req.body)
 
     const fileName = `${uniqid()}${req.file.originalname}`
     const imageUrl = await uploadImage(req.file.buffer, fileName);
@@ -49,12 +50,21 @@ galleryRouter.post("/image", upload.single('file'), async (req, res) => {
     }
     const clientId = await getClientByEmail(req.body.clientEmail);
 
-
-    const {affectedRows} = await addImage(categoryId, imageUrl, clientId);
-    if(!affectedRows){
-      return res.status(500).json({message:"Something went wrong while trying to save the Image in the Database"});
+    if(req.body.isMainImage){
+      const result = await addImageTransaction(categoryId, clientId, imageUrl);
+      // console.log(result);
+      if(result === "commit"){
+        res.status(201).json("The Image has been added as Main Image");
+      } else {
+        return res.status(500).json({message:"Something went wrong while trying to save the Image as main image in the Database"});
+      }
     } else {
-      return res.status(201).json({message:'The Image has been added'});
+      const {affectedRows} = await addImage(categoryId, imageUrl, clientId);
+      if(!affectedRows){
+        return res.status(500).json({message:"Something went wrong while trying to save the Image in the Database"});
+      } else {
+        return res.status(201).json({message:'The Image has been added'});
+      }
     }
   } catch(error){
     console.log(error)
