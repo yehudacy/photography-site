@@ -96,7 +96,7 @@ const ImageUploadForm = () => {
 
       setTimeout(() => {
         setAlert("");
-      setAlertMsg("");
+        setAlertMsg("");
       }, 5000);
     } catch (error) {
       console.log(error.message);

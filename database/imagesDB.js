@@ -16,7 +16,7 @@ const getAllImages = async () => {
   const getImagesQuery = `
   SELECT * FROM images`;
   const [images] = await pool.query(getImagesQuery);
-  console.log(images)
+  // console.log(images)
   return images;
 };
 

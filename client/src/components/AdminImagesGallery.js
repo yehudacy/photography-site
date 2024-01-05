@@ -10,14 +10,10 @@ import {
   DialogContent,
   DialogActions,
   Typography,
-  AppBar,
-  Toolbar,
-  Slide,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import StarIcon from '@mui/icons-material/Star';
 import { Close as CloseIcon } from '@mui/icons-material';
-import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import axiosInstance from '../axiosInstance';
 
@@ -66,12 +62,12 @@ const AdminImagesGallery = () => {
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setFullscreenDialogOpen(false);
   };
 
   const handleImageClick = (image) => {
     setSelectedImage(image);
-    setOpen(true);
+    setFullscreenDialogOpen(true);
   };
 
 
@@ -84,7 +80,7 @@ const AdminImagesGallery = () => {
   };
 
   const handleNavigate = (direction) => {
-    const currentIndex = images.findIndex((image) => image.id === selectedImage.id);
+    const currentIndex = images.findIndex((image) => image.image_id === selectedImage.image_id);
     let newIndex;
 
     if (direction === 'prev') {
@@ -114,25 +110,25 @@ const AdminImagesGallery = () => {
               onClick={() => { handleImageClick(image) }}
             />
             <Grid container item sx={{ display: 'flex', alignItems: 'center', justifyContent: "space-between", p: 0.5 }}>
-              <Button
-                onClick={() => {
-                  setSelectedImage(image);
-                  setDeleteDialogOpen(true);
-                }}
+            <IconButton
                 sx={{
                   color: 'white',
                   backgroundColor: '#3f51b5',
+                  width: 80,
                   padding: 1,
+                  borderRadius: 1, 
                   '&:hover': {
                     backgroundColor: '#3f51b5',
                   },
                 }}
                 style={buttonStyle}
+                onClick={() => {
+                  setSelectedImage(image);
+                  setDeleteDialogOpen(true);
+                }}
               >
-                <IconButton sx={{ color: 'white' }}>
-                  <DeleteIcon />
-                </IconButton>
-              </Button>
+                <DeleteIcon />
+              </IconButton>
               <Button
                 sx={{
                   color: 'white',
@@ -189,7 +185,7 @@ const AdminImagesGallery = () => {
         </DialogActions>
       </Dialog>
 
-      <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
+      <Dialog open={fullscreenDialogOpen} onClose={handleClose} maxWidth="md" fullWidth>
         <IconButton
           edge="end"
           color="inherit"
@@ -201,6 +197,7 @@ const AdminImagesGallery = () => {
 
         {selectedImage && (
           <>
+          {selectedImage}
             <IconButton
               sx={{ position: 'absolute', top: '50%', left: 8, transform: 'translateY(-50%)' }}
               onClick={() => handleNavigate('prev')}
@@ -208,8 +205,8 @@ const AdminImagesGallery = () => {
               <ChevronLeft />
             </IconButton>
             <img
-              src={selectedImage.imageUrl}
-              alt={selectedImage.altText}
+              src={selectedImage.src}
+              alt={""}
               style={{ width: '100%', maxHeight: '80vh', objectFit: 'contain' }}
             />
 
