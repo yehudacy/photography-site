@@ -1,4 +1,5 @@
 import "./App.css";
+import { UserProvider } from './hooks/useUser';
 import NavBar from "./components/NavBar";
 import Gallery from "./pages/Gallery";
 import Home from "./pages/Home";
@@ -17,28 +18,32 @@ import SignUp from "./pages/SignUp";
 import Payment from "./pages/Payment";
 import AdminDashboard from "./pages/AdminDashboard";
 import ClientDashboard from "./pages/ClientDashboard";
+import Logout from "./pages/Logout";
 
 function App() {
   return (
     <>
-    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='en-gb'>
-      <NavBar />  
-      <Routes>
-        <Route path="/" element={<Home />}></Route>
-        <Route path="/login" element={<Login />}></Route>
-        <Route path="/signup" element={<SignUp />}></Route>
-        <Route path="/client" element={<ClientDashboard />}></Route>
-        <Route path="/about" element={<About />}></Route>
-        <Route path="/gallery" element={<Gallery />}></Route>
-        <Route path="/gallery/:category" element={<SingleCategoryGallery />}></Route>
-        <Route path="/pricing" element={<Pricing />}></Route>
-        <Route path="/pricing/order" element={<Order />}></Route>
-        <Route path="/pay" element={<Payment />}></Route>
-        <Route path="/admin" element={<AdminDashboard />}></Route>
-        <Route path="/contactme" element={<ContactMe />}></Route>
-        <Route path="*" element={<NotFound />}></Route>
-      </Routes>
-      </LocalizationProvider>
+      <UserProvider>
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='en-gb'>
+          <NavBar />
+          <Routes>
+            <Route path="/" element={<Home />}></Route>
+            <Route path="/login" element={<Login />}></Route>
+            <Route path="/logout" element={<Logout />}></Route>
+            <Route path="/signup" element={<SignUp />}></Route>
+            <Route path="/client" element={<ClientDashboard />}></Route>
+            <Route path="/about" element={<About />}></Route>
+            <Route path="/gallery" element={<Gallery />}></Route>
+            <Route path="/gallery/:category" element={<SingleCategoryGallery />}></Route>
+            <Route path="/pricing" element={<Pricing />}></Route>
+            <Route path="/pricing/order" element={<Order />}></Route>
+            <Route path="/pay" element={<Payment />}></Route>
+            <Route path="/admin" element={<AdminDashboard />}></Route>
+            <Route path="/contactme" element={<ContactMe />}></Route>
+            <Route path="*" element={<NotFound />}></Route>
+          </Routes>
+        </LocalizationProvider>
+      </UserProvider>
     </>
   );
 }

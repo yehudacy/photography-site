@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useUser } from '../hooks/useUser';
 import {
   TextField,
   Button,
@@ -14,6 +15,10 @@ import axiosInstance from "../axiosInstance";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { user, loginUser } = useUser();
+  
+
+
 
   const [formData, setFormData] = useState({
     email: "",
@@ -52,8 +57,8 @@ const Login = () => {
     try {
       if (validateForm()) {
         // Add your login logic here
-        const  {data}  = await axiosInstance.post("users/login", formData);
-        console.log(data);
+        const { data } = await axiosInstance.post("users/login", formData);
+        loginUser(data);
         !data.isAdmin && navigate("/client");
         data.isAdmin && navigate("/admin");
       } else {

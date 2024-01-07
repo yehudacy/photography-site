@@ -1,17 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid, Paper, Typography, Button } from '@mui/material';
 import TableOfOrders from '../components/TableOfOrders';
 import ContactRequestsTable from '../components/ContactRequestsTable';
 import ImageUploadForm from '../components/ImageUploadForm';
 import AdminImagesGallery from '../components/AdminImagesGallery';
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '../hooks/useUser';
 
 const AdminDashboard = () => {
+
+  const navigate = useNavigate();
+  const {user} = useUser();
+
+
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [componentToRender, setComponentToRender] = useState("");
 
 
-
+  useEffect(() => {
+    // if(!user) navigate('/login');
+  }, []);
 
 
   const handleSelectOrder = (order) => {

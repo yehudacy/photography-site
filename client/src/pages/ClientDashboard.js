@@ -3,34 +3,28 @@ import {
   Grid,
   Paper,
   Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Link,
-  CircularProgress,
-  IconButton,
   Button,
 } from "@mui/material";
-import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  Details as DetailsIcon,
-} from "@mui/icons-material";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import axiosInstance from "../axiosInstance";
 import TableOfOrders from "../components/TableOfOrders";
 import ClientImageList from "../components/ClientImageList";
 import AccountDetails from "../components/AccountDetails";
+import { useUser } from "../hooks/useUser";
 
 const ClientDashboard = () => {
+  const navigate = useNavigate();
+  const {user} = useUser();
+
+
+
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [componentToRender, setComponentToRender] = useState("");
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    // if(!user) navigate('/login');
+  }, []);
 
   const handleSelectOrder = (order) => {
     setSelectedOrder(order);
