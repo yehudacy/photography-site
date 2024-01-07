@@ -19,8 +19,9 @@ const AdminDashboard = () => {
 
 
   useEffect(() => {
-    // if(!user) navigate('/login');
-  }, []);
+    console.log(user)
+    if(!user || !user?.isAdmin) navigate('/login');
+  }, [navigate, user]);
 
 
   const handleSelectOrder = (order) => {

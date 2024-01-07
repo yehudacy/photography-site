@@ -23,8 +23,9 @@ const ClientDashboard = () => {
   const [componentToRender, setComponentToRender] = useState("");
 
   useEffect(() => {
-    // if(!user) navigate('/login');
-  }, []);
+    // console.log(user);
+    if(!user || user?.isAdmin) navigate('/login');
+  }, [navigate, user]);
 
   const handleSelectOrder = (order) => {
     setSelectedOrder(order);

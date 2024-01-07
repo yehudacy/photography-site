@@ -1,5 +1,6 @@
 const express = require('express');
 const { addUser, getUser, login } = require('../../database/usersDB');
+const {generateToken} = require('../authentication/authentication');
 
 const usersRouter = express.Router();
 
@@ -19,11 +20,13 @@ usersRouter.post('/login', async (req, res) => {
     // console.log(user)
     if(user){
       user.isAdmin = false;
+      user.token = generateToken(user);
       res.status(200).json(user);
     } else {
       const admin = await login(credentials, 'administrators');
       if(admin){
         admin.isAdmin = true;
+        admin.token = generateToken(admin);
         return res.status(200).json(admin);
       } 
       return res.status(404).json({ message: 'No account found with the provided email address or the provided password.'});
@@ -54,4 +57,4 @@ usersRouter.post('/', async (req, res) => {
     }
   });
   
-module.exports = { usersRouter };
+module.exports = { usersRouter }; 
