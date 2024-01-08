@@ -60,6 +60,7 @@ const Login = () => {
         const { data } = await axiosInstance.post("users/login", formData);
         console.log(data)
         loginUser(data);
+        axiosInstance.defaults.headers.common["Authorization"] = JSON.parse(localStorage.getItem("user"))?.token;
         !data.isAdmin && navigate("/client");
         data.isAdmin && navigate("/admin");
       } else {

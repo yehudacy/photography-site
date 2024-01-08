@@ -1,9 +1,10 @@
 const express = require('express');
 const {getContactForms, getContactMe, addContactMe, deleteContactMe} = require('../../database/contactmeDB');
+const { authenticateToken } = require('../authentication/authentication');
 const contactMeRouter = express.Router();
 
 //get all contact me forms
-contactMeRouter.get('/', async (req, res) =>{
+contactMeRouter.get('/', authenticateToken,  async (req, res) =>{
     try{
         const contactMeForms = await getContactForms();
         // console.log(contactMeForms)
@@ -14,7 +15,7 @@ contactMeRouter.get('/', async (req, res) =>{
 })
 
 
-contactMeRouter.post('/', async(req, res) => {
+contactMeRouter.post('/', authenticateToken ,async(req, res) => {
     try{
         const contactMe = req.body;
         //validation if failed send with status 400(bad request)
@@ -30,7 +31,7 @@ contactMeRouter.post('/', async(req, res) => {
 });
 
 //route to delete a contact me form
-contactMeRouter.delete("/:contactMeId", async (req, res) => {
+contactMeRouter.delete("/:contactMeId", authenticateToken , async (req, res) => {
     const contactMeId = req.params.contactMeId;
     try{
         const deletedContactMe = await deleteContactMe(contactMeId);

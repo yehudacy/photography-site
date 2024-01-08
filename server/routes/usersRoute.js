@@ -1,6 +1,6 @@
 const express = require('express');
 const { addUser, getUser, login } = require('../../database/usersDB');
-const {generateToken} = require('../authentication/authentication');
+const {generateToken, authenticateToken} = require('../authentication/authentication');
 
 const usersRouter = express.Router();
 
@@ -37,7 +37,7 @@ usersRouter.post('/login', async (req, res) => {
 });
 
 //get a specific user by id
-usersRouter.get('/:clientId', (req, res) => {
+usersRouter.get('/:clientId', authenticateToken ,(req, res) => {
     res.status(200).json({message: "This route works!"})
 });
 

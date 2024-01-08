@@ -6,11 +6,25 @@ const generateToken = (userInfo) => {
         userId : userInfo.isAdmin ? userInfo.administrator_id : userInfo.client_id,
         isAdmin: userInfo.isAdmin
     }
-
-
     const token = jwt.sign(payload, process.env.SECRET_KEY_JWT, {expiresIn: '15s'});
     return token;
 }
+
+//function for authenticate the token
+
+const authenticateToken = (req, res, next) => {
+    const token = req.headers.authorization;
+    if (!token) {
+      return res.status(401).json({ message: 'Unauthorized: Missing token' });
+    }
+    try {
+      const decoded = jwt.verify(token.replace('Bearer ', ''), process.env.SECRET_KEY_JWT);
+        req.user = decoded;
+      next();
+    } catch (error) {
+      return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+    }
+  };
 
 // const crypto = require('crypto');
 
@@ -23,4 +37,4 @@ const generateToken = (userInfo) => {
 
 // console.log('Generated Secret Key:', secretKey);
 
-module.exports = {generateToken}
+module.exports = {generateToken, authenticateToken}

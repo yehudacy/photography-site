@@ -1,10 +1,11 @@
 const express = require('express');
 const {getAllCategoriesNames} = require('../../database/categoryDB');
+const { authenticateToken } = require('../authentication/authentication');
 const categoryRouter = express.Router();
 
 
 //getting all category names;
-categoryRouter.get('/', async (req, res) => {
+categoryRouter.get('/', authenticateToken ,async (req, res) => {
     try {
         const categoryNames = await getAllCategoriesNames();
         // console.log(categoryNames)

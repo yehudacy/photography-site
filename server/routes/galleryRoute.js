@@ -5,7 +5,8 @@ const {uploadImage} = require('../cloudinary/cloudinary')
 const { getAllCategoryImages, getallImagesOfACategory, getCategoryIdByName } = require("../../database/categoryDB");
 const { getClientByEmail } = require("../../database/usersDB");
 const { addImage } = require("../../database/imagesDB");
-const {addImageTransaction} = require('../../database/transactions')
+const {addImageTransaction} = require('../../database/transactions');
+const { authenticateToken } = require("../authentication/authentication");
 
 const galleryRouter = express.Router();
 
@@ -33,7 +34,7 @@ galleryRouter.get("/:category", async (req, res) => {
 
 
 //add a new image to database
-galleryRouter.post("/image", upload.single('file'), async (req, res) => {
+galleryRouter.post("/image", authenticateToken, upload.single('file'), async (req, res) => {
   try{
     if (!req.file) {
       return res.status(400).send('No file uploaded.');

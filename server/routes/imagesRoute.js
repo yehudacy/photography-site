@@ -1,11 +1,12 @@
 const express = require("express");
 const {getAllImages} = require('../../database/imagesDB');
+const { authenticateToken } = require("../authentication/authentication");
 
 
 const imagesRouter = express.Router();
 
 //route to get all images for admin
-imagesRouter.get('/', async(req, res) => {
+imagesRouter.get('/', authenticateToken , async(req, res) => {
     try{
         const images = await getAllImages();
         res.status(200).json(images);

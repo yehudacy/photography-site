@@ -1,10 +1,11 @@
 const express = require("express");
 const { getAllOrders, getOrder, addOrder, getOrderOfSingleClient } = require("../../database/orderDB");
+const { authenticateToken } = require("../authentication/authentication");
 
 const ordersRouter = express.Router();
 
 //place a new order
-ordersRouter.post('/', async (req, res) => {
+ordersRouter.post('/', authenticateToken ,async (req, res) => {
     try {
         const newOrder = req.body;
         //validation if failed send with status 400(bad request)
@@ -19,7 +20,7 @@ ordersRouter.post('/', async (req, res) => {
 })
 
 //route to get all orders
-ordersRouter.get('/', async (req, res) => {
+ordersRouter.get('/', authenticateToken ,async (req, res) => {
     try{
         const orders = await getAllOrders();
         res.status(200).json(orders);
@@ -28,7 +29,7 @@ ordersRouter.get('/', async (req, res) => {
     }
 })
 
-ordersRouter.get('/client/:clientId', async (req, res) => {
+ordersRouter.get('/client/:clientId', authenticateToken ,async (req, res) => {
     try{
         const clientId = req.params.clientId;
         const orders = await getOrderOfSingleClient(clientId);
@@ -43,7 +44,7 @@ ordersRouter.get('/client/:clientId', async (req, res) => {
 })
 
 //route for getting a specific order by id
-ordersRouter.get('/:orderid', async (req, res) => {
+ordersRouter.get('/:orderid', authenticateToken, async (req, res) => {
     try{
         const orderId = req.params.orderid;
         const order = await getOrder(orderId);

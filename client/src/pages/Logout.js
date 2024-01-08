@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from '@mui/material';
 import { useUser } from '../hooks/useUser';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../axiosInstance';
 
 const LogoutDialog = () => {
     const { logoutUser } = useUser();
@@ -15,6 +16,7 @@ const LogoutDialog = () => {
 
     const onLogout =  () => {
         logoutUser();
+        axiosInstance.defaults.headers.common["Authorization"] = null;
         setOpen(false);
         navigate('/login');
     } 
