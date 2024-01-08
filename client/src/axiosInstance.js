@@ -2,8 +2,7 @@ import axios from "axios";
 const axiosInstance = axios.create({
   baseURL: "http://localhost:4000/",
 });
-
-axiosInstance.defaults.headers.common["Authorization"] =
-  JSON.parse(localStorage.getItem("user"))?.token || null;
+const user = localStorage.getItem("user");
+user &&  (axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${JSON.parse(user)?.token}`);
 
 export default axiosInstance;

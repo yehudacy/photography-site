@@ -5,7 +5,7 @@ const getContactForms = async () => {
   const getCContactMeQuery = `
     SELECT * FROM contact_me`;
   const [contactMeForms] = await pool.query(getCContactMeQuery);
-  console.log(contactMeForms);
+  // console.log(contactMeForms);
   return contactMeForms;
 };
 

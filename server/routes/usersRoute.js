@@ -32,7 +32,8 @@ usersRouter.post('/login', async (req, res) => {
       return res.status(404).json({ message: 'No account found with the provided email address or the provided password.'});
     }
   }catch(error) {
-    console.log(error)
+    console.log(error);
+    res.status(500).send();
   }
 });
 

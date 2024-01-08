@@ -56,11 +56,10 @@ const Login = () => {
     e.preventDefault();
     try {
       if (validateForm()) {
-        // Add your login logic here
         const { data } = await axiosInstance.post("users/login", formData);
-        console.log(data)
+        // console.log(data)
         loginUser(data);
-        axiosInstance.defaults.headers.common["Authorization"] = JSON.parse(localStorage.getItem("user"))?.token;
+        axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${data?.token}`;
         !data.isAdmin && navigate("/client");
         data.isAdmin && navigate("/admin");
       } else {

@@ -5,9 +5,9 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon --watch ../server --watch ../database --env-file=.env app.js",
-    "client": "npm run start --prefix ../client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev:server": "nodemon --watch ../server --watch ../database --env-file=.env app.js",
+    "dev:client": "cross-env REACT_APP_PAYPAL_CLIENT_ID=AddlvciVUcT0IRwRzK3c6CjViQ1LGab6fFfiDjQMc8J00qOflO2xoH9uGc8AQ98rknu7mwrZEs5P-JCq npm start --prefix ../client",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\""
   },
   "keywords": [],
   "author": "",
@@ -19,5 +19,8 @@
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
     "uniqid": "^5.4.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }

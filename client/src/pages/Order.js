@@ -51,7 +51,7 @@ const Order = () => {
       setDialog(false);
       const { data } = await axiosInstance.post("/order", newOrder);
       console.log(data);
-      navigate('/client');
+      navigate('/pay');
     } catch (error) {
       console.log(error);
     }

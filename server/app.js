@@ -30,7 +30,7 @@ const startServer = async () => {
     try{
         const isConnected = await checkDataBaseConnection();
         if(isConnected){
-            const port = process.env.PORT || 4000;
+            const port = process.env.PORT || 5000;
             app.listen(port, () => {
                 console.log(`app listening on port ${port}`);
             });

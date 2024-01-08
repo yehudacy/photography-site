@@ -19,8 +19,8 @@ const AdminDashboard = () => {
 
 
   useEffect(() => {
-    console.log(user)
-    if(!user || !user?.isAdmin) navigate('/login');
+    // console.log(user)
+    if(!user || !user?.isAdmin) navigate('/login', {replace: true});
   }, [navigate, user]);
 
 

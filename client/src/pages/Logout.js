@@ -18,7 +18,7 @@ const LogoutDialog = () => {
         logoutUser();
         axiosInstance.defaults.headers.common["Authorization"] = null;
         setOpen(false);
-        navigate('/login');
+        navigate('/login', {replace:true});
     } 
 
     const buttonStyle = {

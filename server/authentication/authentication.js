@@ -6,7 +6,7 @@ const generateToken = (userInfo) => {
         userId : userInfo.isAdmin ? userInfo.administrator_id : userInfo.client_id,
         isAdmin: userInfo.isAdmin
     }
-    const token = jwt.sign(payload, process.env.SECRET_KEY_JWT, {expiresIn: '15s'});
+    const token = jwt.sign(payload, process.env.SECRET_KEY_JWT, {expiresIn: '10h'});
     return token;
 }
 
@@ -22,6 +22,7 @@ const authenticateToken = (req, res, next) => {
         req.user = decoded;
       next();
     } catch (error) {
+      console.log(error)
       return res.status(401).json({ message: 'Unauthorized: Invalid token' });
     }
   };
