@@ -21,6 +21,7 @@ import ClientDashboard from "./pages/ClientDashboard";
 import Logout from "./pages/Logout";
 
 function App() {
+  // {console.log(process.env.REACT_APP_PAYPAL_CLIENT_ID)}
   return (
     <>
       <UserProvider>

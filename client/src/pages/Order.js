@@ -40,7 +40,7 @@ const Order = () => {
       remarks,
       status: "waiting"
     }
-    console.log(newOrder)
+    // console.log(newOrder)
     return newOrder;
   }
 
@@ -50,8 +50,9 @@ const Order = () => {
     try {
       setDialog(false);
       const { data } = await axiosInstance.post("/order", newOrder);
-      console.log(data);
-      navigate('/pay');
+      // console.log(data);
+      // navigate('/pay');
+      navigate('/client');
     } catch (error) {
       console.log(error);
     }
