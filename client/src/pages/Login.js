@@ -9,13 +9,14 @@ import {
   Box,
   Grid,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
 import axiosInstance from "../axiosInstance";
 
 const Login = () => {
   const navigate = useNavigate();
   const { user, loginUser } = useUser();
+  const moveTo = useLocation().state?.moveTo;
   
 
 
@@ -60,6 +61,7 @@ const Login = () => {
         // console.log(data)
         loginUser(data);
         axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${data?.token}`;
+        if(moveTo) return  navigate(moveTo);
         !data.isAdmin && navigate("/client");
         data.isAdmin && navigate("/admin");
       } else {
@@ -147,7 +149,7 @@ const Login = () => {
               Forgot Password?
             </Link>
             <Box mt={1}>
-              <Link component={RouterLink} to={"/signup"} variant="body2">
+              <Link component={RouterLink} to={"/signup"} state={{moveTo:moveTo}} variant="body2">
                 Don't have an account? Sign Up
               </Link>
             </Box>

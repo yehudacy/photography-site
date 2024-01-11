@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { Box, Button } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -9,9 +9,8 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import StarIcon from "@mui/icons-material/StarBorder";
 import { styled } from "@mui/system";
-import { Link } from 'react-router-dom';
-
-
+import { Link } from "react-router-dom";
+import { useUser } from "../hooks/useUser";
 
 const PricingList = styled("ul")({
   margin: 0,
@@ -19,12 +18,18 @@ const PricingList = styled("ul")({
   listStyle: "none",
 });
 
-
-
 const Pricing = () => {
+  const { user } = useUser();
+  console.log(user);
+
   return (
-    <Container maxWidth="md" component="main" >
-      <Grid container spacing={5} alignItems="flex-end" sx={{mt: 'auto', mb: 'auto'}}>
+    <Container maxWidth="md" component="main">
+      <Grid
+        container
+        spacing={5}
+        alignItems="flex-end"
+        sx={{ mt: "auto", mb: "auto" }}
+      >
         {tiers.map((tier) => (
           <Grid
             item
@@ -76,9 +81,27 @@ const Pricing = () => {
                 </PricingList>
               </CardContent>
               <CardActions>
-                <Button fullWidth variant={tier.buttonVariant} component={Link} to={'order'} state={{packagePrice: tier.price}}>
-                  {tier.buttonText}
-                </Button>
+                {user ? (
+                  <Button
+                    fullWidth
+                    variant={tier.buttonVariant}
+                    component={Link}
+                    to={"order"}
+                    state={{ packagePrice: tier.price }}
+                  >
+                    {tier.buttonText}
+                  </Button>
+                ) : (
+                  <Button
+                    fullWidth
+                    variant={tier.buttonVariant}
+                    component={Link}
+                    to={"/login"}
+                    state={{ moveTo: "/Pricing/order", packagePrice: tier.price }}
+                  >
+                    log-in to order
+                  </Button>
+                )}
               </CardActions>
             </Card>
           </Grid>
@@ -86,8 +109,7 @@ const Pricing = () => {
       </Grid>
     </Container>
   );
-}
-
+};
 
 const tiers = [
   {

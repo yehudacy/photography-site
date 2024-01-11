@@ -12,7 +12,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import axiosInstance from "../axiosInstance";
 import Loading from "../components/Loading";
 
@@ -30,7 +30,10 @@ export default function SignUp() {
     allowExtraEmails: false,
   });
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);  
+  const moveTo = useLocation().state?.moveTo;
+  console.log('moveTo',moveTo)
+  const navigate = useNavigate()
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -57,7 +60,11 @@ export default function SignUp() {
         allowExtraEmails: false,
       });
       console.log(data);
-    } catch (error) {}
+
+      navigate('/login', {state:{moveTo: moveTo}})
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (
