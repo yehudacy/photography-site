@@ -11,6 +11,7 @@ const LogoutDialog = () => {
 
     const onClose =  () => {
         setOpen(false);
+        navigate(-1);
     } 
 
 

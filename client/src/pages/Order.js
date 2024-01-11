@@ -6,10 +6,12 @@ import dayjs from "dayjs";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import MyDialog from "../components/MyDialog";
 import axiosInstance from "../axiosInstance";
+import {useUser} from '../hooks/useUser';
 
 const Order = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
+  const {user} = useUser();
 
   const [orderDate] = useState(dayjs());
   const [actionDate, setActionDate] = useState(dayjs());

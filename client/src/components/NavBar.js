@@ -13,14 +13,23 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router-dom";
+import {useUser} from '../hooks/useUser';
+
 
 const pages = ["Home", "About", "Gallery", "Pricing", "Contact me"];
-const settings = [ "Login", "Dashboard", "Logout" ];
+const settings = [ "Login", "Signup", "Dashboard", "Logout" ];
+
+
 
 const NavBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const {user} = useUser();
 
+  const filteredSettings = user
+  ? settings.filter((page) => page.toLowerCase() !== "login")
+  : settings.filter((page) => (page.toLowerCase() === "login" || page.toLowerCase() === "signup"));
+  
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -35,6 +44,8 @@ const NavBar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+ 
+ 
 
   return (
     <AppBar position="sticky">
@@ -155,8 +166,14 @@ const NavBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu} component={Link} to={setting}>
+              { user ? filteredSettings.map((setting) => (
+                <MenuItem key={setting} onClick={handleCloseUserMenu}
+                  component={Link} to={setting.toLowerCase() === "dashboard" ? (user.isAdmin ? 'admin' : 'client') : setting}>
+                  <Typography textAlign="center">{setting}</Typography>
+                </MenuItem>
+              )): 
+              filteredSettings.map((setting) => (
+                <MenuItem key={setting} onClick={handleCloseUserMenu} component={Link} to={setting} >
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}

@@ -39,7 +39,6 @@ function App() {
             <Route path="/pricing" element={<Pricing />}></Route>
             <Route path="/pricing/order" element={<Order />}></Route>
             <Route path="/pay" element={<Payment />}></Route>
-            <Route path="/pay" element={<Payment />}></Route>
             <Route path="/admin" element={<AdminDashboard />}></Route>
             <Route path="/contactme" element={<ContactMe />}></Route>
             <Route path="*" element={<NotFound />}></Route>
