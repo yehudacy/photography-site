@@ -60,7 +60,24 @@ const login = async ({ email, password }, tableName) => {
 };
 
 //edit a user
-const editUser = async () => {};
+const editUser = async (tableName, clientId, {firstName, lastName, email, password, city, street, buildingNumber}) => {
+  try{
+
+    const editUserQuery = `
+    UPDATE ${tableName}
+    SET first_name = ?, last_name = ?, email = ?, city = ?, street = ?, building_number = ?
+    WHERE client_id = ?;`;
+    const [{affectedRows}] = await pool.query(editUserQuery, [firstName, lastName, email, city, street, buildingNumber, clientId]);
+    if(!affectedRows){
+      throw new Error("no rows affected please try again");
+    }
+   let a = await getUser(clientId);
+   console.log(a)
+    return await getUser(clientId);
+  } catch(error) {
+    console.log(error);
+  }
+};
 
 //delete a user
 const deleteUser = async () => {};
@@ -71,4 +88,15 @@ module.exports = { addUser, getUser, login, getClientByEmail };
 // getUser(1);
 
 // login({ email: "yc0527183008@gmail.com", password: "yc@123456" }, "clients");
-getClientByEmail('ecy4959@gmail.com');
+// getClientByEmail('ecy4959@gmail.com');
+// editUser(
+//   "clients", "1", {
+//     firstName: "ester",
+//     lastName: "cywiak",
+//     email: "ecy4959@gmail.com",
+//     password: "Ecy@123456",
+//     city: "bb",
+//     street: "beeri",
+//     building_number: "17"
+//   }
+// )

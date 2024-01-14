@@ -57,5 +57,10 @@ usersRouter.post('/', async (req, res) => {
       return res.status(409).json({ message: error.sqlMessage, errorCode: error.errno });
     }
   });
+
+  //edit an account with new details
+  usersRouter.put('/:clientId',  async (req,res)  => {
+
+  })
   
 module.exports = { usersRouter }; 
