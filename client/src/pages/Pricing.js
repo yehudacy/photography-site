@@ -20,7 +20,7 @@ const PricingList = styled("ul")({
 
 const Pricing = () => {
   const { user } = useUser();
-  console.log(user);
+  // console.log(user);
 
   return (
     <Container maxWidth="md" component="main">

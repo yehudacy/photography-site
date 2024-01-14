@@ -17,6 +17,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { user, loginUser } = useUser();
   const moveTo = useLocation().state?.moveTo;
+  const packagePrice = useLocation().state?.packagePrice;
   
 
 
@@ -61,7 +62,7 @@ const Login = () => {
         // console.log(data)
         loginUser(data);
         axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${data?.token}`;
-        if(moveTo) return  navigate(moveTo);
+        if(moveTo) return  navigate(moveTo,{state:{packagePrice}});
         !data.isAdmin && navigate("/client");
         data.isAdmin && navigate("/admin");
       } else {

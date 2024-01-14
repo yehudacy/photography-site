@@ -22,6 +22,7 @@ const Order = () => {
   const [alert, setAlert] = useState("");
 
   if (!state) {
+    console.log(1111)
     return <Navigate to={'/pricing'} />
   }
 
