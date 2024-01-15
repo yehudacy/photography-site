@@ -6,7 +6,7 @@ const generateToken = (userInfo) => {
         userId : userInfo.isAdmin ? userInfo.administrator_id : userInfo.client_id,
         isAdmin: userInfo.isAdmin
     }
-    const token = jwt.sign(payload, process.env.SECRET_KEY_JWT, {expiresIn: '10h'});
+    const token = jwt.sign(payload, process.env.SECRET_KEY_JWT);
     return token;
 }
 

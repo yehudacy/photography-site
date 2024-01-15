@@ -38,8 +38,21 @@ usersRouter.post('/login', async (req, res) => {
 });
 
 //get a specific user by id
-usersRouter.get('/:clientId', authenticateToken ,(req, res) => {
-    res.status(200).json({message: "This route works!"})
+usersRouter.get('/:clientId', authenticateToken , async (req, res) => {
+    try {
+      const clientId = req.params.clientId;
+      const user = await getUser(clientId);
+      console.log(user);
+      if(user) {
+        return res.status(200).json(user);
+      } 
+      else {
+        return res.status(404).json({message:`No user found with the id ${clientId}`});
+      } 
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({message:'Error retrieving user information'});
+    }
 });
 
 //add a new user

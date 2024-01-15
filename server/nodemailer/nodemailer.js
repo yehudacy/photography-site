@@ -53,9 +53,9 @@ const sendEmail = async (emailOptions) => {
     await emailTransporter.sendMail(emailOptions);
 };
 
-// sendEmail({
-//     subject: "Test",
-//     text: "I am sending an email from nodemailer!",
-//     to: "dudi4038@gmail.com",
-//     from: process.env.EMAIL
-// });
+sendEmail({
+    subject: "Test",
+    text: "I am sending an email from nodemailer!",
+    to: "dudi4038@gmail.com",
+    from: process.env.EMAIL
+});

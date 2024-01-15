@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Grid,
   Typography,
@@ -11,17 +11,29 @@ import { Edit as EditIcon, Save as SaveIcon } from '@mui/icons-material';
 
 const ClientAccountDetails = () => {
   const [clientDetails, setClientDetails] = useState({
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@example.com',
-    password: '********',
-    city: 'Cityville',
-    street: 'Street Lane',
-    buildingNumber: '123',
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    city: '',
+    street: '',
+    buildingNumber: '',
   });
 
   const [isEditing, setIsEditing] = useState(false);
   const [avatarFile, setAvatarFile] = useState(null);
+
+  const getAccountDetailse = async () => {
+    try{
+      
+    } catch (error) {
+
+    }
+  }
+
+  useEffect(() => {
+    
+  }, []);
 
   const handleToggleEdit = () => {
     setIsEditing(!isEditing);

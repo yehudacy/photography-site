@@ -60,9 +60,8 @@ const login = async ({ email, password }, tableName) => {
 };
 
 //edit a user
-const editUser = async (tableName, clientId, {firstName, lastName, email, password, city, street, buildingNumber}) => {
+const editUser = async (tableName, clientId, {firstName, lastName, email, city, street, buildingNumber}) => {
   try{
-
     const editUserQuery = `
     UPDATE ${tableName}
     SET first_name = ?, last_name = ?, email = ?, city = ?, street = ?, building_number = ?
