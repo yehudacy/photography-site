@@ -5,9 +5,9 @@ const {generateToken, authenticateToken} = require('../authentication/authentica
 const usersRouter = express.Router();
 
 //get all users route
-usersRouter.get('/', (req, res) => {
-    res.status(200).json({message: "This route works!"})
-});
+// usersRouter.get('/', (req, res) => {
+//     res.status(200).json({message: "This route works!"})
+// });
 
 //get a user for login clients or administrators
 usersRouter.post('/login', async (req, res) => {
@@ -42,7 +42,7 @@ usersRouter.get('/:clientId', authenticateToken , async (req, res) => {
     try {
       const clientId = req.params.clientId;
       const user = await getUser(clientId);
-      console.log(user);
+      // console.log(user);
       if(user) {
         return res.status(200).json(user);
       } 
