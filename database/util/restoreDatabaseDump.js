@@ -1,5 +1,5 @@
 const { exec } = require('child_process');
-require('dotenv').config();
+// require('dotenv').config();
 
 
 // MySQL database configuration
@@ -14,7 +14,7 @@ const dbConfig = {
 // Backup directory
 const backupDir = process.env.BACKUP_DIR;
  const restoreDatabaseDump = (backupFile) => {
-   const restoreCommand = `mysqldump --host=${dbConfig.host} --user=${dbConfig.user} --password=${dbConfig.password} ${dbConfig.database} < ${backupDir}/${backupFileName}`;
+   const restoreCommand = `C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysqldump.exe --host=${dbConfig.host} --user=${dbConfig.user} --password=${dbConfig.password} ${dbConfig.database} < ${backupDir}/${backupFileName}`;
 
 
    exec(command, (error, stdout, stderr) => {

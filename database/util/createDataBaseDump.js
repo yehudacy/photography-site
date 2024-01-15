@@ -19,7 +19,7 @@ const currentDate = new Date().toISOString().replace(/:/g, "-").slice(0, 19);
 const backupFileName = `backup_${currentDate}.sql`;
 
 // Command to create database dump
-const dumpCommand = `mysqldump --host=${dbConfig.host} --user=${dbConfig.user} --password=${dbConfig.password} ${dbConfig.database} > ${backupDir}/${backupFileName}`;
+const dumpCommand = `"C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysqldump.exe" --host=${dbConfig.host} --user=${dbConfig.user} --password=${dbConfig.password} ${dbConfig.database} > "${backupDir}/${backupFileName}"`;
 
 // Execute the command
 exec(dumpCommand, (error, stdout, stderr) => {

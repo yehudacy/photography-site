@@ -1,6 +1,7 @@
 # Specify the task name and action
 $TaskName = "DailyBackupTask"
-$Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "node --env-file=<path to .env file> <My app>/database/utils/restoreDatabaseDump.js"
+$Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "node --env-file=C:\Users\yehuda aryeh cywiak\photography-site\server\.env 
+C:\Users\yehuda aryeh cywiak\photography-site\database\util\createDataBaseDump.js"
 
 
 # Specify the trigger for daily execution
