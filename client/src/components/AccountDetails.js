@@ -8,9 +8,12 @@ import {
   Button,
   IconButton,
   InputAdornment,
+  Alert,
+  AlertTitle,
 } from "@mui/material";
 import {
   Edit as EditIcon,
+  Rectangle,
   Save as SaveIcon,
   Visibility as VisibilityIcon,
   VisibilityOff as VisibilityOffIcon,
@@ -25,42 +28,65 @@ const ClientAccountDetails = () => {
     lastName: "",
     email: "",
     password: "",
-    confirmPassword: "",
     city: "",
     street: "",
     buildingNumber: "",
   });
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [avatarFile, setAvatarFile] = useState(null);
+  const [alert, setAlert] = useState("");
+  const [isPassChanged, setIsPassChanged] = useState(false);
 
   useEffect(() => {
+    if (isEditing) return;
     const getAccountDetails = async () => {
       try {
         const { data } = await axiosInstance.get(
-          `users/${
-            !user?.isAdmin ? user?.client_id : user?.administrator_id
-          }`
+          `users/${!user?.isAdmin ? user?.client_id : user?.administrator_id}`
         );
-        delete data.client_id;
+        if(!user.isAdmin) delete data.client_id;
+        else if (user.isAdmin) delete data.administrator_id;
         setClientDetails(data);
-        console.log(data);
+        // console.log(data);
       } catch (error) {}
     };
     getAccountDetails();
-  }, [user]);
+  }, [user, isEditing]);
 
   const handleToggleEdit = () => {
     setIsEditing(!isEditing);
   };
 
-  const handleSaveChanges = () => {
-    console.log("Saving changes:", clientDetails);
-    setIsEditing(false);
+  const handleSaveChanges = async () => {
+    if(isPassChanged) {
+      if(clientDetails.password !== confirmPassword){
+        return setAlert('The passwords do not match');
+      }
+    }
+    try {
+      console.log(222222)
+      const { data } = await axiosInstance.put(
+        `/users/${!user.isAdmin ? user.client_id : user.administrator_id}`,
+        clientDetails
+      );
+      console.log(data);
+
+      console.log("Saving changes:", clientDetails);
+      setIsEditing(false);
+      setAlert("success");
+      setTimeout(() => setAlert(""), 5000)
+    } catch (error) {
+      console.log(error);
+      setAlert("error");
+      setTimeout(() => setAlert(""), 5000)
+    }
   };
 
   const handleChange = (field) => (event) => {
+    if(field === "password") setIsPassChanged(true);
     setClientDetails((prevDetails) => ({
       ...prevDetails,
       [field]: event.target.value,
@@ -115,7 +141,7 @@ const ClientAccountDetails = () => {
             <TextField
               label={key.charAt(0).toUpperCase() + key.slice(1)}
               fullWidth
-              value={value}
+              value={value || ""}
               type={
                 key.includes("password") && !key.includes("confirm")
                   ? showPassword
@@ -132,22 +158,24 @@ const ClientAccountDetails = () => {
                   : "transparent",
               }}
               InputProps={
-                key.includes("password") ? {
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={handleTogglePasswordVisibility}
-                        edge="end"
-                      >
-                        {showPassword ? (
-                          <VisibilityOffIcon />
-                        ) : (
-                          <VisibilityIcon />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                } : {}
+                key.includes("password")
+                  ? {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={handleTogglePasswordVisibility}
+                            edge="end"
+                          >
+                            {showPassword ? (
+                              <VisibilityOffIcon />
+                            ) : (
+                              <VisibilityIcon />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }
+                  : {}
               }
             />
           </Grid>
@@ -157,9 +185,9 @@ const ClientAccountDetails = () => {
             <TextField
               label="Confirm Password"
               fullWidth
-              value={clientDetails.confirmPassword}
+              value={confirmPassword}
               type={showPassword ? "text" : "password"}
-              onChange={handleChange("confirmPassword")}
+              onChange={({ target: { value } }) => setConfirmPassword(value)}
               sx={{
                 color: isEditing ? "#1976D2" : "inherit",
                 backgroundColor: isEditing
@@ -224,7 +252,7 @@ const ClientAccountDetails = () => {
               <Button
                 variant="outlined"
                 component="span"
-                sx={{ color: "#1976D2", textTransform: "none" }}
+                sx={{ color: "#1976D2", textTransform: "none" , mb: 1}}
               >
                 change avatar
               </Button>
@@ -232,6 +260,21 @@ const ClientAccountDetails = () => {
           </Grid>
         )}
       </Grid>
+      {alert &&
+        ((alert === "error" || alert === "The passwords do not match") ? (
+          <Alert severity="error">
+            <AlertTitle>{alert}</AlertTitle>
+            changes not applied — <strong>please try again!</strong>
+          </Alert>
+        ) : (
+          <Alert severity="success">
+            <AlertTitle>{alert}</AlertTitle>
+            changes applied!  —{" "}
+            <strong>
+              Thank you! 
+            </strong>
+          </Alert>
+        ))}
     </Grid>
   );
 };

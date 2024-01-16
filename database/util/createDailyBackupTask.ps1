@@ -5,7 +5,7 @@ C:\Users\yehuda aryeh cywiak\photography-site\database\util\createDataBaseDump.j
 
 
 # Specify the trigger for daily execution
-$Trigger = New-ScheduledTaskTrigger -Daily -At "3:00 AM"
+$Trigger = New-ScheduledTaskTrigger -Daily -At "16:45 PM"
 
 
 # Create the task

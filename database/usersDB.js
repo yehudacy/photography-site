@@ -27,10 +27,11 @@ const addUser = async ({
 };
 
 //get a user by id
-const getUser = async (clientId) => {
+const getUser = async (tableName, clientId) => {
+  const idColum = tableName === 'clients' ? "client" : "administrator"; 
   const getClientByIdQuery = `
-    SELECT * FROM clients
-    WHERE client_id = ?`;
+    SELECT * FROM ${tableName}
+    WHERE ${idColum}_id = ?`;
   const [[client]] = await pool.query(getClientByIdQuery, [clientId]);
   // console.log(client)
   return client;
@@ -60,28 +61,24 @@ const login = async ({ email, password }, tableName) => {
 };
 
 //edit a user
-const editUser = async (tableName, clientId, {firstName, lastName, email, city, street, buildingNumber}) => {
-  try{
+const editUser = async (tableName, clientId, {first_name, last_name, email, password, city = null, street = null, building_number = null}) => {
+  const idColum = tableName === 'clients' ? "client" : "administrator";
     const editUserQuery = `
     UPDATE ${tableName}
-    SET first_name = ?, last_name = ?, email = ?, city = ?, street = ?, building_number = ?
-    WHERE client_id = ?;`;
-    const [{affectedRows}] = await pool.query(editUserQuery, [firstName, lastName, email, city, street, buildingNumber, clientId]);
+    SET first_name = ?, last_name = ?, email = ?, password = ?, city = ?, street = ?, building_number = ?
+    WHERE ${idColum}_id = ?;`;
+    const [{affectedRows}] = await pool.query(editUserQuery, [first_name, last_name, email, password, city, street, building_number, clientId]);
     if(!affectedRows){
       throw new Error("no rows affected please try again");
     }
-   let a = await getUser(clientId);
-   console.log(a)
+    // console.log(affectedRows)
     return await getUser(clientId);
-  } catch(error) {
-    console.log(error);
-  }
 };
 
 //delete a user
 const deleteUser = async () => {};
 
-module.exports = { addUser, getUser, login, getClientByEmail };
+module.exports = { addUser, getUser, login, getClientByEmail, editUser };
 
 // addUser({firstName:"yehuda", lastName:"cywiak", email:"yc0527183008@gmail.com", password:"yc@123456", city:"BB", street:"beeri", buildingNumber:"17"});
 // getUser(1);
@@ -89,13 +86,13 @@ module.exports = { addUser, getUser, login, getClientByEmail };
 // login({ email: "yc0527183008@gmail.com", password: "yc@123456" }, "clients");
 // getClientByEmail('ecy4959@gmail.com');
 // editUser(
-//   "clients", "1", {
+//   "clients", "2", {
 //     firstName: "ester",
 //     lastName: "cywiak",
 //     email: "ecy4959@gmail.com",
 //     password: "Ecy@123456",
-//     city: "bb",
+//     city: "bbBB",
 //     street: "beeri",
-//     building_number: "17"
+//     buildingNumber: 17
 //   }
 // )

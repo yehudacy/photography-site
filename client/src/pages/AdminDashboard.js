@@ -4,6 +4,7 @@ import TableOfOrders from '../components/TableOfOrders';
 import ContactRequestsTable from '../components/ContactRequestsTable';
 import ImageUploadForm from '../components/ImageUploadForm';
 import AdminImagesGallery from '../components/AdminImagesGallery';
+import AccountDetails from '../components/AccountDetails';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../hooks/useUser';
 
@@ -44,6 +45,9 @@ const AdminDashboard = () => {
           <Typography variant="h6" gutterBottom>
             Admin Panel 
           </Typography>
+          <Button fullWidth onClick={() => setComponentToRender('Account details')} style={buttonStyle} color="primary">
+            Account details
+          </Button>
           <Button fullWidth onClick={() => setComponentToRender('orders')} style={buttonStyle} color="primary">
             View all orders
           </Button>
@@ -58,6 +62,7 @@ const AdminDashboard = () => {
           </Button>
         </Paper>
       </Grid>
+      {componentToRender === "Account details" && <AccountDetails />}
       {componentToRender === "orders" && <TableOfOrders type="admin" />}
       {componentToRender === "contactMe" && <ContactRequestsTable />}
       {componentToRender === "upload" && <ImageUploadForm />}

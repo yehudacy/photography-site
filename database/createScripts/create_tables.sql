@@ -6,6 +6,9 @@ CREATE TABLE `administrators` (
   `last_name` varchar(20) NOT NULL,
   `email` varchar(50) NOT NULL,
   `password` varchar(20) NOT NULL,
+  `city` varchar(10) DEFAULT NULL,
+  `street` varchar(10) DEFAULT NULL,
+  `building_number` bigint DEFAULT NULL,
   PRIMARY KEY (`administrator_id`),
   UNIQUE KEY `administrators_email_unique` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

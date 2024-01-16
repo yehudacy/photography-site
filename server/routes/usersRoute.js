@@ -1,5 +1,5 @@
 const express = require('express');
-const { addUser, getUser, login } = require('../../database/usersDB');
+const { addUser, getUser, login, editUser } = require('../../database/usersDB');
 const {generateToken, authenticateToken} = require('../authentication/authentication');
 
 const usersRouter = express.Router();
@@ -41,7 +41,8 @@ usersRouter.post('/login', async (req, res) => {
 usersRouter.get('/:clientId', authenticateToken , async (req, res) => {
     try {
       const clientId = req.params.clientId;
-      const user = await getUser(clientId);
+      const tableName = req.user.isAdmin ? 'administrators' : 'clients'
+      const user = await getUser(tableName, clientId);
       // console.log(user);
       if(user) {
         return res.status(200).json(user);
@@ -72,8 +73,17 @@ usersRouter.post('/', async (req, res) => {
   });
 
   //edit an account with new details
-  usersRouter.put('/:clientId',  async (req,res)  => {
-
+  usersRouter.put('/:clientId',authenticateToken,  async (req,res)  => {
+    try{
+      const clientId = req.params.clientId;
+      const tableName = req.user.isAdmin ? 'administrators' : 'clients';
+      const editedUser = await editUser(tableName, clientId, req.body);
+      // console.log(editedUser);
+      res.status(200).json(editedUser);
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({message: 'could not edit the account please try again'})
+    }
   })
   
 module.exports = { usersRouter }; 
