@@ -28,10 +28,12 @@ const addUser = async ({
 
 //get a user by id
 const getUser = async (tableName, clientId) => {
-  const idColum = tableName === 'clients' ? "client" : "administrator"; 
-  const getClientByIdQuery = `
-    SELECT * FROM ${tableName}
-    WHERE ${idColum}_id = ?`;
+  let getClientByIdQuery;
+  if(tableName === 'clients'){
+    getClientByIdQuery = `SELECT * FROM clients WHERE client_id = ?`;
+  } else {
+    getClientByIdQuery = `SELECT * FROM administrators WHERE administrator_id = ?`;
+  }
   const [[client]] = await pool.query(getClientByIdQuery, [clientId]);
   // console.log(client)
   return client;
@@ -62,11 +64,19 @@ const login = async ({ email, password }, tableName) => {
 
 //edit a user
 const editUser = async (tableName, clientId, {first_name, last_name, email, password, city = null, street = null, building_number = null}) => {
-  const idColum = tableName === 'clients' ? "client" : "administrator";
-    const editUserQuery = `
-    UPDATE ${tableName}
+  let editUserQuery;
+  if(tableName === 'clients'){
+    editUserQuery = `
+    UPDATE clients
     SET first_name = ?, last_name = ?, email = ?, password = ?, city = ?, street = ?, building_number = ?
-    WHERE ${idColum}_id = ?;`;
+    WHERE client_id = ?;`;
+  } else {
+    editUserQuery = `
+    UPDATE administrators
+    SET first_name = ?, last_name = ?, email = ?, password = ?, city = ?, street = ?, building_number = ?
+    WHERE administrator_id = ?;`;
+  }
+  
     const [{affectedRows}] = await pool.query(editUserQuery, [first_name, last_name, email, password, city, street, building_number, clientId]);
     if(!affectedRows){
       throw new Error("no rows affected please try again");
