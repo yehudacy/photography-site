@@ -15,7 +15,7 @@ contactMeRouter.get('/', authenticateToken,  async (req, res) =>{
 })
 
 
-contactMeRouter.post('/', authenticateToken ,async(req, res) => {
+contactMeRouter.post('/' ,async(req, res) => {
     try{
         const contactMe = req.body;
         //validation if failed send with status 400(bad request)

@@ -1,5 +1,5 @@
 const express = require("express");
-const { getAllOrders, getOrder, addOrder, getOrderOfSingleClient } = require("../../database/orderDB");
+const { getAllOrders, getOrder, addOrder, getOrderOfSingleClient, deleteOrder } = require("../../database/orderDB");
 const { authenticateToken } = require("../authentication/authentication");
 
 const ordersRouter = express.Router();
@@ -10,7 +10,7 @@ ordersRouter.post('/', authenticateToken ,async (req, res) => {
         const newOrder = req.body;
         //validation if failed send with status 400(bad request)
         const addedOrder = await addOrder(newOrder);
-        // console.log(addedOrder)
+        // console.log(addedOrder) 
         //handle sending me an email
         res.status(201).json(addedOrder); 
     } catch (error) {
@@ -56,6 +56,30 @@ ordersRouter.get('/:orderid', authenticateToken, async (req, res) => {
     } catch (error) {
         res.status(500).json({message: "The server is down please try later"});
     }
+});
+
+//delete an order
+ordersRouter.delete("/:orderId",authenticateToken, async (req, res) => {
+    const orderId = req.params.orderId;
+    console.log(orderId)
+    try{
+        const deletedOrder = await deleteOrder(orderId);
+        console.log(deletedOrder)
+        return res.status(200).json(deletedOrder); 
+    } catch(error){
+        let errorCode; 
+        if(error.message === `No order with the Id of ${orderId}`){
+            errorCode = 404;
+        } else{
+            errorCode = 500;
+        }
+        res.status(errorCode).json(error.message);
+    }
 })
+
+
+
+
+
 module.exports = { ordersRouter };
 

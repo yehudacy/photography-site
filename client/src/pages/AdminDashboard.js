@@ -63,7 +63,7 @@ const AdminDashboard = () => {
         </Paper>
       </Grid>
       {componentToRender === "Account details" && <AccountDetails />}
-      {componentToRender === "orders" && <TableOfOrders type="admin" />}
+      {componentToRender === "orders" && <TableOfOrders />}
       {componentToRender === "contactMe" && <ContactRequestsTable />}
       {componentToRender === "upload" && <ImageUploadForm />}
       {componentToRender === "viewImg" && <AdminImagesGallery />}

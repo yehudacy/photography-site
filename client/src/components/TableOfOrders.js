@@ -2,53 +2,72 @@ import {
   Grid,
   Table,
   TableCell,
-  TableContainer,
+  TableContainer, 
   TableHead, 
   TableRow,
   Typography,
   Paper,
   TableBody,
   IconButton,
+  Alert,
+  AlertTitle,
 } from "@mui/material";
 import DetailsIcon from "@mui/icons-material/Details";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import React, { useEffect, useState } from "react";
+import {useUser} from "../hooks/useUser";
 import axiosInstance from "../axiosInstance";
 
 const TableOfOrders = ({ type }) => {
+
+  const {user} = useUser();
+
   const [orders, setOrders] = useState([]);
   const [fetchOrderError, setFetchOrderError] = useState("");
+  const [alert, setAlert] = useState("");
 
-  const fetchOrders = async (type) => {
-    try {
-      if (type === "admin") {
-        const { data } = await axiosInstance.get("order");
-        setOrders(data);
-        if(!data.length){
-          setFetchOrderError("no orders found");
-        }
-      }
-      if (type === "client") {
-        const { data } = await axiosInstance.get("order/client/1");
-        // console.log(data)
-        setOrders(data);
-        if(!data.length){
-          setFetchOrderError("no orders found");
-        }
-      }
-    } catch (error) {
-      setFetchOrderError(error.message);
-    }
-  };
+  
 
   useEffect(() => {
-    type === "admin" && fetchOrders(type);
-    type === "client" && fetchOrders(type);
-    // fetchOrders()
-  }, [type]);
+    const fetchOrders = async () => {
+      try {
+        if (user.isAdmin) {
+          const { data } = await axiosInstance.get("order");
+          setOrders(data);
+          if(!data.length){
+            setFetchOrderError("no orders found");
+          }
+        }
+        if (!user.isAdmin) {
+          const { data } = await axiosInstance.get(`order/client/${user.client_id}`);
+          // console.log(data)
+          setOrders(data);
+          if(!data.length){
+            setFetchOrderError("no orders found");
+          }
+        }
+      } catch (error) {
+        setFetchOrderError(error.message);
+      }
+    };
+    fetchOrders()
+  }, [user.client_id, user.isAdmin]);
 
   const handleSelectOrder = () => {};
+
+  const handleDelete = async(orderId) => {
+    try{
+      const {data} = await axiosInstance.delete(`/order/${orderId}`);
+      // console.log(data);
+      const filteredOrders = orders.filter((order) => order.order_id !== orderId);
+      setOrders(filteredOrders);
+    }catch(error) {
+      console.log(error);
+      setAlert("error");
+      setTimeout(() => setAlert(""), 5000);
+    }
+  }
 
   return (
     <Grid item xs={12} md={9}>
@@ -89,7 +108,7 @@ const TableOfOrders = ({ type }) => {
                     {/* <IconButton>
                       <EditIcon />
                     </IconButton> */}
-                    <IconButton>
+                    <IconButton onClick={() => handleDelete(order.order_id)}>
                       <DeleteIcon />
                     </IconButton>
                   </TableCell>
@@ -107,6 +126,10 @@ const TableOfOrders = ({ type }) => {
           </TableBody>
         </Table>
       </TableContainer>
+        {alert && <Alert severity="error">
+            <AlertTitle>{alert}</AlertTitle>
+            delete not completed — <strong>please try again!</strong>
+          </Alert>}
     </Grid>
   );
 };

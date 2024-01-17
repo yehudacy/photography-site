@@ -80,7 +80,7 @@ const ClientDashboard = () => {
         </Paper>
       </Grid>
       {componentToRender === "account details" && <AccountDetails />}
-      {componentToRender === "orders" && <TableOfOrders type="client" />}
+      {componentToRender === "orders" && <TableOfOrders  />}
       {componentToRender === "images" && <ClientImageList />}
     </Grid>
   );

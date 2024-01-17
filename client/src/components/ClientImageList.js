@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
 import { Grid, Typography, ImageList, ImageListItem, Dialog, IconButton } from '@mui/material';
 import { Close as CloseIcon, ChevronLeft, ChevronRight } from '@mui/icons-material';
+import { useUser } from '../hooks/useUser';
 
 const ClientImageList = () => {
   // Mock data for images
-  const images = [
+  const images1 = [
     { id: 1, src: 'https://via.placeholder.com/401', alt: 'Image 1' },
     { id: 2, src: 'https://via.placeholder.com/402', alt: 'Image 2' },
     { id: 3, src: 'https://via.placeholder.com/403', alt: 'Image 3' },
-    { id: 4, src: 'https://via.placeholder.com/404', alt: 'Image 4' },
+    { id: 4, src: 'https://via.placeholder.com/404', alt: 'Image 4' }, 
     { id: 5, src: 'https://via.placeholder.com/405', alt: 'Image 5' },
     // Add more images as needed
   ];
 
+  const { user } = useUser();
+
   const [open, setOpen] = useState(false);
+  const [images, setImages] = useState(images1)
   const [selectedImage, setSelectedImage] = useState(null);
 
   const handleImageClick = (image) => {

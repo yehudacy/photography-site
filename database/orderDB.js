@@ -59,7 +59,7 @@ const deleteOrder = async (orderId) => {
     DELETE FROM orders WHERE order_id = ?;`
     const [{ affectedRows }] = await pool.query(deleteOrderQuery, [orderId]);
     if(!affectedRows && !orderToDelete){
-        throw new Error("No such Order ID please double check it!");
+        throw new Error(`No order with the Id of ${orderId}`);
     }
     // console.log(orderToDelete)
     return orderToDelete
@@ -80,7 +80,7 @@ const newOrder = {
 // getOrder(1);
 // getAllOrders();
 // editOrder(1, newOrder);
-// deleteOrder(1)
+// deleteOrder(7)
 
 
 module.exports = { addOrder, getAllOrders, getOrder, editOrder, deleteOrder, getOrderOfSingleClient };

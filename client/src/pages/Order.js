@@ -35,7 +35,7 @@ const Order = () => {
 
   const createOrderFromFields = () => {
     const newOrder = {
-      clientId: 1,
+      clientId: user.client_id,
       orderDate: orderDate.format('YYYY-MM-DD'),
       actionDate: actionDate.format('YYYY-MM-DD'),
       time,
