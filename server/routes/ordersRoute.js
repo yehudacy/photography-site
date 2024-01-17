@@ -10,9 +10,9 @@ ordersRouter.post('/', authenticateToken ,async (req, res) => {
         const newOrder = req.body;
         //validation if failed send with status 400(bad request)
         const addedOrder = await addOrder(newOrder);
-        console.log(addedOrder)
+        // console.log(addedOrder)
         //handle sending me an email
-        res.status(201).json(addedOrder);
+        res.status(201).json(addedOrder); 
     } catch (error) {
         // console.log(error)
         res.status(500).json({message:"The server is down please try again later"}) 

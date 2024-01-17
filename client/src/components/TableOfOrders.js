@@ -3,7 +3,7 @@ import {
   Table,
   TableCell,
   TableContainer,
-  TableHead,
+  TableHead, 
   TableRow,
   Typography,
   Paper,
@@ -86,12 +86,9 @@ const TableOfOrders = ({ type }) => {
                   <TableCell>{order.remarks}</TableCell>
                   <TableCell>{order.status}</TableCell>
                   <TableCell>
-                    <IconButton>
-                      <DetailsIcon />
-                    </IconButton>
-                    <IconButton>
+                    {/* <IconButton>
                       <EditIcon />
-                    </IconButton>
+                    </IconButton> */}
                     <IconButton>
                       <DeleteIcon />
                     </IconButton>
