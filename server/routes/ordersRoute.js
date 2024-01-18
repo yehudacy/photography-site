@@ -33,9 +33,6 @@ ordersRouter.get('/client/:clientId', authenticateToken ,async (req, res) => {
     try{
         const clientId = req.params.clientId;
         const orders = await getOrderOfSingleClient(clientId);
-        // if(!order) {
-        //     res.status(404).json({message: `An order with id of ${orderId} doesn't exist`});
-        // }
         // console.log(orders)
         res.status(200).json(orders);
     } catch (error) {
@@ -61,10 +58,9 @@ ordersRouter.get('/:orderid', authenticateToken, async (req, res) => {
 //delete an order
 ordersRouter.delete("/:orderId",authenticateToken, async (req, res) => {
     const orderId = req.params.orderId;
-    console.log(orderId)
     try{
         const deletedOrder = await deleteOrder(orderId);
-        console.log(deletedOrder)
+        // console.log(deletedOrder)
         return res.status(200).json(deletedOrder); 
     } catch(error){
         let errorCode; 

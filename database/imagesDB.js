@@ -21,9 +21,15 @@ const getAllImages = async () => {
 };
 
 
-//get an image by id
-const getImage = async (imageId) => {
-    
+//get images of one client by client id
+const getImagesOfOneClient = async (clientId) => {
+  const getImagesOfOneClientQuery = `
+  SELECT * FROM images
+  WHERE client_id = ?
+  ORDER BY category_id`;
+  const [images] = await pool.query(getImagesOfOneClientQuery, [clientId]);
+  // console.log(images)
+  return images;
 }
 
 
@@ -33,4 +39,5 @@ const getImage = async (imageId) => {
 
  
   // getAllImages();
-  module.exports = {addImage, getAllImages}
+  // getImagesOfOneClient(2)
+  module.exports = {addImage, getAllImages, getImagesOfOneClient}

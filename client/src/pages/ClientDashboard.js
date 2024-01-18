@@ -11,16 +11,17 @@ import TableOfOrders from "../components/TableOfOrders";
 import ClientImageList from "../components/ClientImageList";
 import AccountDetails from "../components/AccountDetails";
 import { useUser } from "../hooks/useUser";
+import { useLocation } from 'react-router-dom';
+
 
 const ClientDashboard = () => {
   const navigate = useNavigate();
   const {user} = useUser();
 
-
-
+  const location = useLocation();
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const [componentToRender, setComponentToRender] = useState("");
+  const componentToRender = location?.search.split('?')[1]
 
   useEffect(() => {
     // console.log(user);
@@ -47,7 +48,8 @@ const ClientDashboard = () => {
           </Typography>
           <Button
             fullWidth
-            onClick={() => setComponentToRender("account details")}
+            component={RouterLink}
+            to={'?account-details'}
             style={buttonStyle}
             color="primary"
           >
@@ -55,7 +57,8 @@ const ClientDashboard = () => {
           </Button>
           <Button
             fullWidth
-            onClick={() => setComponentToRender("orders")}
+            component={RouterLink}
+            to={'?orders'}
             style={buttonStyle}
             color="primary"
           >
@@ -63,7 +66,8 @@ const ClientDashboard = () => {
           </Button>
           <Button
             fullWidth
-            onClick={() => setComponentToRender("invoices")}
+            component={RouterLink}
+            to={'?invoices'}
             style={buttonStyle}
             color="primary"
           >
@@ -71,7 +75,8 @@ const ClientDashboard = () => {
           </Button>
           <Button
             fullWidth
-            onClick={() => setComponentToRender("images")}
+            component={RouterLink}
+            to={'?images'}
             style={buttonStyle}
             color="primary"
           >
@@ -79,7 +84,7 @@ const ClientDashboard = () => {
           </Button>
         </Paper>
       </Grid>
-      {componentToRender === "account details" && <AccountDetails />}
+      {componentToRender === "account-details" && <AccountDetails />}
       {componentToRender === "orders" && <TableOfOrders  />}
       {componentToRender === "images" && <ClientImageList />}
     </Grid>
