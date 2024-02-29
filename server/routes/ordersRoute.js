@@ -4,7 +4,7 @@ const { authenticateToken } = require("../authentication/authentication");
 
 const ordersRouter = express.Router();
 
-//place a new order
+//place a new order 
 ordersRouter.post('/', authenticateToken ,async (req, res) => {
     try {
         const newOrder = req.body;

@@ -22,7 +22,7 @@ const Order = () => {
   const [alert, setAlert] = useState("");
 
   if (!state) {
-    console.log(1111)
+    // console.log(1111)
     return <Navigate to={'/pricing'} />
   }
 
@@ -53,9 +53,9 @@ const Order = () => {
     try {
       setDialog(false);
       const { data } = await axiosInstance.post("/order", newOrder);
-      // console.log(data);
-      // navigate('/pay');
-      navigate('/client');
+      console.log(data);
+      navigate('/pay');
+      // navigate('/client');
     } catch (error) {
       console.log(error);
     }
