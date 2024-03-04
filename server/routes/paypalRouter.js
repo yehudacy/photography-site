@@ -1,6 +1,13 @@
 const express = require("express");
 const axios = require("axios");
 const qs = require("qs");
+const paypalRouter = express.Router();
+
+
+
+
+
+
 
 // import fetch from "node-fetch";
 // import "dotenv/config";
@@ -8,13 +15,13 @@ const qs = require("qs");
 
 const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PORT = 8888 } = process.env;
 const base = "https://api-m.sandbox.paypal.com";
-const app = express();
+// const app = express();
 
 // host static files
-app.use(express.static("client"));
+// app.use(express.static("client"));
 
 // parse post params sent in body in json format
-app.use(express.json());
+// app.use(express.json());
 
 /**
  * Generate an OAuth 2.0 access token for authenticating with PayPal REST APIs.
@@ -48,7 +55,7 @@ const generateAccessToken = async () => {
  */
 const createOrder = async (cart) => {
   // use the cart information passed from the front-end to calculate the purchase unit details
-  const price = cart.packagePrice == "gold" ? 1600 : cart.packagePrice == "platinum" ? 2400 : 1000;
+  const price = cart.packagePrice == "gold" ? 1650 : cart.packagePrice == "platinum" ? 2400 : 1000;
   console.log(
     "shopping cart information passed from the frontend createOrder() callback:",
     cart,
@@ -91,8 +98,7 @@ const captureOrder = async (orderID) => {
   const accessToken = await generateAccessToken();
   const url = `${base}/v2/checkout/orders/${orderID}/capture`;
 
-  const response = await fetch(url, {
-    method: "POST",
+  const response = await axios.post(url, {}, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -109,7 +115,8 @@ const captureOrder = async (orderID) => {
 
 async function handleResponse(response) {
   try {
-    const jsonResponse = await response.json();
+    // const jsonResponse = await response.json();
+    const jsonResponse = await response.data;
     return {
       jsonResponse,
       httpStatusCode: response.status,
@@ -120,7 +127,7 @@ async function handleResponse(response) {
   }
 }
 
-app.post("/api/orders", async (req, res) => {
+paypalRouter.post("/", async (req, res) => {
   try {
     // use the cart information passed from the front-end to calculate the order amount details
     const { cart } = req.body;
@@ -132,7 +139,7 @@ app.post("/api/orders", async (req, res) => {
   }
 });
 
-app.post("/api/orders/:orderID/capture", async (req, res) => {
+paypalRouter.post("/:orderID/capture", async (req, res) => {
   try {
     const { orderID } = req.params;
     const { jsonResponse, httpStatusCode } = await captureOrder(orderID);
@@ -144,10 +151,13 @@ app.post("/api/orders/:orderID/capture", async (req, res) => {
 });
 
 // serve index.html
-app.get("/", (req, res) => {
+paypalRouter.get("/", (req, res) => {
   res.sendFile(path.resolve("./client/checkout.html"));
 });
 
-app.listen(PORT, () => {
-  console.log(`Node server listening at http://localhost:${PORT}/`);
-});
+// paypalRouter.listen(PORT, () => {
+//   console.log(`Node server listening at http://localhost:${PORT}/`);
+// });
+
+
+module.exports = {paypalRouter};
