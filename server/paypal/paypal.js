@@ -1,7 +1,10 @@
-import express from "express";
-import fetch from "node-fetch";
-import "dotenv/config";
-import path from "path";
+const express = require("express");
+const axios = require("axios");
+const qs = require("qs");
+
+// import fetch from "node-fetch";
+// import "dotenv/config";
+// import path from "path";
 
 const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PORT = 8888 } = process.env;
 const base = "https://api-m.sandbox.paypal.com";
@@ -25,15 +28,14 @@ const generateAccessToken = async () => {
     const auth = Buffer.from(
       PAYPAL_CLIENT_ID + ":" + PAYPAL_CLIENT_SECRET,
     ).toString("base64");
-    const response = await fetch(`${base}/v1/oauth2/token`, {
-      method: "POST",
-      body: "grant_type=client_credentials",
+    const {data} = await axios.post(`${base}/v1/oauth2/token`, qs.stringify({ 'grant_type': 'client_credentials' }),
+    {
       headers: {
         Authorization: `Basic ${auth}`,
       },
     });
 
-    const data = await response.json();
+    // const data = await response.json();
     return data.access_token;
   } catch (error) {
     console.error("Failed to generate Access Token:", error);
@@ -46,6 +48,7 @@ const generateAccessToken = async () => {
  */
 const createOrder = async (cart) => {
   // use the cart information passed from the front-end to calculate the purchase unit details
+  const price = cart.packagePrice == "gold" ? 1600 : cart.packagePrice == "platinum" ? 2400 : 1000;
   console.log(
     "shopping cart information passed from the frontend createOrder() callback:",
     cart,
@@ -59,13 +62,13 @@ const createOrder = async (cart) => {
       {
         amount: {
           currency_code: "USD",
-          value: "100.00",
+          value: price,
         },
       },
     ],
   };
 
-  const response = await fetch(url, {
+  const response = await axios.post(url, JSON.stringify(payload), {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -75,8 +78,6 @@ const createOrder = async (cart) => {
       // "PayPal-Mock-Response": '{"mock_application_codes": "PERMISSION_DENIED"}'
       // "PayPal-Mock-Response": '{"mock_application_codes": "INTERNAL_SERVER_ERROR"}'
     },
-    method: "POST",
-    body: JSON.stringify(payload),
   });
 
   return handleResponse(response);

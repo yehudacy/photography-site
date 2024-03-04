@@ -36,7 +36,7 @@ function Payment() {
                 body: JSON.stringify({
                   cart: [
                     {
-                      id: "YOUR_PRODUCT_ID",
+                      packageName: "gold",
                     },
                   ],
                 }),
