@@ -9,7 +9,7 @@ const addCategory = async (categoryName, categoryImageId) => {
     categoryName,
     categoryImageId,
   ]);
-  console.log(insertId);
+  // console.log(insertId);
   return insertId;
 };
 

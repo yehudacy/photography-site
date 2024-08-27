@@ -67,7 +67,7 @@ usersRouter.post('/', async (req, res) => {
       }
       return res.status(201).json(addedClient);
     } catch (error) {
-    //   console.log(error);
+      // console.log(error);
       return res.status(409).json({ message: error.sqlMessage, errorCode: error.errno });
     }
   });
@@ -81,7 +81,7 @@ usersRouter.post('/', async (req, res) => {
       // console.log(editedUser);
       res.status(200).json(editedUser);
     } catch (error) {
-      console.log(error)
+      // console.log(error)
       res.status(500).json({message: 'could not edit the account please try again'})
     }
   })

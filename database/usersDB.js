@@ -11,8 +11,8 @@ const addUser = async ({
   buildingNumber,
 }) => {
   const addUserQuery = `
-    INSERT INTO clients (first_name, last_name, email, password, city, street, building_number)
-    values(?, ?, ?, ?, ?, ?, ?);`;
+  INSERT INTO clients (first_name, last_name, email, password, city, street, building_number)
+  values(?, ?, ?, ?, ?, ?, ?);`;
   const [{ insertId }] = await pool.query(addUserQuery, [
     firstName,
     lastName,
@@ -21,8 +21,8 @@ const addUser = async ({
     city,
     street,
     buildingNumber,
-  ]);
-  // console.log(insertId);
+  ]); 
+  console.log(insertId);
   return await getUser(insertId);
 };
 

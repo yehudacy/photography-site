@@ -31,7 +31,7 @@ const ImageUploadForm = () => {
     const fetchCategoryNames = async () => {
       try {
         const { data } = await axiosInstance.get("category");
-        // console.log(data);
+        console.log(data);
         setOptions(data);
       } catch (error) {
         console.log("Error:", error);
