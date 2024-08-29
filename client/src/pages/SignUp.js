@@ -48,7 +48,7 @@ export default function SignUp() {
     // console.log(formData);
     // Add logic to handle form submission with formData
     try {
-      const { data } = await axiosInstance.post("users", formData);
+      const { data } = await axiosInstance.post("users", setNullEmptyFields(formData));
       setFormData({
         firstName: "",
         lastName: "",
@@ -59,13 +59,22 @@ export default function SignUp() {
         city: "",
         allowExtraEmails: false,
       });
-      console.log(data);
-
+      // console.log(data);
       navigate('/login', {state:{moveTo: moveTo}})
     } catch (error) {
       console.log(error)
     }
   };
+
+  const setNullEmptyFields = (formData) => {
+    const fieldNames = Object.keys(formData);
+    fieldNames.forEach((fieldName) => {
+      if(formData[fieldName] === ""){
+        formData[fieldName] = null;
+      }
+    })
+    return formData;
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>

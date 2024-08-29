@@ -61,7 +61,7 @@ usersRouter.post('/', async (req, res) => {
     try {
       const newClient = req.body;
       const addedClient = await addUser(newClient);
-      console.log(addedClient);
+      // console.log({'addedClient':addedClient});
       if (!addedClient) {
         return res.status(400).json({ message: "Bad request, the user was not added. Please try again later." });
       }

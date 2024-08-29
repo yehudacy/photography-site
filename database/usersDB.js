@@ -22,8 +22,8 @@ const addUser = async ({
     street,
     buildingNumber,
   ]); 
-  console.log(insertId);
-  return await getUser(insertId);
+  // console.log({"insertId":insertId});
+  return await getUser('clients' ,insertId);
 };
 
 //get a user by id
@@ -35,7 +35,7 @@ const getUser = async (tableName, clientId) => {
     getClientByIdQuery = `SELECT * FROM administrators WHERE administrator_id = ?`;
   }
   const [[client]] = await pool.query(getClientByIdQuery, [clientId]);
-  // console.log(client)
+  // console.log({'client':client})
   return client;
 };
 
