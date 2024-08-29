@@ -31,9 +31,9 @@ CREATE TABLE `clients` (
   `first_name` varchar(20) NOT NULL,
   `last_name` varchar(20) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `password` varchar(20) NOT NULL,
-  `city` varchar(10) DEFAULT NULL,
-  `street` varchar(10) DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
+  `city` varchar(20) DEFAULT NULL,
+  `street` varchar(20) DEFAULT NULL,
   `building_number` bigint DEFAULT NULL,
   PRIMARY KEY (`client_id`),
   UNIQUE KEY `clients_email_unique` (`email`)
