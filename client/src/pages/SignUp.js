@@ -30,10 +30,16 @@ export default function SignUp() {
     allowExtraEmails: false,
   });
 
-  const [loading, setLoading] = useState(false);  
+  const [errors, setErrors] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+  });
+
+  const [loading, setLoading] = useState(false);
   const moveTo = useLocation().state?.moveTo;
-  console.log('moveTo',moveTo)
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -45,36 +51,70 @@ export default function SignUp() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // console.log(formData);
-    // Add logic to handle form submission with formData
-    try {
-      const { data } = await axiosInstance.post("users", setNullEmptyFields(formData));
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        street: "",
-        buildingNumber: "",
-        city: "",
-        allowExtraEmails: false,
-      });
-      // console.log(data);
-      navigate('/login', {state:{moveTo: moveTo}})
-    } catch (error) {
-      console.log(error)
+    const { validatedForm, isValid } = validateForm(formData);
+    if (isValid) {
+      try {
+        const { data } = await axiosInstance.post("users", validatedForm);
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: "",
+          street: "",
+          buildingNumber: "",
+          city: "",
+          allowExtraEmails: false,
+        });
+        restErrors();
+        // console.log(data);
+        navigate("/login", { state: { moveTo: moveTo } });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
-  const setNullEmptyFields = (formData) => {
-    const fieldNames = Object.keys(formData);
+  const validateForm = (formData) => {
+    const validatedForm = { ...formData };
+    let isValid = true;
+    const requiredFields = ["firstName", "lastName", "email", "password"];
+    const NonRequiredFields = ["street", "buildingNumber", "city"];
+    const fieldNames = Object.keys(validatedForm);
     fieldNames.forEach((fieldName) => {
-      if(formData[fieldName] === ""){
-        formData[fieldName] = null;
+      if (requiredFields.includes(fieldName) && !validatedForm[fieldName]) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [fieldName]: "This field is required",
+        }));
+        isValid = false;
+      } else if (fieldName === "password") {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+        if (!passwordRegex.test(validatedForm.password)) {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            [fieldName]:
+              "Password must be at least 6 characters with at least one uppercase and one lowercase letter",
+          }));
+          isValid = false;
+        }
+      } else if(NonRequiredFields.includes(fieldName)){
+        validatedForm[fieldName] = null;
       }
-    })
-    return formData;
-  }
+    });
+    if(isValid) {
+      restErrors();
+    }
+    return { validatedForm, isValid };
+  };
+
+  const restErrors = () => {
+    setErrors({
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+    });
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -112,6 +152,8 @@ export default function SignUp() {
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  error={Boolean(errors.firstName)}
+                  helperText={errors.firstName}
                   value={formData.firstName}
                   onChange={handleChange}
                 />
@@ -124,6 +166,8 @@ export default function SignUp() {
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
+                  error={Boolean(errors.lastName)}
+                  helperText={errors.lastName}
                   value={formData.lastName}
                   onChange={handleChange}
                 />
@@ -136,6 +180,8 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  error={Boolean(errors.email)}
+                  helperText={errors.email}
                   value={formData.email}
                   onChange={handleChange}
                 />
@@ -149,6 +195,8 @@ export default function SignUp() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  error={Boolean(errors.password)}
+                  helperText={errors.password}
                   value={formData.password}
                   onChange={handleChange}
                 />
