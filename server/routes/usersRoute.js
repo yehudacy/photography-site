@@ -1,6 +1,7 @@
 const express = require('express');
 const { addUser, getUser, login, editUser } = require('../../database/usersDB');
 const {generateToken, authenticateToken} = require('../authentication/authentication');
+const { validateSignUpForm, validateLogInForm } = require('./usersUtil');
 
 const usersRouter = express.Router();
 
@@ -13,8 +14,9 @@ const usersRouter = express.Router();
 usersRouter.post('/login', async (req, res) => {
   try{
     const credentials = req.body;
-    if(!credentials.email || !credentials.password){
-      return res.status(401).json({ message: 'Missing email and/or password' });
+    const {valid, errMsg} = validateLogInForm(credentials);
+    if(!valid){
+      return res.status(401).json({ message: errMsg });
     } 
     const user = await login(credentials, 'clients');
     // console.log(user)
@@ -60,7 +62,11 @@ usersRouter.get('/:clientId', authenticateToken , async (req, res) => {
 usersRouter.post('/', async (req, res) => {
     try {
       const newClient = req.body;
-      const addedClient = await addUser(newClient);
+      const {validatedForm, isValid, errMsg} = validateSignUpForm(newClient);
+      if(!isValid){
+        return res.status(400).json({message: errMsg});
+      }
+      const addedClient = await addUser(validatedForm);
       // console.log({'addedClient':addedClient});
       if (!addedClient) {
         return res.status(400).json({ message: "Bad request, the user was not added. Please try again later." });

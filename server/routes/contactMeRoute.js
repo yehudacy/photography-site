@@ -1,6 +1,7 @@
 const express = require('express');
 const {getContactForms, getContactMe, addContactMe, deleteContactMe} = require('../../database/contactmeDB');
 const { authenticateToken } = require('../authentication/authentication');
+const { validateForm } = require('./contactmeUtil');
 const contactMeRouter = express.Router();
 
 //get all contact me forms
@@ -18,7 +19,9 @@ contactMeRouter.get('/', authenticateToken,  async (req, res) =>{
 contactMeRouter.post('/' ,async(req, res) => {
     try{
         const contactMe = req.body;
-        //validation if failed send with status 400(bad request)
+        if(!validateForm(contactMe)){
+            return res.status(400).json({message: "All fields are required"});
+        }
         const contactMeAdded = await addContactMe(contactMe);
         // console.log(contactMeAdded)
         //handle sending me an email

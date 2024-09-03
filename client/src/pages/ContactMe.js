@@ -11,6 +11,7 @@ const ContactMe = () => {
 
   const [dialog, setDialog] = useState(false);
   const [alert, setAlert] = useState("");
+  const [alertText, setAlertText] = useState("");
   const dialogText = {
     dialogContent: "Are you sure you want to send the request",
     dialogBtn1Text: "agree",
@@ -21,6 +22,9 @@ const ContactMe = () => {
     //send the request
     try {
       const body = { name, phoneNumber, email, message };
+      if(!validateForm(body)) {
+        setAlert("error");
+      }
       const { data } = await axiosInstance.post("/contactme", body);
       // console.log(data);
       setDialog(false);
@@ -33,6 +37,10 @@ const ContactMe = () => {
       setTimeout( () => setAlert(""), 5000);
     }
   };
+
+  const validateForm = (formData) => {
+    return  (formData.name && formData.phoneNumber && formData.email && formData.message) ;
+  } 
 
   const resetFields = () => {
     setName("");
@@ -125,6 +133,7 @@ const ContactMe = () => {
                     {alert && (alert === 'error' ? <Alert severity="error">
                       <AlertTitle>{alert}</AlertTitle>
                       It didn't work out — <strong>please try again!</strong>
+                      Check if all the fields are filled
                     </Alert> : 
                     <Alert severity="success">
                     <AlertTitle>{alert}</AlertTitle>
