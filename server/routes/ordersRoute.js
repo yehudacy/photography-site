@@ -14,7 +14,7 @@ ordersRouter.post('/', authenticateToken ,async (req, res) => {
         //handle sending me an email
         res.status(201).json(addedOrder); 
     } catch (error) {
-        // console.log(error)
+        console.log(error)
         res.status(500).json({message:"The server is down please try again later"}) 
     }
 })

@@ -49,10 +49,10 @@ const Order = () => {
 
 
   const handlepayments = async () => {
-    const newOrder = createOrderFromFields();
+    const newOrder = createOrderFromFields();    
     try {
       setDialog(false);
-      const { data } = await axiosInstance.post("/order", newOrder);
+      const { data } = await axiosInstance.post("/api/orders", newOrder);
       console.log(data);
       navigate('/pay');
       // navigate('/client');
