@@ -16,6 +16,7 @@ const {paypalRouter} = require('./routes/paypalRouter');
 
 const corsOptions ={
     origin:'http://localhost:3000', 
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials:true,            //access-control-allow-credentials:true
     optionSuccessStatus:200
 }

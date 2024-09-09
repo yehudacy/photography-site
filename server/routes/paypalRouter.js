@@ -12,7 +12,6 @@ paypal.configure({
 })
 
 
-
 paypalRouter.post("/", async (req, res) => {
   const item = req.body;
   const create_payment_json = {
@@ -50,7 +49,7 @@ paypal.payment.create(
       } else {
           for (let i = 0; i < payment.links.length; i++) {
               if (payment.links[i].rel === 'approval_url') {                
-                  res.redirect(payment.links[i].href);
+                  res.status(200).send({paypalUrl: payment.links[i].href});
               }
           }
       }

@@ -54,7 +54,7 @@ const Order = () => {
       setDialog(false);
       const { data } = await axiosInstance.post("/api/orders", newOrder);
       console.log(data);
-      navigate('/pay');
+      // navigate(data?.paypalUrl);
       // navigate('/client');
     } catch (error) {
       console.log(error);
