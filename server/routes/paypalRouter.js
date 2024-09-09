@@ -29,12 +29,12 @@ paypalRouter.post("/", async (req, res) => {
                 "name": `${item.price} Package`,
                 "sku": "001",
                 "price": `${item.price}`,
-                "currency": "USD",
+                "currency": "ILS",
                 "quantity": 1
             }]
         },
         "amount": {
-            "currency": "USD",
+            "currency": "ILS",
             "total": `${item.price}`
         },
         "description": "Payment for a order of a package"

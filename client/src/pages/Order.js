@@ -54,6 +54,10 @@ const Order = () => {
       setDialog(false);
       const { data } = await axiosInstance.post("/api/orders", newOrder);
       console.log(data);
+      if(data.paypalUrl !== undefined || data.paypalUrl !== ""){
+        window.location.replace(data.paypalUrl);
+      }
+
       // navigate(data?.paypalUrl);
       // navigate('/client');
     } catch (error) {
