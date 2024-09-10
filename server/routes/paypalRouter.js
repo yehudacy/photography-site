@@ -11,16 +11,19 @@ paypal.configure({
   'client_secret': process.env.PAYPAL_SECRET_KEY,
 })
 
+let price = 0;
+
 
 paypalRouter.post("/", async (req, res) => {
   const item = req.body;
+  price = item.price;
   const create_payment_json = {
     "intent": "sale",
     "payer": {
         "payment_method": "paypal"
     },
     "redirect_urls": {
-        "return_url": "http://localhost:3000/client",
+        "return_url": "http://localhost:3000/success",
         "cancel_url": "http://localhost:3000/cancel"
     },
     "transactions": [{
@@ -56,20 +59,38 @@ paypal.payment.create(
   });
 });
 
-// paypalRouter.post("/:orderID/capture", async (req, res) => {
-  // try {
-  //   const { orderID } = req.params;
-  //   const { jsonResponse, httpStatusCode } = await captureOrder(orderID);
-  //   res.status(httpStatusCode).json(jsonResponse);
-  // } catch (error) {
-  //   console.error("Failed to create order:", error);
-  //   res.status(500).json({ error: "Failed to capture order." });
-  // }
-// });
+paypalRouter.get('/success', (req, res) => {
+    console.log(111111);
+    
+    const payerId = req.query.PayerID;
+    const paymentId = req.query.paymentId;
+    
+    console.log(payerId);
+    console.log(paymentId);
+    const execute_payment_json = {
+        "payer_id": payerId,
+        "transactions": [{
+            "amount": {
+                "currency": "ILS",
+                "total": `${price}`
+            }
+        }]
+    };
 
-// serve index.html
-// paypalRouter.get("/", (req, res) => {
-  // res.sendFile(path.resolve("./client/checkout.html"));
-// });
+    paypal.payment.execute(paymentId,
+        execute_payment_json,
+        function (error, payment) {
+            if (error) {
+                console.log(error.response);
+                throw error;
+            } else {
+                console.log(JSON.stringify(payment));
+                price = 0;
+                res.send('Success');
+            }
+        });
+
+})
+
 
 module.exports = {paypalRouter};

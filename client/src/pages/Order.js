@@ -57,8 +57,8 @@ const Order = () => {
       if(data.paypalUrl !== undefined || data.paypalUrl !== ""){
         window.location.replace(data.paypalUrl);
       }
-
       // navigate(data?.paypalUrl);
+
       // navigate('/client');
     } catch (error) {
       console.log(error);
