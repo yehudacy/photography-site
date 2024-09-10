@@ -70,7 +70,7 @@ return (
             <TableCell style={{ width: "20%" }}>Phone Number</TableCell>
             <TableCell style={{ width: "20%" }}>Email</TableCell>
             <TableCell style={{ width: "30%" }}>Message</TableCell>
-            <TableCell style={{ width: "10%" }}>Action</TableCell>
+            <TableCell style={{ width: "10%" }}>Delete</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

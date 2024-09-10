@@ -32,6 +32,11 @@ const AdminDashboard = () => {
     textTransform: "none", // Ensure lowercase text
   };
 
+  const btnTextAlignment = {
+    display: "flex",
+    justifyContent: "left"
+  }
+
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={2}>
@@ -44,6 +49,7 @@ const AdminDashboard = () => {
             onClick={() => setComponentToRender("Account details")}
             style={buttonStyle}
             color="primary"
+            sx={btnTextAlignment}
           >
             Account details
           </Button>
@@ -52,6 +58,7 @@ const AdminDashboard = () => {
             onClick={() => setComponentToRender("orders")}
             style={buttonStyle}
             color="primary"
+            sx={btnTextAlignment}
           >
             View all orders
           </Button>
@@ -60,6 +67,7 @@ const AdminDashboard = () => {
             onClick={() => setComponentToRender("contactMe")}
             style={buttonStyle}
             color="primary"
+            sx={btnTextAlignment}
           >
             View all contact me
           </Button>
@@ -68,6 +76,7 @@ const AdminDashboard = () => {
             onClick={() => setComponentToRender("upload")}
             style={buttonStyle}
             color="primary"
+            sx={btnTextAlignment}
           >
             Upload images
           </Button>
@@ -76,6 +85,7 @@ const AdminDashboard = () => {
             onClick={() => setComponentToRender("viewImg")}
             style={buttonStyle}
             color="primary"
+            sx={btnTextAlignment}
           >
             View images
           </Button>

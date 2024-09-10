@@ -86,7 +86,7 @@ const TableOfOrders = ({ type }) => {
               <TableCell>Price</TableCell>
               <TableCell>Remarks</TableCell>
               <TableCell>Status</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell>Delete</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

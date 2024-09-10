@@ -39,6 +39,11 @@ const ClientDashboard = () => {
     textTransform: "none", // Ensure lowercase text
   };
 
+  const btnTextAlignment = {
+    display: "flex",
+    justifyContent: "left"
+  }
+
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={2}>
@@ -52,6 +57,7 @@ const ClientDashboard = () => {
             to={'?account-details'}
             style={buttonStyle}
             color="primary"
+            sx={btnTextAlignment}
           >
             account details
           </Button>
@@ -61,6 +67,7 @@ const ClientDashboard = () => {
             to={'?orders'}
             style={buttonStyle}
             color="primary"
+            sx={btnTextAlignment}
           >
             my orders
           </Button>
@@ -70,6 +77,7 @@ const ClientDashboard = () => {
             to={'?invoices'}
             style={buttonStyle}
             color="primary"
+            sx={btnTextAlignment}
           >
             my invoices
           </Button>
@@ -79,6 +87,7 @@ const ClientDashboard = () => {
             to={'?images'}
             style={buttonStyle}
             color="primary"
+            sx={btnTextAlignment}
           >
             my images
           </Button>
