@@ -23,7 +23,7 @@ paypalRouter.post("/", async (req, res) => {
         "payment_method": "paypal"
     },
     "redirect_urls": {
-        "return_url": "http://localhost:3000/success",
+        "return_url": "http://localhost:4000/api/orders/success",
         "cancel_url": "http://localhost:3000/cancel"
     },
     "transactions": [{
@@ -84,9 +84,9 @@ paypalRouter.get('/success', (req, res) => {
                 console.log(error.response);
                 throw error;
             } else {
-                console.log(JSON.stringify(payment));
+                console.log(payment);
                 price = 0;
-                res.send('Success');
+                res.send(payment);
             }
         });
 
