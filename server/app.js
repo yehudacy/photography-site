@@ -30,7 +30,7 @@ app.use('/order', ordersRouter);
 app.use('/users', usersRouter);
 app.use('/category', categoryRouter);
 app.use('/images', imagesRouter);
-app.use('/api/orders', paypalRouter);
+app.use('/pay', paypalRouter);
 
 
 

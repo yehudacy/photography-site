@@ -20,6 +20,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import ClientDashboard from "./pages/ClientDashboard";
 import Logout from "./pages/Logout";
 import SuccessPayment from "./pages/SuccessPayment";
+import CancelPayment from "./pages/CancelPayment";
 
 function App() {
   // {console.log(process.env.REACT_APP_PAYPAL_CLIENT_ID)}
@@ -40,7 +41,8 @@ function App() {
             <Route path="/pricing" element={<Pricing />}></Route>
             <Route path="/pricing/order" element={<Order />}></Route>
             <Route path="/pay" element={<Payment />}></Route>
-            <Route path="/success" element={<SuccessPayment />}></Route>
+            <Route path="/pay/success" element={<SuccessPayment />}></Route>
+            <Route path="/pay/cancel" element={<CancelPayment />}></Route>
             <Route path="/admin" element={<AdminDashboard />}></Route>
             <Route path="/contactme" element={<ContactMe />}></Route>
             <Route path="*" element={<NotFound />}></Route>

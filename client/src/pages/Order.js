@@ -52,12 +52,11 @@ const Order = () => {
     const newOrder = createOrderFromFields();    
     try {
       setDialog(false);
-      const { data } = await axiosInstance.post("/api/orders", newOrder);
+      const { data } = await axiosInstance.post("/pay", newOrder);
       console.log(data);
       if(data.paypalUrl !== undefined || data.paypalUrl !== ""){
         window.location.replace(data.paypalUrl);
       }
-      // navigate(data?.paypalUrl);
 
       // navigate('/client');
     } catch (error) {
