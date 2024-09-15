@@ -106,6 +106,17 @@ CREATE TABLE `contact_me` (
   PRIMARY KEY (`contact_me_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE `non_paid_orders` (
+  `order_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `client_id` bigint NOT NULL,
+  `order_date` datetime NOT NULL,
+  `action_date` datetime NOT NULL,
+  `time` varchar(100) NOT NULL,
+  `price` decimal(8,2) NOT NULL,
+  `remarks` varchar(255) NOT NULL,
+  `status` varchar(10) NOT NULL,
+  PRIMARY KEY (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 ALTER TABLE
@@ -120,3 +131,5 @@ ALTER TABLE
     `invoices` ADD CONSTRAINT `invoices_order_id_foreign` FOREIGN KEY(`order_id`) REFERENCES `orders`(`order_id`);
 ALTER TABLE
     `images` ADD CONSTRAINT `images_image_id_foreign` FOREIGN KEY(`image_id`) REFERENCES `categories`(`category_id`);
+ALTER TABLE
+    `non_paid_orders` ADD CONSTRAINT `non_paid_orders_client_id_foreign` FOREIGN KEY(`client_id`) REFERENCES `clients`(`client_id`);

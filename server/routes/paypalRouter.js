@@ -23,7 +23,7 @@ paypalRouter.post("/", async (req, res) => {
     },
     redirect_urls: {
       return_url: "http://localhost:3000/pay/success",
-      cancel_url: "http://localhost:3000/pat/cancel",
+      cancel_url: "http://localhost:3000/pay/cancel",
     },
     transactions: [
       {
