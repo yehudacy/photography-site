@@ -12,7 +12,7 @@ const checkDataBaseConnection = async () => {
     try{
         const connection = await pool.getConnection();
         console.log('data base connected');
-        connection.release();
+        connection.release();        
         return true;
     } catch(error) {
         const message = `The data base isn't connected ${error.message}`;
