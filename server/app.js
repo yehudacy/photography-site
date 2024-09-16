@@ -15,13 +15,6 @@ const {imagesRouter} = require('./routes/imagesRoute');
 const {paypalRouter} = require('./routes/paypalRouter');
 const { nonPaidOrdersRouter } = require('./routes/nonPaidOrdersRoute');
 
-// const corsOptions ={
-//     origin:'http://localhost:3000', 
-//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//     credentials:true,            //access-control-allow-credentials:true
-//     optionSuccessStatus:200
-// }
-
 app.use(cors());
 app.use(express.json());
 

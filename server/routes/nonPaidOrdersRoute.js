@@ -19,31 +19,11 @@ nonPaidOrdersRouter.post('/', authenticateToken ,async (req, res) => {
     }
 })
 
-//route to get all orders
-// ordersRouter.get('/', authenticateToken ,async (req, res) => {
-//     try{
-//         const orders = await getAllOrders();
-//         res.status(200).json(orders);
-//     } catch (error) {
-//         res.status(500).json({message: "The server is down please try later"});
-//     }
-// })
-
-// ordersRouter.get('/client/:clientId', authenticateToken ,async (req, res) => {
-//     try{
-//         const clientId = req.params.clientId;
-//         const orders = await getOrderOfSingleClient(clientId);
-//         // console.log(orders)
-//         res.status(200).json(orders);
-//     } catch (error) {
-//         res.status(500).json({message: "The server is down please try later"});
-//     }
-// })
 
 //route for getting a specific order by id
-nonPaidOrdersRouter.get('/:orderid', authenticateToken, async (req, res) => {
-    try{
-        const orderId = req.params.orderid;        
+nonPaidOrdersRouter.get('/:orderId', authenticateToken, async (req, res) => {
+    try{        
+        const orderId = req.params.orderId;        
         const order = await getNonPaidOrder(orderId);
         if(!order) {
             res.status(404).json({message: `An order with id of ${orderId} doesn't exist`});
