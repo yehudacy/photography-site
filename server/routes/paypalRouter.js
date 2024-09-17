@@ -3,6 +3,7 @@ const axios = require("axios");
 const qs = require("qs");
 const paypal = require("paypal-rest-sdk");
 const ordersRouter = require("./ordersRoute");
+const { addNonPaidOrder } = require("../../database/nonPaidOrdersDB");
 const paypalRouter = express.Router();
 
 paypal.configure({
@@ -13,16 +14,19 @@ paypal.configure({
 
 let price = 0;
 
-paypalRouter.post("/", async (req, res) => {
-  const order = req.body;
-  price = order.price;
+paypalRouter.post("/", async ({body}, res) => {
+  const nonPaidOrder = await addNonPaidOrder(body);
+  console.log(nonPaidOrder);
+  console.log(typeof nonPaidOrder.price);
+  price = nonPaidOrder.price;
+  
   const create_payment_json = {
     intent: "sale",
     payer: {
       payment_method: "paypal",
     },
     redirect_urls: {
-      return_url: "http://localhost:3000/pay/success",
+      return_url: `http://localhost:3000/pay/success/${nonPaidOrder.order_id}`,
       cancel_url: "http://localhost:3000/pay/cancel",
     },
     transactions: [
@@ -30,9 +34,9 @@ paypalRouter.post("/", async (req, res) => {
         item_list: {
           items: [
             {
-              name: `${order.price} Package`,
+              name: `${nonPaidOrder.price} Package`,
               sku: "001",
-              price: `${order.price}`,
+              price: `${nonPaidOrder.price}`,
               currency: "ILS",
               quantity: 1,
             },
@@ -40,7 +44,7 @@ paypalRouter.post("/", async (req, res) => {
         },
         amount: {
           currency: "ILS",
-          total: `${order.price}`,
+          total: `${nonPaidOrder.price}`,
         },
         description: "Payment for a order of a package",
       },
@@ -84,8 +88,7 @@ paypalRouter.post("/api/success", (req, res) => {
         console.log(error.response);
         throw error;
       } else {
-        console.log(payment);
-
+        // console.log(payment);
         price = 0;
         res.send(payment);
       }
