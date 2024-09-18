@@ -41,7 +41,7 @@ function App() {
             <Route path="/pricing" element={<Pricing />}></Route>
             <Route path="/pricing/order" element={<Order />}></Route>
             <Route path="/pay" element={<Payment />}></Route>
-            <Route path="/pay/success/*" element={<SuccessPayment />}></Route>
+            <Route path="/pay/success/:orderId" element={<SuccessPayment />}></Route>
             <Route path="/pay/cancel" element={<CancelPayment />}></Route>
             <Route path="/admin" element={<AdminDashboard />}></Route>
             <Route path="/contactme" element={<ContactMe />}></Route>

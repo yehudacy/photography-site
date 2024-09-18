@@ -3,7 +3,8 @@ const axios = require("axios");
 const qs = require("qs");
 const paypal = require("paypal-rest-sdk");
 const ordersRouter = require("./ordersRoute");
-const { addNonPaidOrder } = require("../../database/nonPaidOrdersDB");
+const { addNonPaidOrder, getNonPaidOrder } = require("../../database/nonPaidOrdersDB");
+const { addOrder } = require("../../database/orderDB");
 const paypalRouter = express.Router();
 
 paypal.configure({
@@ -83,14 +84,23 @@ paypalRouter.post("/api/success", (req, res) => {
   paypal.payment.execute(
     paymentId,
     execute_payment_json,
-    function (error, payment) {
+    async function (error, payment) {
       if (error) {
         console.log(error.response);
         throw error;
       } else {
         // console.log(payment);
-        price = 0;
-        res.send(payment);
+        try{
+          const orderToAdd = await getNonPaidOrder(params.orderId);
+          const addedOrder = await addOrder(orderToAdd);
+          price = 0;
+          res.send({payment, addedOrder});
+        } catch(error) {
+          console.log(error);
+          price = 0;
+          throw error;
+        }
+      
       }
     }
   );

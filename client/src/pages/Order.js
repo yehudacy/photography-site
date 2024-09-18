@@ -1,17 +1,30 @@
 import React, { useState } from "react";
-import { TextField, Button, Typography, Grid, Box, Alert, AlertTitle } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Typography,
+  Grid,
+  Box,
+  Alert,
+  AlertTitle,
+  LinearProgress,
+  Container,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import dayjs from "dayjs";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import MyDialog from "../components/MyDialog";
 import axiosInstance from "../axiosInstance";
-import {useUser} from '../hooks/useUser';
+import { useUser } from "../hooks/useUser";
 
 const Order = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const {user} = useUser();
+  const { user } = useUser();
 
   const [orderDate] = useState(dayjs());
   const [actionDate, setActionDate] = useState(dayjs());
@@ -19,11 +32,12 @@ const Order = () => {
   const [price] = useState(state?.packagePrice);
   const [remarks, setRemarks] = useState("");
   const [dialog, setDialog] = useState(false);
+  const [processing, setProcessing] = useState(false);
   const [alert, setAlert] = useState("");
 
   if (!state) {
     // console.log(1111)
-    return <Navigate to={'/pricing'} />
+    return <Navigate to={"/pricing"} />;
   }
 
   //content for dialog
@@ -31,38 +45,39 @@ const Order = () => {
     dialogContent: "Do you want to check-out",
     dialogBtn1Text: "go to payment",
     dialogBtn2Text: "back",
-  }
+  };
 
   const createOrderFromFields = () => {
     const newOrder = {
       clientId: user.client_id,
-      orderDate: orderDate.format('YYYY-MM-DD'),
-      actionDate: actionDate.format('YYYY-MM-DD'),
+      orderDate: orderDate.format("YYYY-MM-DD"),
+      actionDate: actionDate.format("YYYY-MM-DD"),
       time,
       price,
       remarks,
-      status: "waiting"
-    }
+      status: "waiting",
+    };
     // console.log(newOrder)
     return newOrder;
-  }
-
+  };
 
   const handlepayments = async () => {
-    const newOrder = createOrderFromFields();    
+    setProcessing(true);
+    const newOrder = createOrderFromFields();
     try {
       setDialog(false);
       const { data } = await axiosInstance.post("/pay", newOrder);
       console.log(data);
-      if(data.paypalUrl !== undefined || data.paypalUrl !== ""){
+      if (data.paypalUrl !== undefined || data.paypalUrl !== "") {
         window.location.replace(data.paypalUrl);
       }
+      setProcessing(false)
 
       // navigate('/client');
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const handleCloseDialog = () => {
     setDialog(false);
@@ -83,6 +98,14 @@ const Order = () => {
           handleCloseDialog={handleCloseDialog}
         />
       )}
+      {processing && (
+        <Dialog open={processing}>
+          <DialogTitle>Processing...</DialogTitle>
+          <DialogContent>
+            <LinearProgress/>
+          </DialogContent>
+        </Dialog>
+      )}
       <Box sx={{ height: "100vh" }}>
         <Grid
           container
@@ -98,22 +121,22 @@ const Order = () => {
               </Typography>
               <form onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
-                  <Grid item xs={12} md={6} sx={{ m: 'auto' }} >
+                  <Grid item xs={12} md={6} sx={{ m: "auto" }}>
                     <DatePicker
-                      sx={{ width: '100%', marginY: 2 }}
-                      label='order date'
+                      sx={{ width: "100%", marginY: 2 }}
+                      label="order date"
                       value={orderDate}
                       readOnly
                     />
                     <DatePicker
-                      sx={{ width: '100%', marginY: 2 }}
-                      label='action date'
+                      sx={{ width: "100%", marginY: 2 }}
+                      label="action date"
                       disablePast
                       value={actionDate}
                       onChange={(newDate) => setActionDate(newDate)}
                     />
                     <TimePicker
-                      sx={{ width: '100%', marginY: 2 }}
+                      sx={{ width: "100%", marginY: 2 }}
                       label="execution time"
                       ampm={false}
                       value={time}
@@ -137,17 +160,31 @@ const Order = () => {
                       multiline
                       rows={4}
                     />
-                    <Button variant="contained" type="submit" sx={{ marginY: 2 }} fullWidth>
+                    <Button
+                      variant="contained"
+                      type="submit"
+                      sx={{ marginY: 2 }}
+                      fullWidth
+                    >
                       Place order
                     </Button>
-                    {alert && (alert === 'error' ? <Alert severity="error">
-                      <AlertTitle>{alert}</AlertTitle>
-                      It didn't work out — <strong>please try again!</strong>
-                    </Alert> :
-                      <Alert severity="success">
-                        <AlertTitle>{alert}</AlertTitle>
-                        order has been placed! — <strong>Thank you! we will be in touch if there is any problems</strong>
-                      </Alert>)}
+                    {alert &&
+                      (alert === "error" ? (
+                        <Alert severity="error">
+                          <AlertTitle>{alert}</AlertTitle>
+                          It didn't work out —{" "}
+                          <strong>please try again!</strong>
+                        </Alert>
+                      ) : (
+                        <Alert severity="success">
+                          <AlertTitle>{alert}</AlertTitle>
+                          order has been placed! —{" "}
+                          <strong>
+                            Thank you! we will be in touch if there is any
+                            problems
+                          </strong>
+                        </Alert>
+                      ))}
                   </Grid>
                 </Grid>
               </form>
@@ -156,7 +193,7 @@ const Order = () => {
         </Grid>
       </Box>
     </>
-  )
-}
+  );
+};
 
-export default Order
+export default Order;
