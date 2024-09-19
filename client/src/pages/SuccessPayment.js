@@ -3,7 +3,8 @@ import axiosInstance from "../axiosInstance";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 function SuccessPayment() {
-  const [message, setMessage] = useState("-");
+  const [message, setMessage] = useState("");
+  const [isProcessed, setIsProcessed] = useState(false);
   const [searchParams] = useSearchParams();
   const { orderId } = useParams();
   const navigate = useNavigate();
@@ -25,8 +26,9 @@ function SuccessPayment() {
           setMessage(
             "Your payment has been approved thanks for paying through the website!"
           );
-          setTimeout( () => {
-            navigate('/client?orders');
+          setIsProcessed(true);
+          setTimeout(() => {
+            navigate("/client?orders");
           }, 4500);
         }
       } catch (error) {
@@ -35,11 +37,7 @@ function SuccessPayment() {
     })();
   }, [searchParams, orderId, navigate]);
 
-  return (
-    <div>
-      <h1>{message}</h1>
-    </div>
-  );
+  return <>{isProcessed && <h1>{message}</h1>}</>;
 }
 
 export default SuccessPayment;

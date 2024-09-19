@@ -69,7 +69,7 @@ const Order = () => {
       const { data } = await axiosInstance.post("/pay", newOrder);
       console.log(data);
       if (data.paypalUrl !== undefined || data.paypalUrl !== "") {
-        window.location.replace(data.paypalUrl);
+        window.location.href = data.paypalUrl;
       }
       setProcessing(false)
 

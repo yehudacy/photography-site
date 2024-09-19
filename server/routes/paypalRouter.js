@@ -3,7 +3,7 @@ const axios = require("axios");
 const qs = require("qs");
 const paypal = require("paypal-rest-sdk");
 const ordersRouter = require("./ordersRoute");
-const { addNonPaidOrder, getNonPaidOrder } = require("../../database/nonPaidOrdersDB");
+const { addNonPaidOrder, getNonPaidOrder, deleteOrder } = require("../../database/nonPaidOrdersDB");
 const { addOrder } = require("../../database/orderDB");
 const paypalRouter = express.Router();
 
@@ -93,8 +93,13 @@ paypalRouter.post("/api/success", (req, res) => {
         try{
           const orderToAdd = await getNonPaidOrder(params.orderId);
           const addedOrder = await addOrder(orderToAdd);
-          price = 0;
-          res.send({payment, addedOrder});
+          const deletedOrderFromNonPaidOrders = await deleteOrder(params.orderId);
+          if(deletedOrderFromNonPaidOrders){
+            price = 0;
+            res.send({payment, addedOrder});
+          } else {
+            throw new Error(`can't delete temp order with the id ${params.orderId}`)
+          }
         } catch(error) {
           console.log(error);
           price = 0;
