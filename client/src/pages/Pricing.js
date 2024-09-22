@@ -22,6 +22,10 @@ const Pricing = () => {
   const { user } = useUser();
   // console.log(user);
 
+  const buttonStyle = {
+    textTransform: "none",
+  };
+
   return (
     <Container maxWidth="md" component="main">
       <Grid
@@ -83,6 +87,7 @@ const Pricing = () => {
               <CardActions>
                 {user ? (
                   <Button
+                    sx={buttonStyle}
                     fullWidth
                     variant={tier.buttonVariant}
                     component={Link}
@@ -93,11 +98,15 @@ const Pricing = () => {
                   </Button>
                 ) : (
                   <Button
+                    sx={buttonStyle}
                     fullWidth
                     variant={tier.buttonVariant}
                     component={Link}
                     to={"/login"}
-                    state={{ moveTo: "/Pricing/order", packagePrice: tier.price }}
+                    state={{
+                      moveTo: "/Pricing/order",
+                      packagePrice: tier.price,
+                    }}
                   >
                     log-in to order
                   </Button>
