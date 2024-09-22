@@ -7,7 +7,7 @@ const addNonPaidOrder = async ({clientId, orderDate, actionDate, time, price, re
     INSERT INTO non_paid_orders (client_id, order_date, action_date, time, price, remarks, status) 
     VALUES (?, ?, ?, ?, ?, ?, ?)`;
     const [{insertId}] = await pool.query(addNonPaidOrderQuery, [clientId, orderDate, actionDate, time, price, remarks, status]);
-    console.log(insertId);
+    // console.log(insertId);
     return await getNonPaidOrder(insertId);
 };
 
@@ -17,7 +17,7 @@ const getNonPaidOrder = async (orderId) => {
     SELECT * FROM non_paid_orders
     WHERE order_id = ?`;
     const [[order]] = await pool.query(getNonPaidOrderByIdQuery, [orderId]);
-    console.log(order)
+    // console.log(order)
     return order;
 };
 

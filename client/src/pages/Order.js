@@ -67,7 +67,7 @@ const Order = () => {
     try {
       setDialog(false);
       const { data } = await axiosInstance.post("/pay", newOrder);
-      console.log(data);
+      // console.log(data);
       if (data.paypalUrl !== undefined || data.paypalUrl !== "") {
         window.location.href = data.paypalUrl;
       }

@@ -2,9 +2,7 @@ const { pool } = require('./dbConnection');
 
 
 //add a new order
-const addOrder = async ({client_id, order_date, action_date, time, price, remarks, status}) => {
-    console.log({client_id, order_date, action_date, time, price, remarks, status});
-    
+const addOrder = async ({client_id, order_date, action_date, time, price, remarks, status}) => {    
     const addOrderQuery = `
     INSERT INTO orders (client_id, order_date, action_date, time, price, remarks, status) 
     VALUES (?, ?, ?, ?, ?, ?, ?)`;

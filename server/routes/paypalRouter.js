@@ -17,8 +17,6 @@ let price = 0;
 
 paypalRouter.post("/", async ({body}, res) => {
   const nonPaidOrder = await addNonPaidOrder(body);
-  console.log(nonPaidOrder);
-  console.log(typeof nonPaidOrder.price);
   price = nonPaidOrder.price;
   
   const create_payment_json = {
