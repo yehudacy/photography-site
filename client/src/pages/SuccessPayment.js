@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../axiosInstance";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import Backdrop from "@mui/material/Backdrop";
+import {
+  Alert,
+  AlertTitle,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  LinearProgress,
+} from "@mui/material";
 
 function SuccessPayment() {
   const [message, setMessage] = useState("");
@@ -37,7 +46,28 @@ function SuccessPayment() {
     })();
   }, [searchParams, orderId, navigate]);
 
-  return <>{isProcessed && <h1>{message}</h1>}</>;
+  return (
+    <>
+      {!isProcessed && (
+        <Dialog open={!isProcessed}>
+          <DialogTitle>Processing...</DialogTitle>
+          <DialogContent>
+            <LinearProgress />
+          </DialogContent>
+        </Dialog>
+      )}
+      {isProcessed && (
+        <Dialog open={isProcessed}>
+          <DialogContent>
+            <Alert severity="success">
+              <AlertTitle>Success</AlertTitle>
+              {message}
+            </Alert>
+          </DialogContent>
+        </Dialog>
+      )}
+    </>
+  );
 }
 
 export default SuccessPayment;
