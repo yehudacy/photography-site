@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../axiosInstance";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import Backdrop from "@mui/material/Backdrop";
 import {
   Alert,
   AlertTitle,
@@ -14,6 +13,7 @@ import {
 function SuccessPayment() {
   const [message, setMessage] = useState("");
   const [isProcessed, setIsProcessed] = useState(false);
+  const [status, setStatus] = useState('success');
   const [searchParams] = useSearchParams();
   const { orderId } = useParams();
   const navigate = useNavigate();
@@ -41,6 +41,7 @@ function SuccessPayment() {
           }, 4500);
         }
       } catch (error) {
+        setStatus('error')
         setMessage("The payment failed for some reason please try again");
       }
     })();
@@ -59,8 +60,8 @@ function SuccessPayment() {
       {isProcessed && (
         <Dialog open={isProcessed}>
           <DialogContent>
-            <Alert severity="success">
-              <AlertTitle>Success</AlertTitle>
+            <Alert severity={status}>
+              <AlertTitle>{status}</AlertTitle>
               {message}
             </Alert>
           </DialogContent>
