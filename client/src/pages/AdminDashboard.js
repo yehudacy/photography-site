@@ -7,6 +7,7 @@ import AdminImagesGallery from "../components/AdminImagesGallery";
 import AccountDetails from "../components/AccountDetails";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../hooks/useUser";
+import PackagePrices from "./PackagePrices";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -73,6 +74,15 @@ const AdminDashboard = () => {
           </Button>
           <Button
             fullWidth
+            onClick={() => setComponentToRender("pricing")}
+            style={buttonStyle}
+            color="primary"
+            sx={btnTextAlignment}
+          >
+            Package prices
+          </Button>
+          <Button
+            fullWidth
             onClick={() => setComponentToRender("upload")}
             style={buttonStyle}
             color="primary"
@@ -96,6 +106,7 @@ const AdminDashboard = () => {
       {componentToRender === "contactMe" && <ContactRequestsTable />}
       {componentToRender === "upload" && <ImageUploadForm />}
       {componentToRender === "viewImg" && <AdminImagesGallery />}
+      {componentToRender === "pricing" && <PackagePrices />}
     </Grid>
   );
 };
