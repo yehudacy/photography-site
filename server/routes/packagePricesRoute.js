@@ -17,7 +17,10 @@ packagePriceRouter.post("/", authenticateToken, async ({ body }, res) => {
     res.status(201).json(addedPackage);
   } catch (error) {
     // console.log(error);
-    res.status(500).json({ message: "The server is down please try later" });
+    if(typeof error.message === 'string' && error.message.startsWith("Data truncated for column 'button_variant'")){
+      error.message = `Variant must be ether 'contained' or 'outlined'` 
+    }
+    res.status(500).json({ message: error.message });
   }
 });
 

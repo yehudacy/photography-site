@@ -68,14 +68,14 @@ const deletePackage = async (packageId) => {
 const package = {
   title: "Basic",
   price: 1500,
-  details: "15 users included 2 GB of storage Help center access Email support",
+  details: "15 users included, 2 GB of storage, Help center access, Email support",
   variant: "contained",
 };
 
 // addPackage(package);
 // getPackage(1);
 // editPackage(1, package)
-// deletePackage(2);
+// deletePackage(5);
 
 
 module.exports = {getPackages, addPackage, getPackage, editPackage, deletePackage};
