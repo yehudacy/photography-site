@@ -119,6 +119,14 @@ CREATE TABLE `non_paid_orders` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
+CREATE TABLE `packages` (
+  `package_id` bigint NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) NOT NULL,
+  `price` bigint NOT NULL,
+  `details` varchar(255) NOT NULL,
+  PRIMARY KEY (`package_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 ALTER TABLE
     `payment_methods` ADD PRIMARY KEY `payment_methods_payment_methods_id_primary`(`payment_methods_id`);
 ALTER TABLE
