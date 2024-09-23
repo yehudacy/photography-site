@@ -94,7 +94,7 @@ const Pricing = () => {
                     to={"order"}
                     state={{ packagePrice: tier.price }}
                   >
-                    {tier.buttonText}
+                    order now
                   </Button>
                 ) : (
                   <Button
