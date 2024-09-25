@@ -17,6 +17,7 @@ import {
 } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import axiosInstance from "../axiosInstance";
+import PackageDialog from "../components/PackageDialog";
 
 const PricingList = styled("ul")({
   margin: 0,
@@ -27,6 +28,7 @@ const PricingList = styled("ul")({
 const PackagePrices = () => {
   const [editId, setEditId] = useState(null);
   const [packages, setPackages] = useState([]);
+  const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {
     const getPackages = async () => {
@@ -41,113 +43,142 @@ const PackagePrices = () => {
     getPackages();
   }, []);
 
-  const handleEdit = async () => {};
+  const HandleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleSave = (packageDetails) => {
+    console.log(packageDetails);
+  };
+
+  const handleEdit = async (packageId) => {
+    setEditId(packageId);
+    setOpenDialog(true);
+  };
 
   const handleDelete = async () => {};
 
   return (
-    <Grid
-      container
-      xs={12}
-      md={9}
-      sx={{
-        margin: "auto",
-        textAlign: "center",
-        border: "2px solid #ccc",
-        borderRadius: "8px",
-        transition: "background-color 0.3s ease",
-        height: "100%",
-        width: "100%",
-        marginTop: "100px", // Adjust this value to lower the form
-      }}
-    >
-      <Typography
-        variant="h5"
-        sx={{ marginBottom: "16px", width: "100%", textAlign: "center" }}
+    <>
+      <Grid
+        item
+        container
+        xs={12}
+        md={9}
+        sx={{
+          margin: "auto",
+          padding: "24px",
+          textAlign: "center",
+          border: "2px solid #ccc",
+          borderRadius: "8px",
+          transition: "background-color 0.3s ease",
+          height: "100%",
+          width: "100%",
+          marginTop: "100px", // Adjust this value to lower the form
+        }}
       >
-        Packages
-      </Typography>
-      <Grid item container spacing={3} sx={{ margin: "auto" }}>
-        {packages.map((pack) => {
-          return (
-            <Grid
-              item
-              key={pack.package_id}
-              xs={12}
-              sm={6}
-              md={4}
-              sx={{ p: "24px" }}
-            >
-              <Card>
-                <CardHeader
-                  title={pack.title}
-                  titleTypographyProps={{ align: "center" }}
-                  action={pack.title === "Gold" ? <StarIcon /> : null}
-                  subheaderTypographyProps={{
-                    align: "center",
-                  }}
-                  sx={{
-                    backgroundColor: (theme) =>
-                      theme.palette.mode === "light"
-                        ? theme.palette.grey[200]
-                        : theme.palette.grey[700],
-                  }}
-                />
-                <CardContent>
-                  <Box
+        <Typography
+          variant="h5"
+          sx={{ marginBottom: "16px", width: "100%", textAlign: "center" }}
+        >
+          Packages
+        </Typography>
+        <Grid item container spacing={3} sx={{ margin: "auto" }}>
+          {packages.map((pack) => {
+            return (
+              <Grid
+                item
+                key={pack.package_id}
+                xs={12}
+                sm={6}
+                md={4}
+                sx={{ p: "24px" }}
+              >
+                <Card>
+                  <CardHeader
+                    title={pack.title}
+                    titleTypographyProps={{ align: "center" }}
+                    action={pack.title === "Gold" ? <StarIcon /> : null}
+                    subheaderTypographyProps={{
+                      align: "center",
+                    }}
+                    sx={{
+                      backgroundColor: (theme) =>
+                        theme.palette.mode === "light"
+                          ? theme.palette.grey[200]
+                          : theme.palette.grey[700],
+                    }}
+                  />
+                  <CardContent>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "baseline",
+                        mb: 2,
+                      }}
+                    >
+                      <Typography
+                        component="h2"
+                        variant="h3"
+                        color="text.primary"
+                      >
+                        NIS{pack.price}
+                      </Typography>
+                    </Box>
+                    <PricingList>
+                      {pack.details.split(",").map((line) => (
+                        <Typography
+                          component="li"
+                          variant="subtitle1"
+                          align="center"
+                          key={line}
+                        >
+                          {line}
+                        </Typography>
+                      ))}
+                    </PricingList>
+                  </CardContent>
+                  <CardActions
                     sx={{
                       display: "flex",
+                      alignItems: "center",
                       justifyContent: "center",
-                      alignItems: "baseline",
-                      mb: 2,
                     }}
                   >
-                    <Typography
-                      component="h2"
-                      variant="h3"
-                      color="text.primary"
-                    >
-                      NIS{pack.price}
-                    </Typography>
-                  </Box>
-                  <PricingList>
-                    {pack.details.split(",").map((line) => (
-                      <Typography
-                        component="li"
-                        variant="subtitle1"
-                        align="center"
-                        key={line}
-                      >
-                        {line}
-                      </Typography>
-                    ))}
-                  </PricingList>
-                </CardContent>
-                <CardActions
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <IconButton onClick={handleEdit}>
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton onClick={handleDelete}>
-                    <DeleteIcon />
-                  </IconButton>
-                </CardActions>
-              </Card>
-            </Grid>
-          );
-        })}
+                    <IconButton onClick={() => handleEdit(pack.package_id)}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={handleDelete}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </CardActions>
+                </Card>
+              </Grid>
+            );
+          })}
+        </Grid>
+        <Grid item sx={{ width: "100%" }}>
+          <IconButton>
+            <AddIcon sx={{ fontSize: "50px" }} color="primary" />
+          </IconButton>
+        </Grid>
       </Grid>
-      <Grid item sx={{ width: "100%" }}>
-        <IconButton>
-          <AddIcon sx={{fontSize: '50px', }} color= 'primary'/>
-        </IconButton>
-      </Grid>
-    </Grid>
+      {openDialog && (
+        <PackageDialog
+          open={openDialog}
+          handleClose={HandleCloseDialog}
+          handleSave={handleSave}
+          currentPackage={
+            editId
+              ? packages.filter((pack) => {
+                  return pack.package_id === editId;
+                })
+              : null
+          }
+        />
+      )}
+    </>
   );
 };
 
