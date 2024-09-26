@@ -8,7 +8,7 @@ import {
   MenuItem,
   TextField,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Close as CloseIcon } from "@mui/icons-material";
 
 const menuItemStyle = {display: 'flex', alignItems: 'center', justifyContent: 'center'};
@@ -16,20 +16,30 @@ const btnStyle = {textTransform: 'none'};
 
 const PackageDialog = ({ open, handleClose, handleSave, currentPackage }) => {
   const [isEdit, setIsEdit] = useState(false);
+  const [updated, setUpdated] = useState(true);
   const [packageDetails, setPackageDetails] = useState({
-    package_id: "",
-    title: "",
-    price: "",
-    details: "",
-    variant: "contained",
+    
   });
 
   useEffect(() => {
-    console.log(currentPackage);
     if (currentPackage) {
-      setPackageDetails((prev) => currentPackage);
+      setPackageDetails((prev) => {
+        console.log(prev);
+        console.log(currentPackage);
+        return currentPackage[0]
+      })
     }
   }, [currentPackage]);
+
+  useEffect(() => {
+    console.log('packageDetails state:', packageDetails);
+  }, [packageDetails]);
+
+ 
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setPackageDetails((prev) => ({ ...prev, [name]: value }));
+  };
 
   return (
     <Dialog open={open} onClose={handleClose}>
@@ -46,7 +56,7 @@ const PackageDialog = ({ open, handleClose, handleSave, currentPackage }) => {
       >
         <CloseIcon />
       </IconButton>
-      <DialogContent>
+      {updated && <DialogContent>
         <TextField
           autoFocus
           required
@@ -57,7 +67,9 @@ const PackageDialog = ({ open, handleClose, handleSave, currentPackage }) => {
           type="text"
           fullWidth
           variant="outlined"
-          value={packageDetails.title}
+          value={packageDetails?.title || ""}
+          // defaultValue={packageDetails?.title}
+          onChange={handleInputChange} 
         />
         <TextField
           autoFocus
@@ -69,7 +81,9 @@ const PackageDialog = ({ open, handleClose, handleSave, currentPackage }) => {
           type="number"
           fullWidth
           variant="outlined"
-          value={packageDetails.price}
+          value={packageDetails?.price || null}
+          // defaultValue={packageDetails?.price}
+          onChange={handleInputChange} 
         />
         <TextField
           autoFocus
@@ -83,14 +97,16 @@ const PackageDialog = ({ open, handleClose, handleSave, currentPackage }) => {
           multiline
           fullWidth
           variant="outlined"
-          value={packageDetails.details}
+          value={packageDetails?.details || ""}
+          // defaultValue={packageDetails?.details}
+          onChange={handleInputChange} 
         />
         <TextField
           autoFocus
           required
           margin="dense"
           id="variant"
-          name="contained"
+          name="button_variant"
           label="Button Variant"
           select
           slotProps={{
@@ -98,19 +114,20 @@ const PackageDialog = ({ open, handleClose, handleSave, currentPackage }) => {
               native: true,
             },
           }}
-          multiline
-          value={packageDetails.variant}
+          value={packageDetails?.button_variant || "contained"}
+          // defaultValue={packageDetails.button_variant}
           fullWidth
           variant="outlined"
+          onChange={handleInputChange} 
         >
-          <MenuItem selected value={"contained"} sx={menuItemStyle}>
+          <MenuItem value="contained" sx={menuItemStyle}>
             <Button variant="contained" sx={btnStyle}>Contained</Button>
           </MenuItem>
-          <MenuItem value={"outlined"} sx={menuItemStyle}>
+          <MenuItem value="outlined" sx={menuItemStyle}>
             <Button variant="outlined" sx={btnStyle}>Outlined</Button>
           </MenuItem>
         </TextField>
-      </DialogContent>
+      </DialogContent>}
       <DialogActions></DialogActions>
     </Dialog>
   );
