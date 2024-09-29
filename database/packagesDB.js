@@ -7,15 +7,16 @@ const getPackages = async () => {
   return packages;
 };
 
-const addPackage = async ({ title, price, details, variant }) => {
+const addPackage = async ({ title, price, details, button_variant, currency }) => {
   const addPackageQuery = `
-    INSERT INTO packages(title, price, details, button_variant) 
-    VALUES (?, ?, ?, ?)`;
+    INSERT INTO packages(title, price, details, button_variant, currency) 
+    VALUES (?, ?, ?, ?, ?)`;
   const [{ insertId }] = await pool.query(addPackageQuery, [
     title,
     price,
     details,
-    variant,
+    button_variant,
+    currency
   ]);
 //   console.log(insertId);
   return await getPackage(insertId);
@@ -30,17 +31,18 @@ const getPackage = async (packageId) => {
   return package;
 };
 
-const editPackage = async (packageId, { title, price, details, variant }) => {
+const editPackage = async (packageId, { title, price, details, button_variant, currency }) => {
   const editPackageQuery = `
     UPDATE packages
-    SET package_id = ?, title = ?, price = ?, details = ?, button_variant = ?
+    SET package_id = ?, title = ?, price = ?, details = ?, button_variant = ?, currency = ?
     WHERE package_id = ?;`;
   const [{ affectedRows }] = await pool.query(editPackageQuery, [
     packageId,
     title,
     price,
     details,
-    variant,
+    button_variant,
+    currency,
     packageId,
   ]);
   if (!affectedRows) {

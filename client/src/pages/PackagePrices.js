@@ -8,6 +8,8 @@ import {
   IconButton,
   styled,
   Typography,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/StarBorder";
 import {
@@ -29,6 +31,7 @@ const PackagePrices = () => {
   const [editId, setEditId] = useState(null);
   const [packages, setPackages] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const getPackages = async () => {
@@ -47,16 +50,57 @@ const PackagePrices = () => {
     setOpenDialog(false);
   };
 
-  const handleSave = (packageDetails) => {
-    console.log(packageDetails);
+  const handleSave = (isNew, packageDetails) => {
+    isNew && saveNewPackage(packageDetails);
+    !isNew && editPackage(packageDetails);
+  };
+
+  const saveNewPackage = async (packageDetails) => {
+    try {
+      const { data } = await axiosInstance.post("/pricing", packageDetails);
+      HandleCloseDialog();
+      setPackages((prev) => [...prev, data]);
+    } catch (error) {
+      // console.log(error);
+      setError(`Failed to add the package please try again`);
+    }
+  };
+
+  const editPackage = async (packageDetails) => {
+    try {
+      const { data } = await axiosInstance.put(
+        `/pricing/${packageDetails.package_id}`,
+        packageDetails
+      );
+      HandleCloseDialog();
+      setPackages((prev) => {
+        return prev.map((pack) =>
+          pack.package_id === data.package_id ? data : pack
+        );
+      });
+    } catch (error) {
+      // console.log(error);
+      setError(`Edit failed please try again`);
+    }
   };
 
   const handleEdit = async (packageId) => {
     setEditId(packageId);
     setOpenDialog(true);
+    setTimeout(() => setEditId(null), 100);
   };
 
-  const handleDelete = async () => {};
+  const handleDelete = async (packageId) => {
+    try {
+      const { data } = await axiosInstance.delete(`/pricing/${packageId}`);
+      setPackages((prev) =>
+        prev.filter((pack) => pack.package_id !== packageId)
+      );
+    } catch (error) {
+      // console.log(error);
+      setError(`Delete failed please try again`);
+    }
+  };
 
   return (
     <>
@@ -74,7 +118,7 @@ const PackagePrices = () => {
           transition: "background-color 0.3s ease",
           height: "100%",
           width: "100%",
-          marginTop: "100px", // Adjust this value to lower the form
+          marginTop: "100px",
         }}
       >
         <Typography
@@ -123,7 +167,7 @@ const PackagePrices = () => {
                         variant="h3"
                         color="text.primary"
                       >
-                        NIS{pack.price}
+                        {pack.currency}-{pack.price}
                       </Typography>
                     </Box>
                     <PricingList>
@@ -149,7 +193,7 @@ const PackagePrices = () => {
                     <IconButton onClick={() => handleEdit(pack.package_id)}>
                       <EditIcon />
                     </IconButton>
-                    <IconButton onClick={handleDelete}>
+                    <IconButton onClick={() => handleDelete(pack.package_id)}>
                       <DeleteIcon />
                     </IconButton>
                   </CardActions>
@@ -159,7 +203,7 @@ const PackagePrices = () => {
           })}
         </Grid>
         <Grid item sx={{ width: "100%" }}>
-          <IconButton>
+          <IconButton onClick={() => setOpenDialog(true)}>
             <AddIcon sx={{ fontSize: "50px" }} color="primary" />
           </IconButton>
         </Grid>
@@ -177,6 +221,15 @@ const PackagePrices = () => {
               : null
           }
         />
+      )}
+      {error && (
+        <Snackbar
+          open={Boolean(error)}
+          onClose={() => setError(null)}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert severity="error">{error}</Alert>
+        </Snackbar>
       )}
     </>
   );

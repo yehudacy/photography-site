@@ -8,42 +8,43 @@ import {
   MenuItem,
   TextField,
 } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Close as CloseIcon } from "@mui/icons-material";
 
-const menuItemStyle = {display: 'flex', alignItems: 'center', justifyContent: 'center'};
-const btnStyle = {textTransform: 'none'};
+const flexCenterStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+};
+const btnStyle = { textTransform: "none" };
 
 const PackageDialog = ({ open, handleClose, handleSave, currentPackage }) => {
-  const [isEdit, setIsEdit] = useState(false);
-  const [updated, setUpdated] = useState(true);
   const [packageDetails, setPackageDetails] = useState({
-    
+    button_variant: "contained",
+    currency: "NIS"
   });
+  const [isNew, setIsNew] = useState(true);
 
   useEffect(() => {
     if (currentPackage) {
-      setPackageDetails((prev) => {
-        console.log(prev);
-        console.log(currentPackage);
-        return currentPackage[0]
-      })
+      setPackageDetails(currentPackage[0]);
+      setIsNew(false);
     }
   }, [currentPackage]);
 
-  useEffect(() => {
-    console.log('packageDetails state:', packageDetails);
-  }, [packageDetails]);
-
- 
   const handleInputChange = (event) => {
-    const { name, value } = event.target;
+    let { name, value } = event.target;
+    if(name === 'price') {
+      value = Number(value)
+    }    
     setPackageDetails((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Package Details</DialogTitle>
+      <DialogTitle>
+        {!isNew ? "Update" : "New"} Package Details
+      </DialogTitle>
       <IconButton
         aria-label="close"
         onClick={handleClose}
@@ -56,7 +57,7 @@ const PackageDialog = ({ open, handleClose, handleSave, currentPackage }) => {
       >
         <CloseIcon />
       </IconButton>
-      {updated && <DialogContent>
+      <DialogContent>
         <TextField
           autoFocus
           required
@@ -68,8 +69,7 @@ const PackageDialog = ({ open, handleClose, handleSave, currentPackage }) => {
           fullWidth
           variant="outlined"
           value={packageDetails?.title || ""}
-          // defaultValue={packageDetails?.title}
-          onChange={handleInputChange} 
+          onChange={handleInputChange}
         />
         <TextField
           autoFocus
@@ -81,9 +81,8 @@ const PackageDialog = ({ open, handleClose, handleSave, currentPackage }) => {
           type="number"
           fullWidth
           variant="outlined"
-          value={packageDetails?.price || null}
-          // defaultValue={packageDetails?.price}
-          onChange={handleInputChange} 
+          value={packageDetails?.price}
+          onChange={handleInputChange}
         />
         <TextField
           autoFocus
@@ -98,8 +97,7 @@ const PackageDialog = ({ open, handleClose, handleSave, currentPackage }) => {
           fullWidth
           variant="outlined"
           value={packageDetails?.details || ""}
-          // defaultValue={packageDetails?.details}
-          onChange={handleInputChange} 
+          onChange={handleInputChange}
         />
         <TextField
           autoFocus
@@ -109,26 +107,52 @@ const PackageDialog = ({ open, handleClose, handleSave, currentPackage }) => {
           name="button_variant"
           label="Button Variant"
           select
-          slotProps={{
-            select: {
-              native: true,
-            },
-          }}
           value={packageDetails?.button_variant || "contained"}
-          // defaultValue={packageDetails.button_variant}
-          fullWidth
+          sx={{ width: "49%", marginRight: "1%" }}
           variant="outlined"
-          onChange={handleInputChange} 
+          onChange={handleInputChange}
         >
-          <MenuItem value="contained" sx={menuItemStyle}>
-            <Button variant="contained" sx={btnStyle}>Contained</Button>
+          <MenuItem value="contained" sx={flexCenterStyle}>
+            <Button variant="contained" sx={btnStyle}>
+              Contained
+            </Button>
           </MenuItem>
-          <MenuItem value="outlined" sx={menuItemStyle}>
-            <Button variant="outlined" sx={btnStyle}>Outlined</Button>
+          <MenuItem value="outlined" sx={flexCenterStyle}>
+            <Button variant="outlined" sx={btnStyle}>
+              Outlined
+            </Button>
           </MenuItem>
         </TextField>
-      </DialogContent>}
-      <DialogActions></DialogActions>
+        <TextField
+          autoFocus
+          required
+          margin="dense"
+          id="currency"
+          name="currency"
+          label="currency"
+          select
+          value={packageDetails?.currency || "NIS"}
+          sx={{ width: "49%", marginLeft: "1%" }}
+          variant="outlined"
+          onChange={handleInputChange}
+        >
+          <MenuItem value="USD" sx={flexCenterStyle}>
+            <Button variant="text" sx={btnStyle}>
+              USD
+            </Button>
+          </MenuItem>
+          <MenuItem value="NIS" sx={flexCenterStyle}>
+            <Button variant="text" sx={btnStyle}>
+              NIS
+            </Button>
+          </MenuItem>
+        </TextField>
+      </DialogContent>
+      <DialogActions sx={flexCenterStyle}>
+        <Button variant="contained" sx={btnStyle} onClick={() => handleSave(isNew, packageDetails)}>
+          {!isNew ? "update" : "save"}
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 };

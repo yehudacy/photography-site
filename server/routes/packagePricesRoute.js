@@ -20,6 +20,9 @@ packagePriceRouter.post("/", authenticateToken, async ({ body }, res) => {
     if(typeof error.message === 'string' && error.message.startsWith("Data truncated for column 'button_variant'")){
       error.message = `Variant must be ether 'contained' or 'outlined'` 
     }
+    if(typeof error.message === 'string' && error.message.startsWith("Data truncated for column 'currency'")){
+      error.message = `Currency must be ether 'USD' or 'NIS'` 
+    }
     res.status(500).json({ message: error.message });
   }
 });
@@ -66,9 +69,12 @@ packagePriceRouter.put(
       // console.log(editedPackage);
       res.status(201).json(editedPackage);
     } catch (error) {
-      // console.log(error);
+      console.log(error);
       if(typeof error.message === 'string' && error.message.startsWith("Data truncated for column 'button_variant'")){
         error.message = `Variant must be ether 'contained' or 'outlined'` 
+      }
+      if(typeof error.message === 'string' && error.message.startsWith("Data truncated for column 'currency'")){
+        error.message = `Currency must be ether 'USD' or 'NIS'` 
       }
       res
         .status(500)

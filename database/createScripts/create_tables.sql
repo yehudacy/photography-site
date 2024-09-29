@@ -124,8 +124,10 @@ CREATE TABLE `packages` (
   `title` varchar(100) NOT NULL,
   `price` bigint NOT NULL,
   `details` varchar(255) NOT NULL,
+  `button_variant` enum('outlined','contained') NOT NULL,
+  `currency` enum('USD','NIS') NOT NULL DEFAULT 'NIS',
   PRIMARY KEY (`package_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 ALTER TABLE
     `payment_methods` ADD PRIMARY KEY `payment_methods_payment_methods_id_primary`(`payment_methods_id`);
