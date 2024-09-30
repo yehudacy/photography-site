@@ -4,13 +4,27 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+// const theme = createTheme({
+//   palette: {
+//     primary: {
+//       main: "#ff8f00", // This is an orange looking color
+//     },
+//     secondary: {
+//       main: "#ffcc80", //Another orange-ish color
+//     },
+//   },
+// });
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>
+  // <ThemeProvider theme={theme}>
   <BrowserRouter>
     <App />
   </BrowserRouter>
+  // </ThemeProvider>
   // </React.StrictMode>
 );
 

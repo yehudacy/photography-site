@@ -7,7 +7,7 @@ const ordersRouter = express.Router();
 //place a new order 
 ordersRouter.post('/', authenticateToken ,async (req, res) => {
     try {
-        const newOrder = req.body;
+        const newOrder = req.body;        
         //validation if failed send with status 400(bad request)
         const addedOrder = await addOrder(newOrder);
         // console.log(addedOrder) 

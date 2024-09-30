@@ -14,10 +14,12 @@ paypal.configure({
 });
 
 let price = 0;
+let currency = 'ILS';
 
-paypalRouter.post("/", async ({body}, res) => {
+paypalRouter.post("/", async ({body}, res) => {  
   const nonPaidOrder = await addNonPaidOrder(body);
   price = nonPaidOrder.price;
+  currency = nonPaidOrder.currency;
   
   const create_payment_json = {
     intent: "sale",
@@ -36,13 +38,13 @@ paypalRouter.post("/", async ({body}, res) => {
               name: `${nonPaidOrder.price} Package`,
               sku: "001",
               price: `${nonPaidOrder.price}`,
-              currency: "ILS",
+              currency: `${currency}`,
               quantity: 1,
             },
           ],
         },
         amount: {
-          currency: "ILS",
+          currency: `${currency}`,
           total: `${nonPaidOrder.price}`,
         },
         description: "Payment for a order of a package",
@@ -72,7 +74,7 @@ paypalRouter.post("/api/success", (req, res) => {
     transactions: [
       {
         amount: {
-          currency: "ILS",
+          currency: `${currency}`,
           total: `${price}`,
         },
       },
@@ -94,6 +96,7 @@ paypalRouter.post("/api/success", (req, res) => {
           const deletedOrderFromNonPaidOrders = await deleteOrder(params.orderId);
           if(deletedOrderFromNonPaidOrders){
             price = 0;
+            currency = 'ILS';
             res.send({payment, addedOrder});
           } else {
             throw new Error(`can't delete temp order with the id ${params.orderId}`)
@@ -101,6 +104,7 @@ paypalRouter.post("/api/success", (req, res) => {
         } catch(error) {
           console.log(error);
           price = 0;
+          currency = 'ILS';
           throw error;
         }
       

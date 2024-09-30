@@ -8,6 +8,8 @@ const nonPaidOrdersRouter = express.Router();
 nonPaidOrdersRouter.post('/', authenticateToken ,async (req, res) => {
     try {
         const newOrder = req.body;
+        console.log(newOrder);
+        
         //validation if failed send with status 400(bad request)
         const addedOrder = await addNonPaidOrder(newOrder);
         console.log(addedOrder) 
