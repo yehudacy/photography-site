@@ -22,7 +22,7 @@ const btnStyle = { textTransform: "none" };
 const PackageDialog = ({ open, handleClose, handleSave, currentPackage }) => {
   const [packageDetails, setPackageDetails] = useState({
     button_variant: "contained",
-    currency: "NIS",
+    currency: "ILS",
   });
   const [isNew, setIsNew] = useState(true);
 
@@ -132,7 +132,7 @@ const PackageDialog = ({ open, handleClose, handleSave, currentPackage }) => {
           name="currency"
           label="currency"
           select
-          value={packageDetails?.currency || "NIS"}
+          value={packageDetails?.currency || "ILS"}
           sx={{ width: "49%", marginLeft: "1%" }}
           variant="outlined"
           onChange={handleInputChange}
@@ -142,9 +142,9 @@ const PackageDialog = ({ open, handleClose, handleSave, currentPackage }) => {
               USD
             </Button>
           </MenuItem>
-          <MenuItem value="NIS" sx={flexCenterStyle}>
+          <MenuItem value="ILS" sx={flexCenterStyle}>
             <Button variant="text" sx={btnStyle}>
-              NIS
+              ILS
             </Button>
           </MenuItem>
         </TextField>

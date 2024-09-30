@@ -68,10 +68,13 @@ CREATE TABLE `orders` (
   `action_date` datetime NOT NULL,
   `time` varchar(100) NOT NULL,
   `price` decimal(8,2) NOT NULL,
+  `currency` enum('USD','ILS') DEFAULT 'ILS',
   `remarks` varchar(255) NOT NULL,
   `status` varchar(10) NOT NULL,
   PRIMARY KEY (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
 
 
 
@@ -106,6 +109,8 @@ CREATE TABLE `contact_me` (
   PRIMARY KEY (`contact_me_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+
+DROP TABLE IF EXISTS `non_paid_orders`;
 CREATE TABLE `non_paid_orders` (
   `order_id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `client_id` bigint NOT NULL,
@@ -113,21 +118,24 @@ CREATE TABLE `non_paid_orders` (
   `action_date` datetime NOT NULL,
   `time` varchar(100) NOT NULL,
   `price` decimal(8,2) NOT NULL,
+  `currency` enum('USD','ILS') NOT NULL DEFAULT 'ILS',
   `remarks` varchar(255) NOT NULL,
   `status` varchar(10) NOT NULL,
   PRIMARY KEY (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
+
+DROP TABLE IF EXISTS `packages`;
 CREATE TABLE `packages` (
   `package_id` bigint NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
   `price` bigint NOT NULL,
   `details` varchar(255) NOT NULL,
   `button_variant` enum('outlined','contained') NOT NULL,
-  `currency` enum('USD','NIS') NOT NULL DEFAULT 'NIS',
+  `currency` enum('USD','ILS') NOT NULL DEFAULT 'ILS',
   PRIMARY KEY (`package_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 ALTER TABLE
     `payment_methods` ADD PRIMARY KEY `payment_methods_payment_methods_id_primary`(`payment_methods_id`);

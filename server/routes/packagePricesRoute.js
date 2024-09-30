@@ -21,7 +21,7 @@ packagePriceRouter.post("/", authenticateToken, async ({ body }, res) => {
       error.message = `Variant must be ether 'contained' or 'outlined'` 
     }
     if(typeof error.message === 'string' && error.message.startsWith("Data truncated for column 'currency'")){
-      error.message = `Currency must be ether 'USD' or 'NIS'` 
+      error.message = `Currency must be ether 'USD' or 'ILS'` 
     }
     res.status(500).json({ message: error.message });
   }
@@ -74,7 +74,7 @@ packagePriceRouter.put(
         error.message = `Variant must be ether 'contained' or 'outlined'` 
       }
       if(typeof error.message === 'string' && error.message.startsWith("Data truncated for column 'currency'")){
-        error.message = `Currency must be ether 'USD' or 'NIS'` 
+        error.message = `Currency must be ether 'USD' or 'ILS'` 
       }
       res
         .status(500)

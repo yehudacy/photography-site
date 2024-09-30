@@ -30,6 +30,7 @@ const Order = () => {
   const [actionDate, setActionDate] = useState(dayjs());
   const [time, setTime] = useState("");
   const [price] = useState(state?.packagePrice);
+  const [currency] = useState(state?.currency);
   const [remarks, setRemarks] = useState("");
   const [dialog, setDialog] = useState(false);
   const [processing, setProcessing] = useState(false);
@@ -54,6 +55,7 @@ const Order = () => {
       actionDate: actionDate.format("YYYY-MM-DD"),
       time,
       price,
+      currency,
       remarks,
       status: "waiting",
     };
@@ -145,7 +147,7 @@ const Order = () => {
                     <TextField
                       fullWidth
                       label="Price"
-                      value={`${price} NIS`}
+                      value={`${price} ${currency}`}
                       margin="normal"
                       required
                       type="text"

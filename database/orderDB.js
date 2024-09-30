@@ -2,11 +2,11 @@ const { pool } = require('./dbConnection');
 
 
 //add a new order
-const addOrder = async ({client_id, order_date, action_date, time, price, remarks, status}) => {    
+const addOrder = async ({client_id, order_date, action_date, time, price, currency,  remarks, status}) => {    
     const addOrderQuery = `
-    INSERT INTO orders (client_id, order_date, action_date, time, price, remarks, status) 
-    VALUES (?, ?, ?, ?, ?, ?, ?)`;
-    const [{insertId}] = await pool.query(addOrderQuery, [client_id, order_date, action_date, time, price, remarks, status]);
+    INSERT INTO orders (client_id, order_date, action_date, time, price, currency, remarks, status) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    const [{insertId}] = await pool.query(addOrderQuery, [client_id, order_date, action_date, time, price, currency, remarks, status]);
     // console.log(insertId);
     return await getOrder(insertId);
 };
@@ -40,12 +40,12 @@ const getOrderOfSingleClient = async (clientId) => {
 };
 
 //edit a order
-const editOrder = async (orderId, {clientId, orderDate, actionDate, price, status}) => {
+const editOrder = async (orderId, {clientId, orderDate, actionDate, price, currency, status}) => {
     const editOrderQuery = `
     UPDATE orders
-    SET client_id = ?, order_date = ?, action_date = ?, price = ?, status = ?
+    SET client_id = ?, order_date = ?, action_date = ?, price = ?, currency = ?, status = ?
     WHERE order_id = ?;`;
-    const [{affectedRows}] = await pool.query(editOrderQuery, [clientId, orderDate, actionDate, price, status, orderId]);
+    const [{affectedRows}] = await pool.query(editOrderQuery, [clientId, orderDate, actionDate, price, currency, status, orderId]);
     if(!affectedRows){
         throw new Error("no rows affected please check the order id if it exist");
     }
@@ -72,6 +72,7 @@ const newOrder = {
     actionDate: '2024-08-20',
     time: '12:54',
     price: 1650,
+    currency: 'USD',
     remarks: "some remarks2",
     status: "waiting"
 }
