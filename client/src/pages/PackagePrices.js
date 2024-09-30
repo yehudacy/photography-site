@@ -57,7 +57,7 @@ const PackagePrices = () => {
 
   const saveNewPackage = async (packageDetails) => {
     try {
-      const { data } = await axiosInstance.post("/pricing", packageDetails);
+      const { data } = await axiosInstance.post("/pricing", packageDetails);      
       HandleCloseDialog();
       setPackages((prev) => [...prev, data]);
     } catch (error) {

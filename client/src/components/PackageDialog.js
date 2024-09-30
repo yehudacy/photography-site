@@ -7,6 +7,7 @@ import {
   IconButton,
   MenuItem,
   TextField,
+  Tooltip,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Close as CloseIcon } from "@mui/icons-material";
@@ -21,7 +22,7 @@ const btnStyle = { textTransform: "none" };
 const PackageDialog = ({ open, handleClose, handleSave, currentPackage }) => {
   const [packageDetails, setPackageDetails] = useState({
     button_variant: "contained",
-    currency: "NIS"
+    currency: "NIS",
   });
   const [isNew, setIsNew] = useState(true);
 
@@ -34,17 +35,15 @@ const PackageDialog = ({ open, handleClose, handleSave, currentPackage }) => {
 
   const handleInputChange = (event) => {
     let { name, value } = event.target;
-    if(name === 'price') {
-      value = Number(value)
-    }    
+    if (name === "price") {
+      value = Number(value);
+    }
     setPackageDetails((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>
-        {!isNew ? "Update" : "New"} Package Details
-      </DialogTitle>
+      <DialogTitle>{!isNew ? "Update" : "New"} Package Details</DialogTitle>
       <IconButton
         aria-label="close"
         onClick={handleClose}
@@ -81,24 +80,26 @@ const PackageDialog = ({ open, handleClose, handleSave, currentPackage }) => {
           type="number"
           fullWidth
           variant="outlined"
-          value={packageDetails?.price}
+          value={packageDetails?.price || ""}
           onChange={handleInputChange}
         />
-        <TextField
-          autoFocus
-          required
-          margin="dense"
-          id="details"
-          name="details"
-          label="Package details"
-          type="text"
-          placeholder="Please enter comma(,) separated details"
-          multiline
-          fullWidth
-          variant="outlined"
-          value={packageDetails?.details || ""}
-          onChange={handleInputChange}
-        />
+        <Tooltip arrow title="Please enter the details of the package and separate them with a comma(,)!">
+          <TextField
+            autoFocus
+            required
+            margin="dense"
+            id="details"
+            name="details"
+            label="Package details"
+            type="text"
+            placeholder="Please enter comma(,) separated details"
+            multiline
+            fullWidth
+            variant="outlined"
+            value={packageDetails?.details || ""}
+            onChange={handleInputChange}
+          />
+        </Tooltip>
         <TextField
           autoFocus
           required
@@ -149,7 +150,11 @@ const PackageDialog = ({ open, handleClose, handleSave, currentPackage }) => {
         </TextField>
       </DialogContent>
       <DialogActions sx={flexCenterStyle}>
-        <Button variant="contained" sx={btnStyle} onClick={() => handleSave(isNew, packageDetails)}>
+        <Button
+          variant="contained"
+          sx={btnStyle}
+          onClick={() => handleSave(isNew, packageDetails)}
+        >
           {!isNew ? "update" : "save"}
         </Button>
       </DialogActions>
