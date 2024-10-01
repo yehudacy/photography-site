@@ -13,94 +13,93 @@ const addCategory = async (categoryName, categoryImageId) => {
   return insertId;
 };
 
-
 //edit a category
 const editCategory = async (categoryId, categoryImageId) => {
   let editCategoryQuery = `
   UPDATE categories
   SET category_image_id = ?
   WHERE category_id = ?`;
-  const [{affectedRows}] = await pool.query(editCategoryQuery, [categoryImageId ,categoryId]);
+  const [{ affectedRows }] = await pool.query(editCategoryQuery, [
+    categoryImageId,
+    categoryId,
+  ]);
   // console.log(affectedRows);
   return affectedRows;
- 
-  };
-  //get all category names
-  const getAllCategoriesNames = async () => {
-    const getCategoryNamesQuery = `SELECT name FROM categories`;
-    const [queryResult] = await pool.query(getCategoryNamesQuery);
-    const justNamesArr = queryResult.map(({ name }) => name);
-    //   console.log(justNamesArr)
-    return justNamesArr;
-  };
+};
+//get all category names
+const getAllCategoriesNames = async () => {
+  const getCategoryNamesQuery = `SELECT name FROM categories`;
+  const [queryResult] = await pool.query(getCategoryNamesQuery);
+  const justNamesArr = queryResult.map(({ name }) => name);
+  //   console.log(justNamesArr)
+  return justNamesArr;
+};
 
-  //get category id by category name
-  const getCategoryIdByName = async (categoryName) => {
-    const getCategoryIdQuery = `
+//get category id by category name
+const getCategoryIdByName = async (categoryName) => {
+  const getCategoryIdQuery = `
     SELECT category_id 
     FROM categories 
     WHERE name = ?;`;
-    const [[result]] = await pool.query(getCategoryIdQuery, [
-      categoryName,
-    ]);
-    // console.log(result)
-    return result?.category_id;
-  };
+  const [[result]] = await pool.query(getCategoryIdQuery, [categoryName]);
+  // console.log(result)
+  return result?.category_id;
+};
 
-  //get all images of citrin category
-  const getallImagesOfACategory = async (categoryName) => {
-    let categoryId = await getCategoryIdByName(categoryName);
-    if (categoryId === undefined) {
-      throw new Error(`Category ${categoryName} does not exist`);
-    }
-    const getallImagesOfACategoryQuery = `
+//get all images of citrin category
+const getallImagesOfACategory = async (categoryName) => {
+  let categoryId = await getCategoryIdByName(categoryName);
+  if (categoryId === undefined) {
+    throw new Error(`Category ${categoryName} does not exist`);
+  }
+  const getallImagesOfACategoryQuery = `
     SELECT * FROM images i
 	WHERE i.category_id = ?`;
-    const [imagesOfACategory] = await pool.query(getallImagesOfACategoryQuery, [
-      categoryId,
-    ]);
-    // console.log(imagesOfACategory)
-    return imagesOfACategory;
-  };
+  const [imagesOfACategory] = await pool.query(getallImagesOfACategoryQuery, [
+    categoryId,
+  ]);
+  // console.log(imagesOfACategory)
+  return imagesOfACategory;
+};
 
-  //get all category images
-  const getAllCategoryImages = async () => {
-    const getAllCategoryImagesQuery = `
+//get all category images
+const getAllCategoryImages = async () => {
+  const getAllCategoryImagesQuery = `
     SELECT * FROM images 
     INNER JOIN categories 
     ON images.image_id = categories.category_image_id`;
-    const allCategoryImages = await pool.query(getAllCategoryImagesQuery);
-    // console.log(allCategoryImages);
-    return allCategoryImages;
-  };
+  const allCategoryImages = await pool.query(getAllCategoryImagesQuery);
+  // console.log(allCategoryImages);
+  return allCategoryImages;
+};
 
-  // getCategoryIdByName('new_born')
+// getCategoryIdByName('new_born')
 
-  // addCategory('new_born', 1);
-  // addCategory('burger', 2);
-  // addCategory('camera', 3);
-  // addCategory('coffee', 4);
-  // addCategory('hats', 5);
-  // addCategory('honey', 6);
-  // addCategory('basketball', 7);
-  // addCategory('fern', 8);
-  // addCategory('Mushrooms', 9);
-  // addCategory('Tomato_basil', 10);
-  // addCategory('sea_star', 11);
-  // addCategory('bike', 12);
+// addCategory('new_born', 1);
+// addCategory('burger', 2);
+// addCategory('camera', 3);
+// addCategory('coffee', 4);
+// addCategory('hats', 5);
+// addCategory('honey', 6);
+// addCategory('basketball', 7);
+// addCategory('fern', 8);
+// addCategory('Mushrooms', 9);
+// addCategory('Tomato_basil', 10);
+// addCategory('sea_star', 11);
+// addCategory('bike', 12);
 
-  // getAllCategoryImages();
+// getAllCategoryImages();
 
-  // getCategoryIdByName('new_born');
+// getCategoryIdByName('new_born');
 
-  // getAllCategoriesNames()
+// getAllCategoriesNames()
 
-  // getallImagesOfACategory("new_born");
-  editCategory(5, 28);
-  module.exports = {
-    addCategory,
-    getCategoryIdByName,
-    getAllCategoryImages,
-    getallImagesOfACategory,
-    getAllCategoriesNames
-  };
+// getallImagesOfACategory("new_born");
+// editCategory(5, 28);
+module.exports = {
+  addCategory,
+  getCategoryIdByName,
+  getAllCategoryImages,
+  getallImagesOfACategory,
+  getAllCategoriesNames,
+};

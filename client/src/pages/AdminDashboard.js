@@ -8,6 +8,7 @@ import AccountDetails from "../components/AccountDetails";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../hooks/useUser";
 import PackagePrices from "./PackagePrices";
+import CategoryManagement from "../components/CategoryManagement";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -83,6 +84,15 @@ const AdminDashboard = () => {
           </Button>
           <Button
             fullWidth
+            onClick={() => setComponentToRender("categories")}
+            style={buttonStyle}
+            color="primary"
+            sx={btnTextAlignment}
+          >
+            Categories
+          </Button>
+          <Button
+            fullWidth
             onClick={() => setComponentToRender("upload")}
             style={buttonStyle}
             color="primary"
@@ -107,6 +117,7 @@ const AdminDashboard = () => {
       {componentToRender === "upload" && <ImageUploadForm />}
       {componentToRender === "viewImg" && <AdminImagesGallery />}
       {componentToRender === "pricing" && <PackagePrices />}
+      {componentToRender === "categories" && <CategoryManagement />}
     </Grid>
   );
 };
