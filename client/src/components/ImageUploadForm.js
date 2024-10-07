@@ -30,7 +30,7 @@ const ImageUploadForm = () => {
   useEffect(() => {
     const fetchCategoryNames = async () => {
       try {
-        const { data } = await axiosInstance.get("category");
+        const { data } = await axiosInstance.get("category/names");
         // console.log(data);
         setOptions(data);
       } catch (error) {
@@ -79,23 +79,25 @@ const ImageUploadForm = () => {
 
   const uploadToServer = async (formData) => {
     try {
-      const {data, status} = await axiosInstance.post("/gallery/image", formData);
+      const { data, status } = await axiosInstance.post(
+        "/gallery/image",
+        formData
+      );
       console.log(data, status);
-      if(status === 201) {
-
+      if (status === 201) {
         if (previewUrl) {
           URL.revokeObjectURL(previewUrl);
         }
-        
+
         setCategory("");
         setClientEmail("");
         setIsMainImage(false);
         setFile(null);
         setPreviewUrl(null);
-        
+
         setAlert("success");
         setAlertMsg(data.message);
-        
+
         setTimeout(() => {
           setAlert("");
           setAlertMsg("");
@@ -185,24 +187,6 @@ const ImageUploadForm = () => {
         />
 
         <div style={{ marginBottom: "16px", position: "relative" }}>
-          <input
-            type="file"
-            onChange={handleFileChange}
-            accept="image/*"
-            style={{ display: "none" }}
-            id="imageInput"
-          />
-          <label htmlFor="imageInput">
-            <Button
-              variant="contained"
-              color="primary"
-              component="span"
-              style={chooseFileButtonStyle}
-            >
-              {previewUrl ? "Change File" : "Choose a File"}
-            </Button>
-          </label>
-
           {previewUrl && (
             <>
               <img
@@ -220,6 +204,23 @@ const ImageUploadForm = () => {
               </Button>
             </>
           )}
+          <input
+            type="file"
+            onChange={handleFileChange}
+            accept="image/*"
+            style={{ display: "none" }}
+            id="imageInput"
+          />
+          <label htmlFor="imageInput">
+            <Button
+              variant="contained"
+              color="primary"
+              component="span"
+              style={chooseFileButtonStyle}
+            >
+              {previewUrl ? "Change File" : "Choose a File"}
+            </Button>
+          </label>
         </div>
 
         <FormControlLabel

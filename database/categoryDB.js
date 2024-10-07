@@ -26,6 +26,24 @@ const editCategory = async (categoryId, categoryImageId) => {
   // console.log(affectedRows);
   return affectedRows;
 };
+//get all category objects including image urls and names
+const getCategories = async () => {
+  const getCategoriesQuery = `
+ SELECT 
+  categories.category_id, 
+  categories.name, 
+  categories.category_image_id, 
+  images.src
+FROM 
+  photography_site.categories
+LEFT JOIN 
+  photography_site.images
+ON 
+  categories.category_image_id = images.image_id;`;
+  const [result] = await pool.query(getCategoriesQuery);
+  // console.log(result);
+  return result;
+};
 //get all category names
 const getAllCategoriesNames = async () => {
   const getCategoryNamesQuery = `SELECT name FROM categories`;
@@ -96,10 +114,12 @@ const getAllCategoryImages = async () => {
 
 // getallImagesOfACategory("new_born");
 // editCategory(5, 28);
+// getCategories();
 module.exports = {
   addCategory,
   getCategoryIdByName,
   getAllCategoryImages,
   getallImagesOfACategory,
   getAllCategoriesNames,
+  getCategories,
 };
