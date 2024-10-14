@@ -40,11 +40,17 @@ const CategoryDialog = ({ open, onClose, handleSave, category }) => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+    if(previewImage){
+      URL.revokeObjectURL(previewImage)
+    }
     setPreviewImage(URL.createObjectURL(file));
   };
 
   const handleImageClear = () => {
-    setFormData({ ...formData, src: "" });
+    if(previewImage){
+      URL.revokeObjectURL(previewImage)
+    }
+    setPreviewImage(null);
   };
 
   return (
@@ -100,7 +106,7 @@ const CategoryDialog = ({ open, onClose, handleSave, category }) => {
             alignItems: "center",
           }}
         >
-          {formData.src && (
+          {previewImage && (
             <Button
               variant="contained"
               color="error"
@@ -163,30 +169,3 @@ const CategoryDialog = ({ open, onClose, handleSave, category }) => {
 };
 
 export default CategoryDialog;
-
-{
-  /* <Box sx={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-{formData.src && (
-  <Button
-    variant="contained"
-    color="error"
-    onClick={handleImageClear}
-  >
-    <Clear />
-    <Typography variant="body2" color="inherit" sx={{ marginLeft: 1 }}>
-      Clear
-    </Typography>
-  </Button>
-)}
-<Button
-  variant="contained"
-  color="primary"
-  onClick={formData.src ? () => document.getElementById('image-input').click() : () => document.getElementById('image-input').click()}
->
-  <AddPhotoAlternate />
-  <Typography variant="body2" color="inherit" sx={{ marginLeft: 1 }}>
-    {formData.src ? 'Change Image' : 'Add Image'}
-  </Typography>
-</Button>
-</Box> */
-}
