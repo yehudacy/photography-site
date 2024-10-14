@@ -90,7 +90,7 @@ const deleteUser = async () => {};
 
 module.exports = { addUser, getUser, login, getClientByEmail, editUser };
 
-// addUser({firstName:"yehuda", lastName:"cywiak", email:"yc0527183008@gmail.com", password:"yc@123456", city:"BB", street:"beeri", buildingNumber:"17"});
+// addUser({firstName:"Ester", lastName:"cywiak", email:"ecy4959@gmail.com", password:"demoecy@123456", city:"BB", street:"beeri", buildingNumber:"17"});
 // getUser(1);
 
 // login({ email: "yc0527183008@gmail.com", password: "yc@123456" }, "clients");
