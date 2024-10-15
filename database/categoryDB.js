@@ -9,8 +9,8 @@ const addCategory = async (categoryName, categoryImageId) => {
     categoryName,
     categoryImageId,
   ]);
-  // console.log(insertId);
-  return insertId;
+  console.log(insertId);
+  return getCategory(insertId);
 };
 
 //edit a category
@@ -25,6 +25,32 @@ const editCategory = async (categoryId, categoryImageId) => {
   ]);
   // console.log(affectedRows);
   return affectedRows;
+};
+
+const getCategory = async (categoryId) => {
+  const getCategoryByIdQuery = `
+    SELECT * FROM categories
+    WHERE category_id = ?`;
+  const [[category]] = await pool.query(getCategoryByIdQuery, [categoryId]);
+    // console.log(category);
+  return category;
+};
+
+//delete a category
+const deleteCategory = async (categoryId) => {
+  const categoryToDelete = await getCategory(categoryId);
+  if (!categoryToDelete) {
+    throw new Error(`No category with the Id of ${categoryId}`);
+  }
+  const removeCategoryQuery = `
+  DELETE FROM categories 
+  WHERE category_id = ?;`;
+  const [result] = await pool.query(removeCategoryQuery, [categoryId]);
+  if (result.affectedRows === 1) {
+    return categoryToDelete;
+  } else {
+    throw "Delete failed";
+  }
 };
 //get all category objects including image urls and names
 const getCategories = async () => {
@@ -115,6 +141,8 @@ const getAllCategoryImages = async () => {
 // getallImagesOfACategory("new_born");
 // editCategory(5, 28);
 // getCategories();
+// getCategory(5)
+// deleteCategory(11)
 module.exports = {
   addCategory,
   getCategoryIdByName,
@@ -122,4 +150,6 @@ module.exports = {
   getallImagesOfACategory,
   getAllCategoriesNames,
   getCategories,
+  getCategory,
+  deleteCategory,
 };

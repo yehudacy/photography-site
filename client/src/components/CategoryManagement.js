@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../axiosInstance";
 import {
+  Alert,
   Box,
   Card,
   CardActions,
   CardContent,
   Grid,
   IconButton,
+  Snackbar,
   Typography,
 } from "@mui/material";
 import CategoryDialog from "./CategoryDialog";
@@ -21,6 +23,8 @@ const CategoryManagement = () => {
   const [categories, setCategories] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [error, setError] = useState(null);
+
 
   useEffect(() => {
     const getCategories = async () => {
@@ -48,10 +52,16 @@ const CategoryManagement = () => {
     setDialogOpen(true);
   };
 
-  const handleDelete = (categoryId) => {
-    setCategories(
-      categories.filter((category) => category.category_id !== categoryId)
-    );
+  const handleDelete = async (categoryId) => {
+    try{
+      const { data } = await axiosInstance.delete(`/category/${categoryId}`);
+      setCategories((prev) => {
+        return prev.filter((category) => category.category_id !== data.category_id);
+      });
+    }catch(error){
+         // console.log(error);
+         setError(`Delete failed please try again`);
+    }
   };
 
   const handleSave = (categoryData) => {    
@@ -156,6 +166,15 @@ const CategoryManagement = () => {
         </Grid>
         <CategoryDialog open={dialogOpen} onClose={handleClose} handleSave={handleSave} category={selectedCategory}/>
       </Grid>
+      {error && (
+        <Snackbar
+          open={Boolean(error)}
+          onClose={() => setError(null)}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert severity="error">{error}</Alert>
+        </Snackbar>
+      )}
     </>
   );
 };

@@ -39,11 +39,11 @@ const CategoryDialog = ({ open, onClose, handleSave, category }) => {
   };
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
+    const image = e.target.files[0];
     if(previewImage){
       URL.revokeObjectURL(previewImage)
     }
-    setPreviewImage(URL.createObjectURL(file));
+    setPreviewImage(URL.createObjectURL(image));
   };
 
   const handleImageClear = () => {
@@ -135,7 +135,7 @@ const CategoryDialog = ({ open, onClose, handleSave, category }) => {
           >
             <AddPhotoAlternate />
             <Typography variant="body2" color="inherit" sx={{ marginLeft: 1 }}>
-              {formData.src ? "Change Image" : "Add Image"}
+              {previewImage ? "Change Image" : "Add Image"}
             </Typography>
           </Button>
         </Box>
