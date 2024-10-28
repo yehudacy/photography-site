@@ -64,7 +64,7 @@ const CategoryManagement = () => {
     }
   };
 
-  const handleSave = (categoryData) => {    
+  const handleSave = async (categoryData) => {    
     if (selectedCategory) {
       // Edit existing category
       setCategories(
@@ -74,10 +74,19 @@ const CategoryManagement = () => {
       );
     } else {
       // Add new category
-      setCategories([
-        ...categories,
-        { ...categoryData, category_id: Date.now() },
-      ]);
+      try{
+        console.log(categoryData);
+        
+        const { data } = await axiosInstance.post(`/category`, categoryData);
+        setCategories([
+          ...categories,
+          data
+        ]);
+        setDialogOpen(false);
+      }catch(error){
+           // console.log(error);
+           setError(`Delete failed please try again`);
+      }
     }
   };
 

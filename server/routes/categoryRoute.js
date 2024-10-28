@@ -3,6 +3,7 @@ const {
   getAllCategoriesNames,
   getCategories,
   deleteCategory,
+  addCategory,
 } = require("../../database/categoryDB");
 const { authenticateToken } = require("../authentication/authentication");
 const categoryRouter = express.Router();
@@ -27,6 +28,18 @@ categoryRouter.get("/names", authenticateToken, async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "the server is down please try later" });
+  }
+});
+
+categoryRouter.post("/", authenticateToken, async ({ body }, res) => {
+  try {
+    console.log(body);
+    body.category_image_id = 5;
+    const addedCategory = await addCategory(body);
+    res.status(201).json(addedCategory);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
   }
 });
 

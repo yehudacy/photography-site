@@ -1,13 +1,13 @@
 const { pool } = require("./dbConnection");
 
 //add a new category
-const addCategory = async (categoryName, categoryImageId) => {
+const addCategory = async ({name, category_image_id}) => {
   const addCategoryQuery = `
     INSERT INTO categories (name, category_image_id) 
     VALUES (?, ?)`;
   const [{ insertId }] = await pool.query(addCategoryQuery, [
-    categoryName,
-    categoryImageId,
+    name,
+    category_image_id,
   ]);
   console.log(insertId);
   return getCategory(insertId);
