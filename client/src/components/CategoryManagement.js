@@ -75,7 +75,7 @@ const CategoryManagement = () => {
     } else {
       // Add new category
       try{
-        console.log(categoryData);
+        console.log({categoryData});
         
         const { data } = await axiosInstance.post(`/category`, categoryData);
         setCategories([

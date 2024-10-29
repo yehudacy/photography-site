@@ -16,7 +16,7 @@ const btnStyle = { textTransform: "none" };
 const CategoryDialog = ({ open, onClose, handleSave, category }) => {
   const [formData, setFormData] = useState({
     name: "",
-    src: "",
+    file: "",
   });
 
   const [previewImage, setPreviewImage] = useState(null);
@@ -40,9 +40,15 @@ const CategoryDialog = ({ open, onClose, handleSave, category }) => {
 
   const handleImageChange = (e) => {
     const image = e.target.files[0];
+    console.log(image);
+    
     if(previewImage){
       URL.revokeObjectURL(previewImage)
     }
+    setFormData({
+      ...formData,
+      file: image
+    })
     setPreviewImage(URL.createObjectURL(image));
   };
 
@@ -141,6 +147,7 @@ const CategoryDialog = ({ open, onClose, handleSave, category }) => {
         </Box>
         <input
           type="file"
+          name="file"
           id="image-input"
           style={{ display: "none" }}
           onChange={(e) => handleImageChange(e)}

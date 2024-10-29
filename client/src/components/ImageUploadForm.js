@@ -122,7 +122,7 @@ const ImageUploadForm = () => {
     formData.append("clientEmail", clientEmail);
     formData.append("isMainImage", isMainImage);
     formData.append("file", file);
-    // console.log("file", formData.get('file'))
+    console.log("file", formData.get('file'))
     uploadToServer(formData);
 
     // Revoke the object URL after saving

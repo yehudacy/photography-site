@@ -1,4 +1,5 @@
 const express = require("express");
+const multer = require('multer');
 const {
   getAllCategoriesNames,
   getCategories,
@@ -7,6 +8,10 @@ const {
 } = require("../../database/categoryDB");
 const { authenticateToken } = require("../authentication/authentication");
 const categoryRouter = express.Router();
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
 
 //getting all category objects including category image url;
 categoryRouter.get("/", async (req, res) => {
@@ -31,11 +36,12 @@ categoryRouter.get("/names", authenticateToken, async (req, res) => {
   }
 });
 
-categoryRouter.post("/", authenticateToken, async ({ body }, res) => {
+categoryRouter.post("/", authenticateToken, upload.single('file'), async ( req, res) => {
   try {
-    console.log(body);
-    body.category_image_id = 5;
-    const addedCategory = await addCategory(body);
+    console.log(req.body.file);
+    // console.log(req.file);
+    req.body.category_image_id = null;
+    const addedCategory = await addCategory(req.body);
     res.status(201).json(addedCategory);
   } catch (error) {
     console.log(error);
