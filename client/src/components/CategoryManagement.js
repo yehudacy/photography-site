@@ -65,6 +65,9 @@ const CategoryManagement = () => {
   };
 
   const handleSave = async (categoryData) => {    
+    const formData = new FormData();
+    formData.append('name', categoryData.name);
+    formData.append('image', categoryData.image);
     if (selectedCategory) {
       // Edit existing category
       setCategories(
@@ -75,9 +78,9 @@ const CategoryManagement = () => {
     } else {
       // Add new category
       try{
-        console.log({categoryData});
+        console.log(formData.get('image'));
         
-        const { data } = await axiosInstance.post(`/category`, categoryData);
+        const { data } = await axiosInstance.post(`/category`, formData);
         setCategories([
           ...categories,
           data

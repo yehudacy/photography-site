@@ -36,10 +36,10 @@ categoryRouter.get("/names", authenticateToken, async (req, res) => {
   }
 });
 
-categoryRouter.post("/", authenticateToken, upload.single('file'), async ( req, res) => {
+categoryRouter.post("/", authenticateToken, upload.single('image'), async ( req, res) => {
   try {
-    console.log(req.body.file);
-    // console.log(req.file);
+    console.log(req.image);
+    // console.log(req.file); 
     req.body.category_image_id = null;
     const addedCategory = await addCategory(req.body);
     res.status(201).json(addedCategory);

@@ -16,7 +16,7 @@ const btnStyle = { textTransform: "none" };
 const CategoryDialog = ({ open, onClose, handleSave, category }) => {
   const [formData, setFormData] = useState({
     name: "",
-    file: "",
+    image: "",
   });
 
   const [previewImage, setPreviewImage] = useState(null);
@@ -45,9 +45,11 @@ const CategoryDialog = ({ open, onClose, handleSave, category }) => {
     if(previewImage){
       URL.revokeObjectURL(previewImage)
     }
-    setFormData({
-      ...formData,
-      file: image
+    setFormData( (prev) => {
+     return {
+      ...prev,
+      image: image,
+     }
     })
     setPreviewImage(URL.createObjectURL(image));
   };
