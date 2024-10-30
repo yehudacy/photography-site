@@ -63,7 +63,7 @@ categoryRouter.post(
         res.status(201).json({...addedCategory, src: imageUrl});
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       res.status(500).json({ message: error.message });
     }
   }

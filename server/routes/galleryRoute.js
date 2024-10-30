@@ -39,8 +39,6 @@ galleryRouter.post("/image", authenticateToken, upload.single('file'), async (re
     if (!req.file) {
       return res.status(400).send('No file uploaded.');
     }
-    // console.log(req.file)
-    // console.log(req.body)
 
     const fileName = `${uniqid()}${req.file.originalname}`
     const imageUrl = await uploadImage(req.file.buffer, fileName);
@@ -53,7 +51,6 @@ galleryRouter.post("/image", authenticateToken, upload.single('file'), async (re
 
     if(req.body.isMainImage){
       const result = await addImageTransaction(categoryId, clientId, imageUrl);
-      // console.log(result);
       if(result === "commit"){
         res.status(201).json("The Image has been added as Main Image");
       } else {
