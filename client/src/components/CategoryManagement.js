@@ -30,7 +30,7 @@ const CategoryManagement = () => {
     const getCategories = async () => {
       try {
         const { data } = await axiosInstance.get("/category");
-        // console.log(data);
+        console.log(data);
         setCategories(data);
       } catch (error) {
         console.log(error);
@@ -77,18 +77,23 @@ const CategoryManagement = () => {
       );
     } else {
       // Add new category
-      try{
-        console.log(formData.get('image'));
-        
+      try{        
         const { data } = await axiosInstance.post(`/category`, formData);
+        console.log(data);
+        
         setCategories([
           ...categories,
           data
         ]);
         setDialogOpen(false);
+        setSelectedCategory(null);
+        return true;
       }catch(error){
            // console.log(error);
-           setError(`Delete failed please try again`);
+           setError(`Saving failed please try again`);
+           setTimeout(() => {
+            setError("");
+           }, 5000)
       }
     }
   };

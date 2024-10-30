@@ -39,8 +39,8 @@ galleryRouter.post("/image", authenticateToken, upload.single('file'), async (re
     if (!req.file) {
       return res.status(400).send('No file uploaded.');
     }
-    console.log(req.file)
-    console.log(req.body)
+    // console.log(req.file)
+    // console.log(req.body)
 
     const fileName = `${uniqid()}${req.file.originalname}`
     const imageUrl = await uploadImage(req.file.buffer, fileName);

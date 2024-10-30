@@ -39,9 +39,7 @@ const CategoryDialog = ({ open, onClose, handleSave, category }) => {
   };
 
   const handleImageChange = (e) => {
-    const image = e.target.files[0];
-    console.log(image);
-    
+    const image = e.target.files[0];    
     if(previewImage){
       URL.revokeObjectURL(previewImage)
     }
@@ -157,7 +155,12 @@ const CategoryDialog = ({ open, onClose, handleSave, category }) => {
       </DialogContent>
       <DialogActions>
         <Button
-          onClick={onClose}
+          onClick={() => {
+            onClose();
+            setFormData(f => ({ name: "", src: "" }));
+            setPreviewImage(null);
+            setIsEditing(false);
+          }}
           variant="contained"
           color="primary"
           sx={btnStyle}
@@ -165,7 +168,12 @@ const CategoryDialog = ({ open, onClose, handleSave, category }) => {
           Cancel
         </Button>
         <Button
-          onClick={() => handleSave(formData)}
+          onClick={ async () => {
+            if(! await handleSave(formData)) return; 
+            setFormData(f => ({ name: "", src: "" }));
+            setPreviewImage(null);
+            setIsEditing(false);
+          }}
           variant="contained"
           color="primary"
           sx={btnStyle}

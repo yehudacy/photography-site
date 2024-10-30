@@ -152,4 +152,5 @@ module.exports = {
   getCategories,
   getCategory,
   deleteCategory,
+  editCategory,
 };
