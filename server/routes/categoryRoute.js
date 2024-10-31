@@ -7,11 +7,13 @@ const {
   deleteCategory,
   addCategory,
   getCategory,
+  editCategory,
 } = require("../../database/categoryDB");
 const { authenticateToken } = require("../authentication/authentication");
 const { uploadImage } = require("../cloudinary/cloudinary");
 const {
   addCategoryAndImageTransaction,
+  editCategoryTransaction,
 } = require("../../database/transactions");
 const { login } = require("../../database/usersDB");
 const categoryRouter = express.Router();
@@ -60,10 +62,36 @@ categoryRouter.post(
       console.log(status, categoryId);
       if (status === "commit") {
         const addedCategory = await getCategory(categoryId);
-        res.status(201).json({...addedCategory, src: imageUrl});
+        res.status(201).json({ ...addedCategory, src: imageUrl });
       }
     } catch (error) {
       // console.log(error);
+      res.status(500).json({ message: error.message });
+    }
+  }
+);
+
+categoryRouter.put(
+  "/:categoryId",
+  authenticateToken,
+  upload.single("image"),
+  async ({ body, file, params : {categoryId} }, res) => {    
+    let imageUrl;
+    try {
+      if(body.imgChanged === 'true'){
+        const fileName = `${uniqid()}${file.originalname}`;
+        imageUrl = await uploadImage(file.buffer, fileName);
+      }
+
+     const url = body.imgChanged === 'true' ? imageUrl : body.image;
+      
+      const {status} = await editCategoryTransaction(categoryId, body, url);
+      if(status === "commit"){
+        const updatedCategory = await getCategory(categoryId);
+        res.status(200).json({ ...updatedCategory, src: url });
+      }
+    } catch (error) {
+      console.log(error);
       res.status(500).json({ message: error.message });
     }
   }

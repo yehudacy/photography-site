@@ -13,10 +13,10 @@ import {
 } from "@mui/material";
 import CategoryDialog from "./CategoryDialog";
 import {
-    Edit as EditIcon,
-    Delete as DeleteIcon,
-    AddCircle as AddIcon,
-  } from "@mui/icons-material";
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  AddCircle as AddIcon,
+} from "@mui/icons-material";
 const CategoryManagement = () => {
   //link to a library that is passible to hl=ep me with the images
   //https://www.npmjs.com/package/mui-image?activeTab=readme
@@ -25,12 +25,11 @@ const CategoryManagement = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [error, setError] = useState(null);
 
-
   useEffect(() => {
     const getCategories = async () => {
       try {
         const { data } = await axiosInstance.get("/category");
-        console.log(data);
+        // console.log(data);
         setCategories(data);
       } catch (error) {
         console.log(error);
@@ -41,7 +40,7 @@ const CategoryManagement = () => {
 
   const handleClose = () => {
     setDialogOpen(false);
-  }
+  };
   const handleAdd = () => {
     setSelectedCategory(null);
     setDialogOpen(true);
@@ -53,47 +52,66 @@ const CategoryManagement = () => {
   };
 
   const handleDelete = async (categoryId) => {
-    try{
+    try {
       const { data } = await axiosInstance.delete(`/category/${categoryId}`);
       setCategories((prev) => {
-        return prev.filter((category) => category.category_id !== data.category_id);
+        return prev.filter(
+          (category) => category.category_id !== data.category_id
+        );
       });
-    }catch(error){
-         // console.log(error);
-         setError(`Delete failed please try again`);
+    } catch (error) {
+      // console.log(error);
+      setError(`Delete failed please try again`);
     }
   };
 
-  const handleSave = async (categoryData) => {    
+  const handleSave = async (categoryData, isEditing, imgChanged) => {
     const formData = new FormData();
-    formData.append('name', categoryData.name);
-    formData.append('image', categoryData.image);
-    if (selectedCategory) {
+    formData.append("name", categoryData.name);
+    formData.append("image", categoryData.image);
+    formData.append("imgChanged", imgChanged);
+    if (isEditing) {
       // Edit existing category
-      setCategories(
-        categories.map((cat) =>
-          cat.category_id === selectedCategory.category_id ? categoryData : cat
-        )
-      );
-    } else {
-      // Add new category
-      try{        
-        const { data } = await axiosInstance.post(`/category`, formData);
-        console.log(data);
-        
-        setCategories([
-          ...categories,
-          data
-        ]);
+      try {   
+        const { data } = await axiosInstance.put(
+          `/category/${selectedCategory.category_id}`,
+          formData,
+        );
+
+        setCategories((prevCategories) => {
+          return prevCategories.map((cat) => {
+            if (cat.category_id === data.category_id) {
+              return data;
+            }
+            return cat;
+          });
+        });
         setDialogOpen(false);
         setSelectedCategory(null);
         return true;
-      }catch(error){
-           // console.log(error);
-           setError(`Saving failed please try again`);
-           setTimeout(() => {
-            setError("");
-           }, 5000)
+      } catch (error) {
+        // console.log(error);
+        setError(`Editing failed please try again`);
+        setTimeout(() => {
+          setError("");
+        }, 5000);
+      }
+    } else {
+      // Add new category
+      try {
+        const { data } = await axiosInstance.post(`/category`, formData);
+        console.log(data);
+
+        setCategories([...categories, data]);
+        setDialogOpen(false);
+        setSelectedCategory(null);
+        return true;
+      } catch (error) {
+        // console.log(error);
+        setError(`Saving failed please try again`);
+        setTimeout(() => {
+          setError("");
+        }, 5000);
       }
     }
   };
@@ -117,7 +135,7 @@ const CategoryManagement = () => {
           marginTop: "100px",
         }}
       >
-       <Typography
+        <Typography
           variant="h5"
           sx={{ marginBottom: "16px", width: "100%", textAlign: "center" }}
         >
@@ -127,51 +145,53 @@ const CategoryManagement = () => {
           {categories.map((category) => (
             <Grid item xs={12} sm={4} key={category.category_id}>
               <Card>
-              <CardContent>
-                <Typography variant="h6">{category.name}</Typography>
-                <Box
-                  sx={{
-                    width: '100%',
-                    height: '175px',
-                    backgroundColor: category.src ? 'transparent' : '#f0f0f0', 
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    border: '1px solid #ddd', 
-                    overflow: 'hidden', 
-                  }}
-                >
-                  {category.src ? (
-                    <img
-                      src={category.src}
-                      alt={category.name}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                      }}
-                    />
-                  ) : (
-                    <Typography variant="body2" color="textSecondary">
-                      No Image Available
-                    </Typography>
-                  )}
-                </Box>
-              </CardContent>
-                <CardActions
+                <CardContent>
+                  <Typography variant="h6">{category.name}</Typography>
+                  <Box
                     sx={{
+                      width: "100%",
+                      height: "175px",
+                      backgroundColor: category.src ? "transparent" : "#f0f0f0",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
+                      border: "1px solid #ddd",
+                      overflow: "hidden",
                     }}
                   >
-                    <IconButton onClick={() => handleEdit(category)}>
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton onClick={() => handleDelete(category.category_id)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </CardActions>
+                    {category.src ? (
+                      <img
+                        src={category.src}
+                        alt={category.name}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    ) : (
+                      <Typography variant="body2" color="textSecondary">
+                        No Image Available
+                      </Typography>
+                    )}
+                  </Box>
+                </CardContent>
+                <CardActions
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <IconButton onClick={() => handleEdit(category)}>
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => handleDelete(category.category_id)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </CardActions>
               </Card>
             </Grid>
           ))}
@@ -181,13 +201,18 @@ const CategoryManagement = () => {
             <AddIcon sx={{ fontSize: "50px" }} color="primary" />
           </IconButton>
         </Grid>
-        <CategoryDialog open={dialogOpen} onClose={handleClose} handleSave={handleSave} category={selectedCategory}/>
+        <CategoryDialog
+          open={dialogOpen}
+          onClose={handleClose}
+          handleSave={handleSave}
+          category={selectedCategory}
+        />
       </Grid>
       {error && (
         <Snackbar
           open={Boolean(error)}
           onClose={() => setError(null)}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
           <Alert severity="error">{error}</Alert>
         </Snackbar>

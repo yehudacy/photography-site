@@ -20,14 +20,15 @@ const CategoryDialog = ({ open, onClose, handleSave, category }) => {
 
   const [previewImage, setPreviewImage] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [imgChanged, setImgChanged] = useState(false);
 
   useEffect(() => {
     if (category) {
-      setFormData(prev => ({ ...prev, name: category.name, src: category.src }));
+      setFormData(prev => ({ ...prev, name: category.name, image: category.src }));
       setPreviewImage(category.src);
       setIsEditing(true);
     } else {
-      setFormData(f => ({ name: "", src: "" }));
+      setFormData(f => ({ name: "", image: "" }));
       setPreviewImage(null);
       setIsEditing(false);
     }
@@ -37,7 +38,7 @@ const CategoryDialog = ({ open, onClose, handleSave, category }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = (e) => {    
     const image = e.target.files[0];    
     if(previewImage){
       URL.revokeObjectURL(previewImage)
@@ -49,6 +50,7 @@ const CategoryDialog = ({ open, onClose, handleSave, category }) => {
      }
     })
     setPreviewImage(URL.createObjectURL(image));
+    setImgChanged(true);
   };
 
   const handleImageClear = () => {
@@ -56,6 +58,7 @@ const CategoryDialog = ({ open, onClose, handleSave, category }) => {
       URL.revokeObjectURL(previewImage)
     }
     setPreviewImage(null);
+    setImgChanged(true);
   };
 
   return (
@@ -168,10 +171,11 @@ const CategoryDialog = ({ open, onClose, handleSave, category }) => {
         </Button>
         <Button
           onClick={ async () => {
-            if(! await handleSave(formData)) return; 
+            if(! await handleSave(formData, isEditing, imgChanged)) return;   
             setFormData(f => ({ name: "", src: "" }));
             setPreviewImage(null);
             setIsEditing(false);
+            setImgChanged(false);
           }}
           variant="contained"
           color="primary"

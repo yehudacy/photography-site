@@ -1,4 +1,3 @@
-const { addCategory, editCategory } = require("./categoryDB");
 const { pool } = require("./dbConnection");
 const { addImage } = require("./imagesDB");
 
@@ -107,6 +106,63 @@ async function addCategoryAndImageTransaction(category, imageUrl) {
   }
 }
 
+async function editCategoryTransaction(categoryId, category, imageUrl, imgChanged) {
+  let connection;
+
+  try {
+    // Get a connection from the pool
+    connection = await pool.getConnection();
+    // Begin the transaction
+    await connection.beginTransaction();
+    // Perform multiple queries within the transaction
+    let insertedId;
+    if(category.imgChanged){      
+      let addImageQuery = `
+      INSERT INTO images (category_id, src) 
+      VALUES (?, ?);`;
+      const [{insertId}] = await connection.query(addImageQuery, [
+        categoryId,
+        imageUrl,
+      ]);
+      insertedId = insertId;
+    }    
+    const categoryImageId = category.imgChanged ? insertedId : category.category_image_id;
+    
+    let editCategoryQuery = `
+    UPDATE categories
+    SET name = ?, 
+      category_image_id = ?
+    WHERE category_id = ?`;
+    const  [{affectedRows}]  = await pool.query(editCategoryQuery, [
+      category.name,
+      categoryImageId,
+      categoryId,
+    ]);
+
+    // If everything went well, commit the transaction
+    await connection.commit();
+
+    console.log("Transaction committed successfully!");
+    return { status: "commit"};
+  } catch (error) {
+    // If there was an error, rollback the transaction
+    if (connection) {
+      await connection.rollback();
+    }
+    console.error("Error in transaction:", error.message);
+    return { status: "rollback" };
+  } finally {
+    // Release the connection back to the pool
+    if (connection) {
+      connection.release();
+    }
+  }
+}
+
 // addImageTransaction(7, null, 'https://res.cloudinary.com/dzjsaikk1/image/upload/v1704411348/15sdpy4q8lqzui02jIMG_3013.JPG.jpg')
 
-module.exports = { addImageTransaction, addCategoryAndImageTransaction };
+module.exports = {
+  addImageTransaction,
+  addCategoryAndImageTransaction,
+  editCategoryTransaction,
+};

@@ -14,12 +14,14 @@ const addCategory = async ({name, category_image_id}) => {
 };
 
 //edit a category
-const editCategory = async (categoryId, categoryImageId) => {
+const editCategory = async (categoryId, name, categoryImageId) => {
   let editCategoryQuery = `
   UPDATE categories
-  SET category_image_id = ?
+  SET name = ? 
+    category_image_id = ?
   WHERE category_id = ?`;
   const [{ affectedRows }] = await pool.query(editCategoryQuery, [
+    name,
     categoryImageId,
     categoryId,
   ]);
