@@ -186,42 +186,46 @@ const ImageUploadForm = () => {
           style={{ marginBottom: "16px" }}
         />
 
-        <div style={{ marginBottom: "16px", position: "relative" }}>
-          {previewUrl && (
-            <>
-              <img
-                src={previewUrl}
-                alt="Preview"
-                style={{ maxWidth: "100%", marginTop: "8px" }}
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleClearFile}
-                style={clearButtonStyle}
-              >
-                Clear
-              </Button>
-            </>
-          )}
-          <input
-            type="file"
-            onChange={handleFileChange}
-            accept="image/*"
-            style={{ display: "none" }}
-            id="imageInput"
-          />
-          <label htmlFor="imageInput">
-            <Button
-              variant="contained"
-              color="primary"
-              component="span"
-              style={chooseFileButtonStyle}
-            >
-              {previewUrl ? "Change File" : "Choose a File"}
-            </Button>
-          </label>
-        </div>
+<div style={{ marginBottom: "16px", position: "relative" }}>
+  {previewUrl && (
+    <img
+      src={previewUrl}
+      alt="Preview"
+      style={{ maxWidth: "100%", marginBottom: "8px" }}
+    />
+  )}
+  <div style={{ display: "flex", justifyContent: "space-between", marginTop: "8px" }}>
+    {previewUrl ? (
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={handleClearFile}
+        style={clearButtonStyle}
+      >
+        Clear
+      </Button>
+    ) : (
+      <div></div> // Empty div to maintain layout when there's no Clear button
+    )}
+    <label htmlFor="imageInput">
+      <Button
+        variant="contained"
+        color="primary"
+        component="span"
+        style={chooseFileButtonStyle}
+      >
+        {previewUrl ? "Change File" : "Choose a File"}
+      </Button>
+    </label>
+  </div>
+  <input
+    type="file"
+    onChange={handleFileChange}
+    // accept="image/*"
+    style={{ display: "none" }}
+    id="imageInput"
+  />
+</div>
 
         <FormControlLabel
           control={
