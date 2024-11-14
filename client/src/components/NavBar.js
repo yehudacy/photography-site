@@ -19,7 +19,7 @@ import {useUser} from '../hooks/useUser';
 const pages = ["Home", "About", "Gallery", "Pricing", "Contact me"];
 const settings = [ "Login", "Signup", "Dashboard", "Logout" ];
 
-
+const pageNamesStyle = {textTransform: "none"}
 
 const NavBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -106,7 +106,7 @@ const NavBar = () => {
                   onClick={handleCloseNavMenu}
                   key={page}
                 >
-                  <Typography textAlign="center">{page}</Typography>
+                  <Typography textAlign="center" sx={pageNamesStyle}>{page}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -137,7 +137,7 @@ const NavBar = () => {
                 component={Link}
                 to={page !== "Home" ? `/${page.replaceAll(' ', '')}` : '/'}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
+                sx={{...pageNamesStyle, ...{ my: 2, color: "white", display: "block" }}}
               >
                 {page}
               </Button>
