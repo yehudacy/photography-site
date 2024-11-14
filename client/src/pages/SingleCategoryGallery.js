@@ -1,79 +1,62 @@
 import React, { useEffect, useState } from 'react';
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
-import { Box } from '@mui/material';
 import axiosInstance from '../axiosInstance';
 import { useParams } from 'react-router-dom';
-import uniqid from 'uniqid';
-
-
-
-
-
-function srcset(image, size, rows = 2, cols = 2) {
-  return {
-    src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
-    srcSet: `${image}?w=${size * cols}&h=${size * rows
-      }&fit=crop&auto=format&dpr=2 2x`,
-  };
-}
-
+import ResponsiveImageGrid from '../components/ResponsiveImageGrid';
+import ImageLightboxModal from '../components/ImageLightboxModal';
 
 const SingleCategoryGallery = () => {
-  const {category} = useParams();
+  const { category } = useParams();
+  const [images, setImages] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
 
-  const [singleCategoryImages, setSingleCategoryImages] = useState([]);
-  
   useEffect(() => {
-    const getSingleCategoryImages = async () => {
-      try{
-        const {data} = await axiosInstance.get(`gallery/${category}`);
-        setSingleCategoryImages(data);
+    const fetchImages = async () => {
+      try {
+        const { data } = await axiosInstance.get(`gallery/${category}`);
+        setImages(data);
       } catch (error) {
-        //need to edit the error handling;
-        console.log(error)
+        console.error(error);
       }
-    }
-    getSingleCategoryImages();
+    };
+    fetchImages();
   }, [category]);
 
- 
+  const handleImageClick = (index) => {
+    setSelectedImage(index);
+  };
+
+  const handleClose = () => {
+    setSelectedImage(null);
+  };
+
+  const handleNext = () => {
+    setSelectedImage((prev) => 
+      prev === images.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const handlePrev = () => {
+    setSelectedImage((prev) => 
+      prev === 0 ? images.length - 1 : prev - 1
+    );
+  };
 
   return (
-    <Box
-      sx={{
-        marginX: "auto",
-        boxSizing: 'content-box',
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: "100%",
-      }}
-    >
-      <ImageList
-        sx={{ width: '100%', height: '100%' }}
-        variant="quilted"
-        cols={4}
-        rowHeight={121}
-      >
-        {singleCategoryImages.map((item) => (
-          
-          <ImageListItem key={uniqid()} cols={item.cols || 1} rows={item.rows || 1}>
-            <img
-              {...srcset(item.src, 121, item.rows, item.cols)}
-              alt={item.title}
-              loading="lazy"
-            />
-          </ImageListItem>
-        ))}
-      </ImageList>
-    </Box>
-  )
-}
+    <>
+      <ResponsiveImageGrid 
+        images={images} 
+        onImageClick={handleImageClick} 
+      />
+      <ImageLightboxModal
+        open={selectedImage !== null}
+        images={images}
+        selectedImageIndex={selectedImage}
+        onClose={handleClose}
+        onNext={handleNext}
+        onPrev={handlePrev}
+      />
+    </>
+  );
+};
 
-export default SingleCategoryGallery
-
-
-
-
-
+export default SingleCategoryGallery;
