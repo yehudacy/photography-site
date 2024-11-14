@@ -1,72 +1,96 @@
 import { useEffect, useState } from "react";
 import axiosInstance from '../axiosInstance';
-import ImageList from "@mui/material/ImageList";
-import ImageListItem from "@mui/material/ImageListItem";
-import ImageListItemBar from "@mui/material/ImageListItemBar";
-import IconButton from "@mui/material/IconButton";
-import InfoIcon from "@mui/icons-material/Info";
-import { Box } from "@mui/material";
+import { Box, Grid, Card, CardMedia, CardContent, Typography, CircularProgress, Container } from "@mui/material";
 import { Link } from "react-router-dom";
 
 export default function Gallery() {
   const [categoryImages, setCategoryImages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     getCategoryImages();
   }, []);
 
   const getCategoryImages = async () => {
-    try{
-      const {data} = await axiosInstance.get('gallery');
-      // console.log(data)
-      setCategoryImages(data)
+    try {
+      setLoading(true);
+      const { data } = await axiosInstance.get('gallery');
+      setCategoryImages(data);
     } catch (error) {
-      //need to edit the error handling
-      console.log(error);
+      setError(error);
+    } finally {
+      setLoading(false);
     }
-  } 
-  return (
-    <Box
-      sx={{
-        marginX: "auto",
-        boxSizing: 'content-box',
-        display: "flex",    
-        alignItems: "center",
-        justifyContent: "center",
-        width: "100%",
-      }}
-    >
-      <ImageList sx={{ width: "100%", height: "100%" }} cols={4}>
-        
-        {categoryImages.map((item) => (
-          <ImageListItem key={item.category_id}
-          component={Link}
-          to={`${item.name}`}
-          // state={{categoryId: item.categoryId}}
-          >
-            <img
-              srcSet={`${item.src}?w=248&fit=crop&auto=format&dpr=2 2x`}
-              src={`${item.src}?w=248&fit=crop&auto=format`}
-              alt={item.name}
-              loading="lazy"
-            />
-            <ImageListItemBar
-              title={item.name}
-              subtitle={item.author}
-              actionIcon={
-                <IconButton
-                  sx={{ color: "rgba(255, 255, 255, 0.54)" }}
-                  aria-label={`info about ${item.name}`}
-                >
-                  <InfoIcon />
-                </IconButton>
-              }
-            />
-          </ImageListItem>
-        ))}
-      </ImageList>
+  };
+
+  if (loading) return (
+    <Box sx={{ 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      height: '100vh' 
+    }}>
+      <CircularProgress />
     </Box>
   );
+  
+  if (error) return <Typography color="error">Error: {error.message}</Typography>;
+
+  return (
+    <Container maxWidth="xl" disableGutters sx={{ 
+      width: '100%', 
+      px: { xs: 1, sm: 2, md: 3 } 
+    }}>
+      <Grid container spacing={3} sx={{ width: '100%', m: 0 }}>
+        {categoryImages.map((item) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={item.category_id} sx={{ p: 1 }}>
+            <Card 
+              component={Link} 
+              to={`${item.name}`} 
+              sx={{ 
+                textDecoration: 'none', 
+                color: 'inherit',
+                borderRadius: 3, 
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                '&:hover': {
+                  transform: 'scale(1.05)', 
+                  boxShadow: 3, 
+                }
+              }}
+              elevation={1}
+            >
+              <CardMedia
+                component="img"
+                height="200"
+                image={`${item.src}?w=248&fit=crop&auto=format`}
+                alt={item.name}
+                sx={{ 
+                  objectFit: 'cover',
+                  borderTopLeftRadius: 12,
+                  borderTopRightRadius: 12,
+                }}
+              />
+              <CardContent sx={{ 
+                flexGrow: 1, 
+                backgroundColor: '#e6f2ff', // Light background color
+                borderBottomLeftRadius: 12, // Match the card's border radius
+                borderBottomRightRadius: 12, // Match the card's border radius
+              }}>
+                <Typography variant="h6" gutterBottom>
+                  {item.name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {item.author}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
+  );
 }
-
-
