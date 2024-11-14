@@ -15,7 +15,7 @@ const ImageLightboxModal = ({
   onClose, 
   onNext, 
   onPrev 
-}) => {
+}) => {  
   if (selectedImageIndex === null) return null;
 
   return (
