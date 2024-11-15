@@ -50,14 +50,18 @@ const AdminImagesGallery = () => {
     setMainImageDialogOpen(false);
   };
 
+  const handleClose = () => {
+    setSelectedImageIndex(null);
+  };
+
   const handleNext = () => {
-    setSelectedImage((prevIndex) => 
+    setSelectedImageIndex((prevIndex) => 
       prevIndex === images.length - 1 ? 0 : prevIndex + 1
     );
   };
 
   const handlePrev = () => {
-    setSelectedImage((prevIndex) => 
+    setSelectedImageIndex((prevIndex) => 
       prevIndex === 0 ? images.length - 1 : prevIndex - 1
     );
   };
@@ -80,7 +84,7 @@ const AdminImagesGallery = () => {
         open={selectedImageIndex !== null}
         images={images}
         selectedImageIndex={selectedImageIndex}
-        onClose={() => setSelectedImage(null)}
+        onClose={handleClose}
         onNext={handleNext}
         onPrev={handlePrev}
       />
