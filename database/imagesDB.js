@@ -11,6 +11,15 @@ const addImage = async (categoryId, src, clientId = null) => {
         return addedImage;
 };
 
+const getImage = async (imageId) => {
+  const getImageByIdQuery = `
+    SELECT * FROM images
+    WHERE image_id = ?`;
+  const [[image]] = await pool.query(getImageByIdQuery, [imageId]);
+    console.log(image);
+  return image;
+};
+
 //get all images
 const getAllImages = async () => {
   const getImagesQuery = `
@@ -32,7 +41,17 @@ const getImagesOfOneClient = async (clientId) => {
   return images;
 }
 
-
+const deleteImage = async (imageId) => {
+  const imageToDelete = await getImage(imageId);
+  const deleteImageQuery = `
+  DELETE FROM images WHERE image_id = ?;`
+  const [{ affectedRows }] = await pool.query(deleteImageQuery, [imageId]);
+  if(!affectedRows && !orderToDelete){
+      throw new Error(`No image with the Id of ${imageId}`);
+  }
+  // console.log(imageToDelete)
+  return imageToDelete
+}
  
 
 
@@ -40,4 +59,4 @@ const getImagesOfOneClient = async (clientId) => {
  
   // getAllImages();
   // getImagesOfOneClient(2)
-  module.exports = {addImage, getAllImages, getImagesOfOneClient}
+  module.exports = {addImage, getAllImages, getImagesOfOneClient, getImage, deleteImage}

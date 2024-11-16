@@ -1,9 +1,17 @@
 // AdminImagesGallery.js
-import React, { useEffect, useState } from 'react';
-import { Box, Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from '@mui/material';
-import AdminImageGrid from '../components/AdminImageGrid';
-import ImageLightboxModal from '../components/ImageLightboxModal';
-import axiosInstance from '../axiosInstance';
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Typography,
+} from "@mui/material";
+import AdminImageGrid from "../components/AdminImageGrid";
+import ImageLightboxModal from "../components/ImageLightboxModal";
+import axiosInstance from "../axiosInstance";
 
 const AdminImagesGallery = () => {
   const [images, setImages] = useState([]);
@@ -15,7 +23,7 @@ const AdminImagesGallery = () => {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const { data } = await axiosInstance.get('/images');        
+        const { data } = await axiosInstance.get("/images");        
         setImages(data);
       } catch (error) {
         console.error(error);
@@ -38,10 +46,17 @@ const AdminImagesGallery = () => {
     setSelectedImageIndex(index);
   };
 
-  const handleDelete = () => {
-    setImages((prev) => prev.filter((img) => img.id !== selectedImage.id));
-    setDeleteDialogOpen(false);
+  const handleDelete = async (imageToDelete) => {
+    try{      
+      const {data} = await axiosInstance.delete(`/gallery/image/${imageToDelete.image_id}`);
+      setImages((prev) => prev.filter((img) => img.image_id !== data.image_id));
+      setDeleteDialogOpen(false);
+    } catch(error) {
+      console.log(error);
+      
+    }
   };
+      
 
   const handleSetMainImage = () => {
     setImages((prev) =>
@@ -55,23 +70,23 @@ const AdminImagesGallery = () => {
   };
 
   const handleNext = () => {
-    setSelectedImageIndex((prevIndex) => 
+    setSelectedImageIndex((prevIndex) =>
       prevIndex === images.length - 1 ? 0 : prevIndex + 1
     );
   };
 
   const handlePrev = () => {
-    setSelectedImageIndex((prevIndex) => 
+    setSelectedImageIndex((prevIndex) =>
       prevIndex === 0 ? images.length - 1 : prevIndex - 1
     );
   };
 
   return (
-    <Box sx={{ padding: 2, maxWidth: 1200, margin: '0 auto' }}>
+    <Box sx={{ padding: 2, maxWidth: 1200, margin: "0 auto" }}>
       <Typography variant="h4" align="center" gutterBottom>
         Admin Images Gallery
       </Typography>
-      
+
       <AdminImageGrid
         images={images}
         onImageClick={handleImageClick}
@@ -79,7 +94,6 @@ const AdminImagesGallery = () => {
         onSetMainClick={handleSetMainClick}
       />
 
-      {/* Image Lightbox Modal */}
       <ImageLightboxModal
         open={selectedImageIndex !== null}
         images={images}
@@ -90,7 +104,10 @@ const AdminImagesGallery = () => {
       />
 
       {/* Delete Confirmation Dialog */}
-      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+      >
         <DialogTitle>Delete Image</DialogTitle>
         <DialogContent>
           <Typography variant="body1">
@@ -98,13 +115,20 @@ const AdminImagesGallery = () => {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)} color="primary">Cancel</Button>
-          <Button onClick={handleDelete} color="error">Delete</Button>
+          <Button onClick={() => setDeleteDialogOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={() => handleDelete(selectedImage)} color="error">
+            Delete
+          </Button>
         </DialogActions>
       </Dialog>
 
       {/* Set Main Image Confirmation Dialog */}
-      <Dialog open={mainImageDialogOpen} onClose={() => setMainImageDialogOpen(false)}>
+      <Dialog
+        open={mainImageDialogOpen}
+        onClose={() => setMainImageDialogOpen(false)}
+      >
         <DialogTitle>Set as Main Image</DialogTitle>
         <DialogContent>
           <Typography variant="body1">
@@ -112,8 +136,12 @@ const AdminImagesGallery = () => {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setMainImageDialogOpen(false)} color="primary">Cancel</Button>
-          <Button onClick={handleSetMainImage} color="primary">Set as Main Image</Button>
+          <Button onClick={() => setMainImageDialogOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleSetMainImage} color="primary">
+            Set as Main Image
+          </Button>
         </DialogActions>
       </Dialog>
     </Box>
