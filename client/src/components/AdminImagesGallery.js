@@ -1,159 +1,113 @@
-import React, { useEffect, useState } from 'react';
+// AdminImagesGallery.js
+import React, { useEffect, useState } from "react";
 import {
-  Grid,
-  Card,
-  CardMedia,
-  Button,
-  IconButton,
+  Box,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
+  Button,
   Typography,
-} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import StarIcon from '@mui/icons-material/Star';
-import { Close as CloseIcon } from '@mui/icons-material';
-import { ChevronLeft, ChevronRight } from '@mui/icons-material';
-import axiosInstance from '../axiosInstance';
-
+} from "@mui/material";
+import AdminImageGrid from "../components/AdminImageGrid";
+import ImageLightboxModal from "../components/ImageLightboxModal";
+import axiosInstance from "../axiosInstance";
 
 const AdminImagesGallery = () => {
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [mainImageDialogOpen, setMainImageDialogOpen] = useState(false);
-  const [fullscreenDialogOpen, setFullscreenDialogOpen] = useState(false);
-  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const fetchAllImages = async () => {
+    const fetchImages = async () => {
       try {
-        const {data} = await axiosInstance.get('/images');
-        console.log('data', data);
+        const { data } = await axiosInstance.get("/images");        
         setImages(data);
-      } catch (err) {
-        console.error(`Error! ${err}`);
-      };
-    }
-    fetchAllImages();
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchImages();
   }, []);
 
-
-  const handleDelete = () => {
-    // Handle delete logic (remove the selected image from the state)
-    setImages((prevImages) => prevImages.filter((img) => img.id !== selectedImage.id));
-
-    // Close the delete confirmation dialog
-    setDeleteDialogOpen(false);
+  const handleDeleteClick = (image) => {
+    setSelectedImage(image);
+    setDeleteDialogOpen(true);
   };
 
-  const handleSetMainImage = () => {
-    // Handle set main image logic (update the selected image as the main image in the state)
-    setImages((prevImages) =>
-      prevImages.map((img) => ({
-        ...img,
-        isMainImage: img.id === selectedImage.id ? true : img.isMainImage,
-      }))
-    );
+  const handleSetMainClick = (image) => {
+    setSelectedImage(image);
+    setMainImageDialogOpen(true);
+  };
 
-    // Close the set main image confirmation dialog
+  const handleImageClick = (index) => {
+    setSelectedImageIndex(index);
+  };
+
+  const handleDelete = async (imageToDelete) => {
+    try{      
+      const {data} = await axiosInstance.delete(`/gallery/image/${imageToDelete.image_id}`);
+      setImages((prev) => prev.filter((img) => img.image_id !== data.image_id));
+      setDeleteDialogOpen(false);
+    } catch(error) {
+      console.log(error);
+      
+    }
+  };
+      
+
+  const handleSetMainImage = () => {
+    setImages((prev) =>
+      prev.map((img) => ({ ...img, isMainImage: img.id === selectedImage.id }))
+    );
     setMainImageDialogOpen(false);
   };
 
   const handleClose = () => {
-    setFullscreenDialogOpen(false);
+    setSelectedImageIndex(null);
   };
 
-  const handleImageClick = (image) => {
-    setSelectedImage(image);
-    setFullscreenDialogOpen(true);
+  const handleNext = () => {
+    setSelectedImageIndex((prevIndex) =>
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+    );
   };
 
-
-  const handleOpenFullscreenDialog = () => {
-    setFullscreenDialogOpen(true);
-  };
-
-  const handleCloseFullscreenDialog = () => {
-    setFullscreenDialogOpen(false);
-  };
-
-  const handleNavigate = (direction) => {
-    const currentIndex = images.findIndex((image) => image.image_id === selectedImage.image_id);
-    let newIndex;
-
-    if (direction === 'prev') {
-      newIndex = (currentIndex - 1 + images.length) % images.length;
-    } else {
-      newIndex = (currentIndex + 1) % images.length;
-    }
-
-    setSelectedImage(images[newIndex]);
-  };
-
-  const buttonStyle = {
-    height: '50px', // Adjust the height as needed
-    textTransform: 'none', // Ensure lowercase text
+  const handlePrev = () => {
+    setSelectedImageIndex((prevIndex) =>
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+    );
   };
 
   return (
-    <Grid container item xs={12} md={9} spacing={2} sx={{ padding: 2, justifyContent: 'center', alignItems: 'center', mt: 1 }}>
-      {images.map((image) => (
-        <Grid item xs={12} md={6} key={image.image_id}>
-          <Card>
-            <CardMedia
-              component="img"
-              alt={image.altText}
-              height="300"
-              image={image.src}
-              onClick={() => { handleImageClick(image) }}
-            />
-            <Grid container item sx={{ display: 'flex', alignItems: 'center', justifyContent: "space-between", p: 0.5 }}>
-            <IconButton
-                sx={{
-                  color: 'white',
-                  backgroundColor: '#3f51b5',
-                  width: 80,
-                  padding: 1,
-                  borderRadius: 1, 
-                  '&:hover': {
-                    backgroundColor: '#3f51b5',
-                  },
-                }}
-                style={buttonStyle}
-                onClick={() => {
-                  setSelectedImage(image);
-                  setDeleteDialogOpen(true);
-                }}
-              >
-                <DeleteIcon />
-              </IconButton>
-              <Button
-                sx={{
-                  color: 'white',
-                  backgroundColor: '#3f51b5',
-                  padding: 1,
-                  '&:hover': {
-                    backgroundColor: '#3f51b5',
-                  },
-                }}
-                onClick={() => {
-                  setSelectedImage(image);
-                  setMainImageDialogOpen(true);
-                }}
-                style={buttonStyle}
-              >
-                <StarIcon />
-                Set as Main Image
-              </Button>
-            </Grid>
-          </Card>
-        </Grid>
-      ))}
+    <Box sx={{ padding: 2, maxWidth: 1200, margin: "0 auto" }}>
+      <Typography variant="h4" align="center" gutterBottom>
+        Admin Images Gallery
+      </Typography>
+
+      <AdminImageGrid
+        images={images}
+        onImageClick={handleImageClick}
+        onDeleteClick={handleDeleteClick}
+        onSetMainClick={handleSetMainClick}
+      />
+
+      <ImageLightboxModal
+        open={selectedImageIndex !== null}
+        images={images}
+        selectedImageIndex={selectedImageIndex}
+        onClose={handleClose}
+        onNext={handleNext}
+        onPrev={handlePrev}
+      />
 
       {/* Delete Confirmation Dialog */}
-      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+      >
         <DialogTitle>Delete Image</DialogTitle>
         <DialogContent>
           <Typography variant="body1">
@@ -161,8 +115,10 @@ const AdminImagesGallery = () => {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)} style={buttonStyle}>Cancel</Button>
-          <Button color="error" onClick={handleDelete} style={buttonStyle}>
+          <Button onClick={() => setDeleteDialogOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={() => handleDelete(selectedImage)} color="error">
             Delete
           </Button>
         </DialogActions>
@@ -180,45 +136,15 @@ const AdminImagesGallery = () => {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setMainImageDialogOpen(false)} style={buttonStyle}>Cancel</Button>
-          <Button onClick={handleSetMainImage} style={buttonStyle}>Set as Main Image</Button>
+          <Button onClick={() => setMainImageDialogOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleSetMainImage} color="primary">
+            Set as Main Image
+          </Button>
         </DialogActions>
       </Dialog>
-
-      <Dialog open={fullscreenDialogOpen} onClose={handleClose} maxWidth="md" fullWidth>
-        <IconButton
-          edge="end"
-          color="inherit"
-          onClick={handleClose}
-          style={{ position: 'absolute', top: 8, right: 8 }}
-        >
-          <CloseIcon />
-        </IconButton>
-
-        {selectedImage && (
-          <>
-            <IconButton
-              sx={{ position: 'absolute', top: '50%', left: 8, transform: 'translateY(-50%)' }}
-              onClick={() => handleNavigate('prev')}
-            >
-              <ChevronLeft />
-            </IconButton>
-            <img
-              src={selectedImage.src}
-              alt={""}
-              style={{ width: '100%', maxHeight: '80vh', objectFit: 'contain' }}
-            />
-
-            <IconButton
-              sx={{ position: 'absolute', top: '50%', right: 8, transform: 'translateY(-50%)' }}
-              onClick={() => handleNavigate('next')}
-            >
-              <ChevronRight />
-            </IconButton>
-          </>
-        )}
-      </Dialog>
-    </Grid>
+    </Box>
   );
 };
 

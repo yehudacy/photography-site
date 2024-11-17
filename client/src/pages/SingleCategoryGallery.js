@@ -12,7 +12,7 @@ const SingleCategoryGallery = () => {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const { data } = await axiosInstance.get(`gallery/${category}`);
+        const { data } = await axiosInstance.get(`gallery/${category}`);        
         setImages(data);
       } catch (error) {
         console.error(error);

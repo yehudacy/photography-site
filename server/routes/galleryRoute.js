@@ -1,10 +1,10 @@
 const express = require("express");
 const multer = require('multer');
 const uniqid = require('uniqid');
-const {uploadImage} = require('../cloudinary/cloudinary')
+const {uploadImage, deleteImageFromCloud} = require('../cloudinary/cloudinary')
 const { getAllCategoryImages, getallImagesOfACategory, getCategoryIdByName } = require("../../database/categoryDB");
 const { getClientByEmail } = require("../../database/usersDB");
-const { addImage } = require("../../database/imagesDB");
+const { addImage, getImage, deleteImage } = require("../../database/imagesDB");
 const {addImageTransaction} = require('../../database/transactions');
 const { authenticateToken } = require("../authentication/authentication");
 
@@ -31,7 +31,6 @@ galleryRouter.get("/:category", async (req, res) => {
     console.log(error)
   }
 });
-
 
 //add a new image to database
 galleryRouter.post("/image", authenticateToken, upload.single('file'), async (req, res) => {
@@ -68,6 +67,39 @@ galleryRouter.post("/image", authenticateToken, upload.single('file'), async (re
     console.log(error)
     res.status(500).send('Error uploading image to Cloudinary.');
   }
+});
+
+
+galleryRouter.delete( "/image/:imageId" , async (req, res) =>{
+  try {    
+    const imageId = req.params.imageId;
+    const imageToDelete = await getImage(imageId);
+    if(!imageToDelete){
+      res.status(404).json({message: `No image with the id ${imageId} was found`});
+    }
+    const {result} = await deleteImageFromCloud(imageToDelete.src);
+    if(!(result === 'not found')){
+      const deletedImage = await deleteImage(imageToDelete.image_id);
+      if(deletedImage){
+        res.status(200).json(deletedImage);
+      }
+
+    } else {
+      res.status(404).json({message: "The image doesn't exist on the cloud"})
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({message: error.message});
+    
+  }
 })
+
+const removeFileExtension = (fileName) => {
+  const lastDotIndex = fileName.lastIndexOf('.');
+  if (lastDotIndex !== -1) {
+    return fileName.substring(0, lastDotIndex);
+  }
+  return fileName; 
+};
 
 module.exports = { galleryRouter };
