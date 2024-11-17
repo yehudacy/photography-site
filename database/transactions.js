@@ -51,7 +51,7 @@ async function addImageTransaction(categoryId, clientId, src, publicId) {
   }
 }
 
-async function addCategoryAndImageTransaction(category, imageUrl) {
+async function addCategoryAndImageTransaction(category, imageUrl, publicId) {
   let connection;
 
   try {
@@ -70,12 +70,13 @@ async function addCategoryAndImageTransaction(category, imageUrl) {
     ]);
 
     let addImageQuery = `
-    INSERT INTO images (category_id, src) 
+    INSERT INTO images (category_id, src, cloud_public_id) 
     VALUES (?, ?);`;
 
     const [addedImageInfo] = await connection.query(addImageQuery, [
       insertId,
       imageUrl,
+      publicId,
     ]);
 
     let editCategoryQuery = `
@@ -107,7 +108,7 @@ async function addCategoryAndImageTransaction(category, imageUrl) {
   }
 }
 
-async function editCategoryTransaction(categoryId, category, imageUrl, imgChanged) {
+async function editCategoryTransaction(categoryId, category, imageUrl, publicId, imgChanged) {
   let connection;
 
   try {
@@ -119,11 +120,12 @@ async function editCategoryTransaction(categoryId, category, imageUrl, imgChange
     let insertedId;
     if(category.imgChanged){      
       let addImageQuery = `
-      INSERT INTO images (category_id, src) 
+      INSERT INTO images (category_id, src, cloud_public_id) 
       VALUES (?, ?);`;
       const [{insertId}] = await connection.query(addImageQuery, [
         categoryId,
         imageUrl,
+        publicId,
       ]);
       insertedId = insertId;
     }    

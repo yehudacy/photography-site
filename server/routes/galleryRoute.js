@@ -77,7 +77,7 @@ galleryRouter.delete( "/image/:imageId" , async (req, res) =>{
     if(!imageToDelete){
       res.status(404).json({message: `No image with the id ${imageId} was found`});
     }
-    const {result} = await deleteImageFromCloud(imageToDelete.src);
+    const {result} = await deleteImageFromCloud(imageToDelete.cloud_public_id);
     if(!(result === 'not found')){
       const deletedImage = await deleteImage(imageToDelete.image_id);
       if(deletedImage){

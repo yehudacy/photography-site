@@ -32,8 +32,8 @@ const uploadImage = async (fileBuffer, fileName) => {
 };
 
 
-const deleteImageFromCloud = async (imageUrl) => {
-  const publicId = getPublicIdFromUrl(imageUrl);
+const deleteImageFromCloud = async (publicId) => {
+  // const publicId = getPublicIdFromUrl(imageUrl);
   // console.log(publicId);
   return new Promise((resolve, reject) => {
     cloudinary.uploader.destroy(publicId, (error, result) => {
