@@ -41,8 +41,8 @@ galleryRouter.post("/image", authenticateToken, upload.single('file'), async (re
     }
 
     const fileName = `${uniqid()}${req.file.originalname}`
-    const imageUrl = await uploadImage(req.file.buffer, fileName);
-    // console.log(imageUrl)
+  const {secure_url, public_id} = await uploadImage(req.file.buffer, fileName);
+    console.log(secure_url, public_id)
     const categoryId = await getCategoryIdByName(req.body.category);
     if(!categoryId){
        return res.status(400).json({message:"This Category does not exist"});
@@ -50,14 +50,14 @@ galleryRouter.post("/image", authenticateToken, upload.single('file'), async (re
     const clientId = await getClientByEmail(req.body.clientEmail);
 
     if(req.body.isMainImage){
-      const result = await addImageTransaction(categoryId, clientId, imageUrl);
+      const result = await addImageTransaction(categoryId, clientId, secure_url, public_id);
       if(result === "commit"){
         res.status(201).json("The Image has been added as Main Image");
       } else {
         return res.status(500).json({message:"Something went wrong while trying to save the Image as main image in the Database"});
       }
     } else {
-      const {affectedRows} = await addImage(categoryId, imageUrl, clientId);
+      const {affectedRows} = await addImage(categoryId, secure_url, clientId, public_id);
       if(!affectedRows){
         return res.status(500).json({message:"Something went wrong while trying to save the Image in the Database"});
       } else {

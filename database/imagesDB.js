@@ -2,12 +2,12 @@ const { pool } = require('./dbConnection');
 const { getCategoryIdByName } = require('./categoryDB')
 
 //add an image to the data base
-const addImage = async (categoryId, src, clientId = null) => {
+const addImage = async (categoryId, src, clientId = null, cloudPublicId) => {
         let addImageQuery = `
-        INSERT INTO images (category_id, client_id, src) 
-        VALUES (?, ?, ?);`;
-        const [addedImage] = await pool.query(addImageQuery, [categoryId, clientId, src]);
-        // console.log(addedImage);
+        INSERT INTO images (category_id, client_id, src, cloud_public_id) 
+        VALUES (?, ?, ?, ?);`;
+        const [addedImage] = await pool.query(addImageQuery, [categoryId, clientId, src, cloudPublicId]);
+        console.log({addedImage});
         return addedImage;
 };
 

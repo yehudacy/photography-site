@@ -1,7 +1,7 @@
 const { pool } = require("./dbConnection");
 const { addImage } = require("./imagesDB");
 
-async function addImageTransaction(categoryId, clientId, src) {
+async function addImageTransaction(categoryId, clientId, src, publicId) {
   let connection;
 
   try {
@@ -12,14 +12,15 @@ async function addImageTransaction(categoryId, clientId, src) {
     await connection.beginTransaction();
 
     const addImageQuery = `
-        INSERT INTO images (category_id, client_id, src) 
-        VALUES (?, ?, ?);`;
+        INSERT INTO images (category_id, client_id, src, cloud_public_id) 
+        VALUES (?, ?, ?, ?);`;
 
     // Perform multiple queries within the transaction
     const [{ insertId }] = await connection.query(addImageQuery, [
       categoryId,
       clientId,
       src,
+      publicId
     ]);
 
     const setMainImageQuery = `

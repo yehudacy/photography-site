@@ -19,11 +19,11 @@ const uploadImage = async (fileBuffer, fileName) => {
     };
     const uploadStream = cloudinary.uploader.upload_stream(
       options,
-      (error, result) => {
+      (error, {secure_url, public_id}) => {
         if (error) {
           reject(error);
-        } else {
-          resolve(result.secure_url);
+        } else {          
+          resolve({secure_url, public_id});
         }
       }
     );
