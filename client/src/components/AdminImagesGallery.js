@@ -8,10 +8,14 @@ import {
   DialogActions,
   Button,
   Typography,
+  Alert,
+  AlertTitle,
 } from "@mui/material";
 import AdminImageGrid from "../components/AdminImageGrid";
 import ImageLightboxModal from "../components/ImageLightboxModal";
 import axiosInstance from "../axiosInstance";
+
+const buttonsStyle = { textTransform: "none" };
 
 const AdminImagesGallery = () => {
   const [images, setImages] = useState([]);
@@ -19,11 +23,12 @@ const AdminImagesGallery = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [mainImageDialogOpen, setMainImageDialogOpen] = useState(false);
+  const [alert, setAlert] = useState(null);
 
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const { data } = await axiosInstance.get("/images");        
+        const { data } = await axiosInstance.get("/images");
         setImages(data);
       } catch (error) {
         console.error(error);
@@ -47,22 +52,32 @@ const AdminImagesGallery = () => {
   };
 
   const handleDelete = async (imageToDelete) => {
-    try{      
-      const {data} = await axiosInstance.delete(`/gallery/image/${imageToDelete.image_id}`);
+    try {
+      const { data } = await axiosInstance.delete(
+        `/gallery/image/${imageToDelete.image_id}`
+      );
       setImages((prev) => prev.filter((img) => img.image_id !== data.image_id));
       setDeleteDialogOpen(false);
-    } catch(error) {
+    } catch (error) {
       console.log(error);
-      
     }
   };
-      
 
-  const handleSetMainImage = () => {
-    setImages((prev) =>
-      prev.map((img) => ({ ...img, isMainImage: img.id === selectedImage.id }))
-    );
-    setMainImageDialogOpen(false);
+  const handleSetMainImage = async (imageToSetAsMain) => {
+    try {
+      const data = await axiosInstance.put(
+        `/category/img/${imageToSetAsMain.category_id}`,
+        imageToSetAsMain
+      );
+      // console.log(data);
+      setMainImageDialogOpen(false);
+      setAlert("success");
+      setTimeout(setAlert(null), 4000);
+    } catch (error) {
+      setMainImageDialogOpen(false);
+      setAlert("error");
+      setTimeout(setAlert(null), 4000);
+    }
   };
 
   const handleClose = () => {
@@ -115,10 +130,20 @@ const AdminImagesGallery = () => {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)} color="primary">
+          <Button
+            onClick={() => setDeleteDialogOpen(false)}
+            color="primary"
+            variant="contained"
+            sx={buttonsStyle}
+          >
             Cancel
           </Button>
-          <Button onClick={() => handleDelete(selectedImage)} color="error">
+          <Button
+            onClick={() => handleDelete(selectedImage)}
+            color="error"
+            variant="contained"
+            sx={buttonsStyle}
+          >
             Delete
           </Button>
         </DialogActions>
@@ -136,14 +161,36 @@ const AdminImagesGallery = () => {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setMainImageDialogOpen(false)} color="primary">
+          <Button
+            onClick={() => setMainImageDialogOpen(false)}
+            color="primary"
+            variant="contained"
+            sx={buttonsStyle}
+          >
             Cancel
           </Button>
-          <Button onClick={handleSetMainImage} color="primary">
+          <Button
+            onClick={() => handleSetMainImage(selectedImage)}
+            color="primary"
+            variant="contained"
+            sx={buttonsStyle}
+          >
             Set as Main Image
           </Button>
         </DialogActions>
       </Dialog>
+      {alert &&
+        (alert === "error" ? (
+          <Alert severity="error">
+            <AlertTitle>{alert}</AlertTitle>
+            Main image is not set — <strong>please try again!</strong>
+          </Alert>
+        ) : (
+          <Alert severity="success">
+            <AlertTitle>{alert}</AlertTitle>
+            Main image is set — <strong>successfully!</strong>
+          </Alert>
+        ))}
     </Box>
   );
 };

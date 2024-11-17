@@ -76,9 +76,9 @@ export default function Gallery() {
               />
               <CardContent sx={{ 
                 flexGrow: 1, 
-                backgroundColor: '#e6f2ff', // Light background color
-                borderBottomLeftRadius: 12, // Match the card's border radius
-                borderBottomRightRadius: 12, // Match the card's border radius
+                backgroundColor: '#e6f2ff', 
+                borderBottomLeftRadius: 12, 
+                borderBottomRightRadius: 12,
               }}>
                 <Typography variant="h6" gutterBottom>
                   {item.name}

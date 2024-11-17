@@ -40,14 +40,14 @@ CREATE TABLE `clients` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
-DROP TABLE IF EXISTS `images`;
-CREATE TABLE `images` (
+SELECT * FROM photography_site.images;CREATE TABLE `images` (
   `image_id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `category_id` bigint NOT NULL,
   `client_id` bigint DEFAULT NULL,
   `src` varchar(255) NOT NULL,
+  `cloud_public_id` varchar(255) NOT NULL,
   PRIMARY KEY (`image_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 DROP TABLE IF EXISTS `invoices`;

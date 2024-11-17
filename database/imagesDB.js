@@ -7,7 +7,7 @@ const addImage = async (categoryId, src, clientId = null, cloudPublicId) => {
         INSERT INTO images (category_id, client_id, src, cloud_public_id) 
         VALUES (?, ?, ?, ?);`;
         const [addedImage] = await pool.query(addImageQuery, [categoryId, clientId, src, cloudPublicId]);
-        console.log({addedImage});
+        // console.log({addedImage});
         return addedImage;
 };
 
@@ -16,7 +16,7 @@ const getImage = async (imageId) => {
     SELECT * FROM images
     WHERE image_id = ?`;
   const [[image]] = await pool.query(getImageByIdQuery, [imageId]);
-    console.log(image);
+    // console.log(image);
   return image;
 };
 

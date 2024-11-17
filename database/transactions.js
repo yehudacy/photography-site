@@ -71,7 +71,7 @@ async function addCategoryAndImageTransaction(category, imageUrl, publicId) {
 
     let addImageQuery = `
     INSERT INTO images (category_id, src, cloud_public_id) 
-    VALUES (?, ?);`;
+    VALUES (?, ?, ?);`;
 
     const [addedImageInfo] = await connection.query(addImageQuery, [
       insertId,
@@ -121,7 +121,7 @@ async function editCategoryTransaction(categoryId, category, imageUrl, publicId,
     if(category.imgChanged){      
       let addImageQuery = `
       INSERT INTO images (category_id, src, cloud_public_id) 
-      VALUES (?, ?);`;
+      VALUES (?, ?, ?);`;
       const [{insertId}] = await connection.query(addImageQuery, [
         categoryId,
         imageUrl,

@@ -53,16 +53,20 @@ categoryRouter.post(
       // console.log(req.file);
 
       const fileName = `${uniqid()}${req.file.originalname}`;
-      const imageUrl = await uploadImage(req.file.buffer, fileName);
+      const { secure_url, public_id } = await uploadImage(
+        req.file.buffer,
+        fileName
+      );
 
       const { status, categoryId } = await addCategoryAndImageTransaction(
         req.body,
-        imageUrl
+        secure_url,
+        public_id
       );
-      console.log(status, categoryId);
+      // console.log(status, categoryId);
       if (status === "commit") {
         const addedCategory = await getCategory(categoryId);
-        res.status(201).json({ ...addedCategory, src: imageUrl });
+        res.status(201).json({ ...addedCategory, src: secure_url });
       }
     } catch (error) {
       // console.log(error);
@@ -75,20 +79,51 @@ categoryRouter.put(
   "/:categoryId",
   authenticateToken,
   upload.single("image"),
-  async ({ body, file, params : {categoryId} }, res) => {    
+  async ({ body, file, params: { categoryId } }, res) => {
     let imageUrl;
+    let publicId;
     try {
-      if(body.imgChanged === 'true'){
+      if (body.imgChanged === "true") {
         const fileName = `${uniqid()}${file.originalname}`;
-        imageUrl = await uploadImage(file.buffer, fileName);
+        const { secure_url, public_id } = await uploadImage(
+          file.buffer,
+          fileName
+        );
+        imageUrl = secure_url;
+        publicId = public_id;
       }
 
-     const url = body.imgChanged === 'true' ? imageUrl : body.image;
-      
-      const {status} = await editCategoryTransaction(categoryId, body, url);
-      if(status === "commit"){
+      const url = body.imgChanged === "true" ? imageUrl : body.image;
+
+      const { status } = await editCategoryTransaction(
+        categoryId,
+        body,
+        url,
+        publicId
+      );
+      if (status === "commit") {
         const updatedCategory = await getCategory(categoryId);
         res.status(200).json({ ...updatedCategory, src: url });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: error.message });
+    }
+  }
+);
+
+//changing only the main image
+categoryRouter.put(
+  "/img/:categoryId",
+  authenticateToken,
+  async ({ body, params: { categoryId } }, res) => {    
+    try {
+      const categoryToEdit = await getCategory(categoryId)
+      if(categoryToEdit){
+        const {category_id, name} = categoryToEdit;
+        const data = await editCategory(category_id, name, body.image_id);
+        console.log(data);
+        res.status(200).json({message: "Added as main image successfully!"})
       }
     } catch (error) {
       console.log(error);
