@@ -2,8 +2,8 @@ import {
   Grid,
   Table,
   TableCell,
-  TableContainer, 
-  TableHead, 
+  TableContainer,
+  TableHead,
   TableRow,
   Typography,
   Paper,
@@ -16,18 +16,17 @@ import DetailsIcon from "@mui/icons-material/Details";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import React, { useEffect, useState } from "react";
-import {useUser} from "../hooks/useUser";
+import { useUser } from "../hooks/useUser";
 import axiosInstance from "../axiosInstance";
+import { format, parseISO } from "date-fns";
 
 const TableOfOrders = ({ type }) => {
-
-  const {user} = useUser();
+  const { user } = useUser();
 
   const [orders, setOrders] = useState([]);
   const [fetchOrderError, setFetchOrderError] = useState("");
   const [alert, setAlert] = useState("");
 
-  
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -35,15 +34,17 @@ const TableOfOrders = ({ type }) => {
         if (user.isAdmin) {
           const { data } = await axiosInstance.get("order");
           setOrders(data);
-          if(!data.length){
+          if (!data.length) {
             setFetchOrderError("no orders found");
           }
         }
         if (!user.isAdmin) {
-          const { data } = await axiosInstance.get(`order/client/${user.client_id}`);
+          const { data } = await axiosInstance.get(
+            `order/client/${user.client_id}`
+          );
           // console.log(data)
           setOrders(data);
-          if(!data.length){
+          if (!data.length) {
             setFetchOrderError("no orders found");
           }
         }
@@ -51,23 +52,25 @@ const TableOfOrders = ({ type }) => {
         setFetchOrderError(error.message);
       }
     };
-    fetchOrders()
+    fetchOrders();
   }, [user.client_id, user.isAdmin]);
 
   const handleSelectOrder = () => {};
 
-  const handleDelete = async(orderId) => {
-    try{
-      const {data} = await axiosInstance.delete(`/order/${orderId}`);
+  const handleDelete = async (orderId) => {
+    try {
+      const { data } = await axiosInstance.delete(`/order/${orderId}`);
       // console.log(data);
-      const filteredOrders = orders.filter((order) => order.order_id !== orderId);
+      const filteredOrders = orders.filter(
+        (order) => order.order_id !== orderId
+      );
       setOrders(filteredOrders);
-    }catch(error) {
+    } catch (error) {
       console.log(error);
       setAlert("error");
       setTimeout(() => setAlert(""), 5000);
     }
-  }
+  };
 
   return (
     <Grid item xs={12} md={9}>
@@ -98,8 +101,12 @@ const TableOfOrders = ({ type }) => {
                 >
                   <TableCell>{order.order_id}</TableCell>
                   <TableCell>{order.client_id}</TableCell>
-                  <TableCell>{order.order_date}</TableCell>
-                  <TableCell>{order.action_date}</TableCell>
+                  <TableCell>
+                    {format(parseISO(order.order_date), "dd/MM/yyyy")}
+                  </TableCell>
+                  <TableCell>
+                    {format(parseISO(order.action_date), "dd/MM/yyyy")}
+                  </TableCell>
                   <TableCell>{order.time}</TableCell>
                   <TableCell>{order.price}</TableCell>
                   <TableCell>{order.remarks}</TableCell>
@@ -117,8 +124,8 @@ const TableOfOrders = ({ type }) => {
             ) : (
               <TableRow>
                 <TableCell colSpan={10} align="center">
-                <Typography variant="h6" color="error">
-                    { fetchOrderError }
+                  <Typography variant="h6" color="error">
+                    {fetchOrderError}
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -126,10 +133,12 @@ const TableOfOrders = ({ type }) => {
           </TableBody>
         </Table>
       </TableContainer>
-        {alert && <Alert severity="error">
-            <AlertTitle>{alert}</AlertTitle>
-            delete not completed — <strong>please try again!</strong>
-          </Alert>}
+      {alert && (
+        <Alert severity="error">
+          <AlertTitle>{alert}</AlertTitle>
+          delete not completed — <strong>please try again!</strong>
+        </Alert>
+      )}
     </Grid>
   );
 };
