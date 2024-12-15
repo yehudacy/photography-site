@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, List, ListItem, ListItemText, Button } from "@mui/material";
+import {
+  Box,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  Button,
+  IconButton,
+  ListItemButton,
+} from "@mui/material";
+import { ArrowBack as ArrowBackIcon } from "@mui/icons-material";
 
 const ManageUsers = () => {
   const [users, setUsers] = useState([]);
@@ -48,46 +58,70 @@ const ManageUsers = () => {
     }
   };
 
+  const handleBackToUsers = () => {
+    setSelectedUser(null);
+    setJobs([]);
+  };
+
+  const handleBackToJobs = () => {
+    setSelectedJob(null);
+    setJobImages([]);
+  };
+
   return (
     <Box>
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="h6" align="center" gutterBottom>
         Manage Users
       </Typography>
-      <Box>
-        <Typography variant="subtitle1">Users:</Typography>
-        <List>
-          {users.map((user) => (
-            <ListItem
-              key={user.id}
-              button
-              selected={selectedUser?.id === user.id}
-              onClick={() => handleUserClick(user)}
-            >
-              <ListItemText primary={user.name} />
-            </ListItem>
-          ))}
-        </List>
-      </Box>
-      {selectedUser && (
-        <Box mt={2}>
-          <Typography variant="subtitle1">Jobs for {selectedUser.name}:</Typography>
+
+      {!selectedUser && (
+        <Box>
+          <Typography variant="subtitle1">Users:</Typography>
           <List>
-            {jobs.map((job) => (
-              <ListItem
-                key={job.id}
-                button
-                selected={selectedJob?.id === job.id}
-                onClick={() => handleJobClick(job)}
+            {users.map((user) => (
+              <ListItemButton
+                key={user.id}
+                onClick={() => handleUserClick(user)}
               >
-                <ListItemText primary={job.title} />
-              </ListItem>
+                <ListItemText primary={user.name} color="primary" />
+              </ListItemButton>
             ))}
           </List>
         </Box>
       )}
+
+      {selectedUser && !selectedJob && (
+        <Box>
+          <IconButton
+            onClick={handleBackToUsers}
+            sx={{ marginBottom: 2, alignSelf: "flex-end" }}
+          >
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography variant="subtitle1">
+            Jobs for {selectedUser.name}:
+          </Typography>
+          <List>
+            {jobs.map((job) => (
+              <ListItemButton key={job.id} onClick={() => handleJobClick(job)}>
+                <ListItemText primary={job.title} />
+              </ListItemButton>
+            ))}
+          </List>
+        </Box>
+      )}
+
       {selectedJob && (
-        <Box mt={2}>
-          <Typography variant="subtitle1">Images for {selectedJob.title}:</Typography>
+        <Box>
+          <IconButton
+            onClick={handleBackToJobs}
+            sx={{ marginBottom: 2, alignSelf: "flex-end" }}
+          >
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography variant="subtitle1">
+            Images for {selectedJob.title}:
+          </Typography>
           <List>
             {jobImages.map((image, index) => (
               <ListItem key={index}>
