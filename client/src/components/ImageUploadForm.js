@@ -13,6 +13,7 @@ import {
   Grid,
   Alert,
   AlertTitle,
+  Box,
 } from "@mui/material";
 
 const ImageUploadForm = () => {
@@ -147,126 +148,129 @@ const ImageUploadForm = () => {
   };
 
   return (
-    <Grid item xs={12} md={9}>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          padding: "16px",
-        }}
-      >
-        <Typography variant="h6" gutterBottom>
-          Upload Image
-        </Typography>
-
-        <FormControl fullWidth style={{ marginBottom: "16px" }}>
-          <InputLabel htmlFor="category">Category</InputLabel>
-          <Select
-            label="Category"
-            id="category"
-            value={category}
-            onChange={handleCategoryChange}
-          >
-            {options.map((name, index) => {
-              return (
-                <MenuItem key={index} value={name}>
-                  {name}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
-
-        <TextField
-          label="Client Email"
-          fullWidth
-          value={clientEmail}
-          onChange={handleClientEmailChange}
-          style={{ marginBottom: "16px" }}
-        />
-
-        <div style={{ marginBottom: "16px", position: "relative" }}>
-          {previewUrl && (
-            <img
-              src={previewUrl}
-              alt="Preview"
-              style={{ maxWidth: "100%", marginBottom: "8px" }}
-            />
-          )}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              marginTop: "8px",
-            }}
-          >
-            {previewUrl ? (
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={handleClearFile}
-                style={clearButtonStyle}
-              >
-                Clear
-              </Button>
-            ) : (
-              <div></div> // Empty div to maintain layout when there's no Clear button
-            )}
-            <label htmlFor="imageInput">
-              <Button
-                variant="contained"
-                color="primary"
-                component="span"
-                style={chooseFileButtonStyle}
-              >
-                {previewUrl ? "Change File" : "Choose a File"}
-              </Button>
-            </label>
-          </div>
-          <input
-            type="file"
-            onChange={handleFileChange}
-            // accept="image/*"
-            style={{ display: "none" }}
-            id="imageInput"
-          />
-        </div>
-
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={isMainImage}
-              onChange={handleIsMainImageChange}
-              color="primary"
-            />
-          }
-          label="Set as Main Image"
-          style={{ marginBottom: "16px" }}
-        />
-
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSave}
-          style={buttonStyle}
+    <Box sx={{ padding: 2, maxWidth: 1200, margin: "0 auto" }}>
+      <Grid item >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            padding: "16px",
+          }}
         >
-          Save
-        </Button>
-      </div>
-      {alert &&
-        (alert === "error" ? (
-          <Alert severity="error">
-            <AlertTitle>{alert}</AlertTitle>
-            {alertMsg}
-          </Alert>
-        ) : (
-          <Alert severity="success">
-            <AlertTitle>{alert}</AlertTitle>
-            {alertMsg}
-          </Alert>
-        ))}
-    </Grid>
+          
+
+          <Typography variant="h4" align="center" gutterBottom>
+                Upload Image
+              </Typography>
+          <FormControl fullWidth style={{ marginBottom: "16px" }}>
+            <InputLabel htmlFor="category">Category</InputLabel>
+            <Select
+              label="Category"
+              id="category"
+              value={category}
+              onChange={handleCategoryChange}
+            >
+              {options.map((name, index) => {
+                return (
+                  <MenuItem key={index} value={name}>
+                    {name}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+
+          <TextField
+            label="Client Email"
+            fullWidth
+            value={clientEmail}
+            onChange={handleClientEmailChange}
+            style={{ marginBottom: "16px" }}
+          />
+
+          <div style={{ marginBottom: "16px", position: "relative" }}>
+            {previewUrl && (
+              <img
+                src={previewUrl}
+                alt="Preview"
+                style={{ maxWidth: "100%", marginBottom: "8px" }}
+              />
+            )}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginTop: "8px",
+              }}
+            >
+              {previewUrl ? (
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleClearFile}
+                  style={clearButtonStyle}
+                >
+                  Clear
+                </Button>
+              ) : (
+                <div></div> // Empty div to maintain layout when there's no Clear button
+              )}
+              <label htmlFor="imageInput">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  component="span"
+                  style={chooseFileButtonStyle}
+                >
+                  {previewUrl ? "Change File" : "Choose a File"}
+                </Button>
+              </label>
+            </div>
+            <input
+              type="file"
+              onChange={handleFileChange}
+              // accept="image/*"
+              style={{ display: "none" }}
+              id="imageInput"
+            />
+          </div>
+
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={isMainImage}
+                onChange={handleIsMainImageChange}
+                color="primary"
+              />
+            }
+            label="Set as Main Image"
+            style={{ marginBottom: "16px" }}
+          />
+
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSave}
+            style={buttonStyle}
+          >
+            Save
+          </Button>
+        </Box>
+        {alert &&
+          (alert === "error" ? (
+            <Alert severity="error">
+              <AlertTitle>{alert}</AlertTitle>
+              {alertMsg}
+            </Alert>
+          ) : (
+            <Alert severity="success">
+              <AlertTitle>{alert}</AlertTitle>
+              {alertMsg}
+            </Alert>
+          ))}
+      </Grid>
+      </Box>
   );
 };
 

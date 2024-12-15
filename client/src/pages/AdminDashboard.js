@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../hooks/useUser";
 import PackagePrices from "./PackagePrices";
 import CategoryManagement from "../components/CategoryManagement";
+import Portfolio from "../components/Portfolio";
+import UserImageManager from "../components/UserImageManager";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -36,11 +38,11 @@ const AdminDashboard = () => {
 
   const btnTextAlignment = {
     display: "flex",
-    justifyContent: "left"
-  }
+    justifyContent: "left",
+  };
 
   return (
-    <Grid container spacing={3}>
+    <Grid container>
       <Grid item xs={12} md={2}>
         <Paper style={{ padding: "16px" }}>
           <Typography variant="h6" gutterBottom>
@@ -93,31 +95,33 @@ const AdminDashboard = () => {
           </Button>
           <Button
             fullWidth
-            onClick={() => setComponentToRender("upload")}
+            onClick={() => setComponentToRender("portfolio")}
             style={buttonStyle}
             color="primary"
             sx={btnTextAlignment}
           >
-            Upload images
+            Portfolio
           </Button>
           <Button
             fullWidth
-            onClick={() => setComponentToRender("viewImg")}
+            onClick={() => setComponentToRender("user management")}
             style={buttonStyle}
             color="primary"
             sx={btnTextAlignment}
           >
-            View images
+            User Management
           </Button>
         </Paper>
       </Grid>
-      {componentToRender === "Account details" && <AccountDetails />}
-      {componentToRender === "orders" && <TableOfOrders />}
-      {componentToRender === "contactMe" && <ContactRequestsTable />}
-      {componentToRender === "upload" && <ImageUploadForm />}
-      {componentToRender === "viewImg" && <AdminImagesGallery />}
-      {componentToRender === "pricing" && <PackagePrices />}
-      {componentToRender === "categories" && <CategoryManagement />}
+      <Grid item xs={12} md={10}>
+        {componentToRender === "Account details" && <AccountDetails />}
+        {componentToRender === "orders" && <TableOfOrders />}
+        {componentToRender === "contactMe" && <ContactRequestsTable />}
+        {componentToRender === "portfolio" && <Portfolio />}
+        {componentToRender === "pricing" && <PackagePrices />}
+        {componentToRender === "categories" && <CategoryManagement />}
+        {componentToRender === "user management" && <UserImageManager></UserImageManager>}
+      </Grid>
     </Grid>
   );
 };
