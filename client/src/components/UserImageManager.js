@@ -1,6 +1,6 @@
-import { Box, Grid, Paper, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Grid, Tab, Tabs, Typography } from "@mui/material";
 import React, { useState } from "react";
-import ImageUploadForm from "./ImageUploadForm";
+import BulkImageUploadForm from "./BulkImageUploadForm";
 import ManageUsers from "./ManageUsers";
 
 const UserImageManager = () => {
@@ -14,7 +14,7 @@ const UserImageManager = () => {
     <Grid container>
       <Grid item xs={12}>
         <Box style={{ padding: "16px" }}>
-          <Typography variant="h4" align="center" gutterBottom>
+          <Typography variant="h5" align="center" gutterBottom>
             User Image Manager
           </Typography>
           <Tabs
@@ -39,7 +39,7 @@ const UserImageManager = () => {
 
       <Grid item xs={12}>
         <Box style={{ padding: "16px" }}>
-          {activeTab === 0 && <ImageUploadForm />}
+          {activeTab === 0 && <BulkImageUploadForm />}
           {activeTab === 1 && <ManageUsers />}
         </Box>
       </Grid>

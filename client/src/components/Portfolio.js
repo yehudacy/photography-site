@@ -1,7 +1,7 @@
-import { Box, Tab, Tabs } from "@mui/material";
+import { Box, Grid, Tab, Tabs, Typography } from "@mui/material";
 import { useState } from "react";
-import ImageUploadForm from "./ImageUploadForm";
 import AdminImagesGallery from "./AdminImagesGallery";
+import ImageUploadForm from "./ImageUploadForm";
 
 const Portfolio = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -10,32 +10,40 @@ const Portfolio = () => {
     setActiveTab(newValue);
   };
 
-  const tabsStyle = {
-    textTransform: "none",
-  };
-
   return (
-    <Box sx={{ marginTop: 3 }}>
-      <Tabs
-        value={activeTab}
-        onChange={handleTabChange}
-        indicatorColor="primary"
-        textColor="primary"
-        centered
-        sx={{
-          ".Mui-selected": {
-            bgcolor: "#E0F7Fa",
-          },
-        }}
-      >
-        <Tab label="Upload Image" sx={tabsStyle} />
-        <Tab label="View Images" sx={tabsStyle} />
-      </Tabs>
-      <Box sx={{ marginTop: 2 }}>
-        {activeTab === 0 && <ImageUploadForm />}
-        {activeTab === 1 && <AdminImagesGallery />}
-      </Box>
-    </Box>
+    <Grid container>
+      <Grid item xs={12}>
+        <Box style={{ padding: "16px" }}>
+          <Typography variant="h4" align="center" gutterBottom>
+            Portfolio
+          </Typography>
+          <Tabs
+            value={activeTab}
+            onChange={handleTabChange}
+            indicatorColor="primary"
+            textColor="primary"
+            variant="fullWidth"
+            sx={{
+              borderBottom: 1,
+              borderColor: "divider",
+              ".Mui-selected": {
+                backgroundColor: "#E0F7FA",
+              },
+            }}
+          >
+            <Tab label="Upload Image" sx={{ textTransform: "none" }} />
+            <Tab label="View Images" sx={{ textTransform: "none" }} />
+          </Tabs>
+        </Box>
+      </Grid>
+
+      <Grid item xs={12}>
+        <Box style={{ padding: "16px" }}>
+          {activeTab === 0 && <ImageUploadForm />}
+          {activeTab === 1 && <AdminImagesGallery />}
+        </Box>
+      </Grid>
+    </Grid>
   );
 };
 

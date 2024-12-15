@@ -28,7 +28,7 @@ const AdminImagesGallery = () => {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const { data } = await axiosInstance.get("/images");
+        const { data } = await axiosInstance.get("/images");        
         setImages(data);
       } catch (error) {
         console.error(error);

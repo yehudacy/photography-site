@@ -42,6 +42,7 @@ const AdminImageGrid = ({
                 sx={{ p: 1, backgroundColor: "#e6f2ff" }}
               >
                 <IconButton
+                size="small"
                   onClick={() => onDeleteClick(image)}
                   sx={{
                     color: "white",
@@ -54,13 +55,14 @@ const AdminImageGrid = ({
                 <Button
                   onClick={() => onSetMainClick(image)}
                   sx={{
-                    color: "white",
-                    backgroundColor: "#3fb1d3",
-                    "&:hover": { backgroundColor: "primary.main" },
+                    color: "blue",
+                    textTransform: "none",
+                    backgroundColor: "#72cde2",
+                    "&:hover": { backgroundColor: "#72cde2" },
                   }}
-                  startIcon={<StarIcon />}
+                  startIcon={<StarIcon fontSize="small" />}
                 >
-                  Set as Main
+                  Set as main
                 </Button>
               </Grid>
             </Card>
