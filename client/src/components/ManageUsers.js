@@ -8,8 +8,10 @@ import {
   Button,
   IconButton,
   ListItemButton,
+  Grid,
 } from "@mui/material";
 import { ArrowBack as ArrowBackIcon } from "@mui/icons-material";
+import JobCard from "./JobCard";
 
 const ManageUsers = () => {
   const [users, setUsers] = useState([]);
@@ -103,9 +105,12 @@ const ManageUsers = () => {
           </Typography>
           <List>
             {jobs.map((job) => (
-              <ListItemButton key={job.id} onClick={() => handleJobClick(job)}>
-                <ListItemText primary={job.title} />
-              </ListItemButton>
+              <Grid item xs={12} sm={6} md={4} key={job.id}>
+                <JobCard
+                  job={{ title: job.name }}
+                  onClick={() => handleJobClick(job)}
+                />
+              </Grid>
             ))}
           </List>
         </Box>
