@@ -37,7 +37,6 @@ jobsRouter.get("/client/:clientId", authenticateToken, async ({params }, res) =>
   }
   try {
     const jobListPerClient = await getJobsPerClient(clientId);
-    console.log(jobListPerClient);
     if (jobListPerClient. length > 0) {
       res.status(200).json(jobListPerClient);
     } else {
