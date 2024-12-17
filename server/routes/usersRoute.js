@@ -74,7 +74,6 @@ usersRouter.post("/login", async (req, res) => {
 usersRouter.get("/clientList", authenticateToken, async (req, res) => {
   try {
     const clientList = await getClientList();
-    console.log(clientList);
     if (clientList) {
       res.status(200).json(
         clientList.map((client) => {

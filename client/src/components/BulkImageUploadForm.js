@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from "react";
-import axiosInstance from "../axiosInstance";
+import CloseIcon from "@mui/icons-material/Close";
 import {
-  TextField,
-  Button,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Select,
-  Typography,
-  Grid,
   Alert,
   AlertTitle,
   Box,
+  Button,
+  FormControl,
+  Grid,
   IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography
 } from "@mui/material";
-import  CloseIcon from "@mui/icons-material/Close"
+import React, { useEffect, useState } from "react";
+import axiosInstance from "../axiosInstance";
 
 const BulkImageUploadForm = () => {
   const [clients, setClients] = useState([]);
@@ -30,7 +29,6 @@ const BulkImageUploadForm = () => {
     const fetchClients = async () => {
       try {
         const { data } = await axiosInstance.get("/users/clientList");
-        console.log(data);
         setClients(data);
       } catch (error) {
         console.error("Error fetching clients:", error);
@@ -46,12 +44,7 @@ const BulkImageUploadForm = () => {
     setSelectedJob(""); // Reset job when client changes
 
     try {
-      //   const { data } = await axiosInstance.get(`/jobs?clientId=${clientId}`);
-      const data = [
-        { id: 1, title: "Job 1" },
-        { id: 2, title: "Job 2" },
-        { id: 3, title: "Job 3" },
-      ];
+      const { data } = await axiosInstance.get(`/jobs/${clientId}`);
       setJobs(data);
     } catch (error) {
       console.error("Error fetching jobs:", error);
@@ -160,11 +153,15 @@ const BulkImageUploadForm = () => {
           onChange={handleClientChange}
           label="Client"
         >
-          {clients.map((client) => (
-            <MenuItem key={client.client_id} value={client.client_id}>
-              {client.fullName}
-            </MenuItem>
-          ))}
+          {clients.length > 0 ? (
+            clients.map((client) => (
+              <MenuItem key={client.client_id} value={client.client_id}>
+                {client.fullName}
+              </MenuItem>
+            ))
+          ) : (
+            <MenuItem>No clients found</MenuItem>
+          )}
         </Select>
       </FormControl>
 
@@ -177,11 +174,14 @@ const BulkImageUploadForm = () => {
           label="Job"
           disabled={!selectedClient}
         >
-          {jobs.map((job) => (
-            <MenuItem key={job.id} value={job.id}>
+          {jobs.length > 0 ? jobs.map((job) => (
+            <MenuItem key={job.job_id} value={job.job_id}>
               {job.title}
             </MenuItem>
-          ))}
+          )) : 
+          <MenuItem>
+          {`No jobs found for client ${clients.find((client) => client.client_id === selectedClient)?.fullName}`} 
+          </MenuItem>}
         </Select>
       </FormControl>
 

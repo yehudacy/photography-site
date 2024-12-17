@@ -15,6 +15,7 @@ const {imagesRouter} = require('./routes/imagesRoute');
 const {paypalRouter} = require('./routes/paypalRouter');
 const { nonPaidOrdersRouter } = require('./routes/nonPaidOrdersRoute');
 const { packagePriceRouter } = require('./routes/packagePricesRoute');
+const { jobsRouter } = require('./routes/jobsRoute');
 
 app.use(cors());
 app.use(express.json());
@@ -28,6 +29,7 @@ app.use('/category', categoryRouter);
 app.use('/images', imagesRouter);
 app.use('/pay', paypalRouter);
 app.use('/pricing', packagePriceRouter);
+app.use('/jobs', jobsRouter);
 
 
 
