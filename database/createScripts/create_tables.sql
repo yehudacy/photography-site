@@ -137,6 +137,29 @@ CREATE TABLE `packages` (
   PRIMARY KEY (`package_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+
+DROP TABLE IF EXISTS `jobs`
+CREATE TABLE `jobs` (
+  `job_id` int NOT NULL AUTO_INCREMENT,
+  `client_id` int NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `create_date` datetime NOT NULL,
+  `delete_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`job_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+DROP TABLE IF EXISTS `job_images`
+CREATE TABLE `job_images` (
+  `job_image_id` int NOT NULL AUTO_INCREMENT,
+  `job_id` int NOT NULL,
+  `client_id` int NOT NULL,
+  `src` varchar(255) NOT NULL,
+  `cloud_public_id` varchar(255) NOT NULL,
+  `is_main_image` tinyint NOT NULL DEFAULT '0',
+  PRIMARY KEY (`job_image_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
 ALTER TABLE
     `payment_methods` ADD PRIMARY KEY `payment_methods_payment_methods_id_primary`(`payment_methods_id`);
 ALTER TABLE

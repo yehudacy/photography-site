@@ -85,10 +85,18 @@ const editUser = async (tableName, clientId, {first_name, last_name, email, pass
     return await getUser(clientId);
 };
 
+//get client list
+const getClientList = async () => {
+  const getClientListQuery = `SELECT client_id, first_name, last_name FROM clients`;
+  const [clientList] = await pool.query(getClientListQuery);
+  // console.log(clientList);
+  return clientList;
+}
+
 //delete a user
 const deleteUser = async () => {};
 
-module.exports = { addUser, getUser, login, getClientByEmail, editUser };
+module.exports = { addUser, getUser, login, getClientByEmail, editUser, getClientList };
 
 // addUser({firstName:"Ester", lastName:"cywiak", email:"ecy4959@gmail.com", password:"demoecy@123456", city:"BB", street:"beeri", buildingNumber:"17"});
 // getUser(1);

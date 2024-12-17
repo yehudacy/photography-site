@@ -29,12 +29,8 @@ const BulkImageUploadForm = () => {
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        // const { data } = await axiosInstance.get("/clients");
-        const data = [
-          { id: 1, name: "Client 1" },
-          { id: 2, name: "client 2" },
-          { id: 3, name: "client 3" },
-        ];
+        const { data } = await axiosInstance.get("/users/clientList");
+        console.log(data);
         setClients(data);
       } catch (error) {
         console.error("Error fetching clients:", error);
@@ -165,8 +161,8 @@ const BulkImageUploadForm = () => {
           label="Client"
         >
           {clients.map((client) => (
-            <MenuItem key={client.id} value={client.id}>
-              {client.name}
+            <MenuItem key={client.client_id} value={client.client_id}>
+              {client.fullName}
             </MenuItem>
           ))}
         </Select>
