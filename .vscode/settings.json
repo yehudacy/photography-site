@@ -20,5 +20,7 @@
         "yehuda",
         "עבודות",
         "תכנות"
-    ]
+    ],
+    "editor.cursorSurroundingLines": 2,
+    "editor.cursorWidth": 1
 }

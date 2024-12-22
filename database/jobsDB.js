@@ -10,7 +10,7 @@ const addJob = async ({ client_id, title }) => {
     title,
     new Date(),
   ]);
-  // console.log(/insertId);
+  // console.log({insertId});
   return await getJob(insertId);
 };
 
@@ -19,7 +19,7 @@ const getJob = async (jobId) => {
     SELECT * FROM jobs
     WHERE job_id = ?`;
   const [[job]] = await pool.query(getJobByIdQuery, [jobId]);
-  // console.log(job)
+  console.log(job)
   return job;
 };
 
