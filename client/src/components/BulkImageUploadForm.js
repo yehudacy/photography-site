@@ -27,6 +27,7 @@ const BulkImageUploadForm = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [alert, setAlert] = useState("");
   const [alertMsg, setAlertMsg] = useState("");
+  const [saveJobErrorMsg, setSaveJobErrorMsg] = useState("");
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -160,11 +161,12 @@ const BulkImageUploadForm = () => {
         const newJobs = [...prev, data];
         return newJobs;
       })      
+      setDialogOpen(false)
     } catch (error) {
-      console.log(error);
-      //TO DO handle error case
+      setSaveJobErrorMsg(error.response.data.message)
+      setTimeout(setSaveJobErrorMsg(""), 5000)
+      return false;
     }
-    setDialogOpen(false)
   };
 
   return (
@@ -321,6 +323,7 @@ const BulkImageUploadForm = () => {
           dialogOpen={dialogOpen}
           handleCloseDialog={handleCloseDialog}
           handleSaveJob={handleSaveJob}
+          saveJobErrorMsg={saveJobErrorMsg}
         />
       )}
     </>

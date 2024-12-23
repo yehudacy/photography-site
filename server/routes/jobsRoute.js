@@ -15,7 +15,7 @@ jobsRouter.post("/", authenticateToken, async ({ body }, res) => {
       throw new Error(`Failed to add job!`, {cause: 400})
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     
     res.status(error.cause).json({ message: error.message})
   }
