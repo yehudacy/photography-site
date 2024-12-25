@@ -27,7 +27,6 @@ const BulkImageUploadForm = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [alert, setAlert] = useState("");
   const [alertMsg, setAlertMsg] = useState("");
-  const [saveJobErrorMsg, setSaveJobErrorMsg] = useState("");
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -104,7 +103,7 @@ const BulkImageUploadForm = () => {
   const uploadToServer = async (formData) => {
     try {
       const { data, status } = await axiosInstance.post(
-        "/gallery/bulk-upload",
+        "/gallery/bulk-upload-images",
         formData
       );
       if (status === 201) {
@@ -155,16 +154,17 @@ const BulkImageUploadForm = () => {
   const handleSaveJob = async (jobTitle) => {
     console.log("save job", jobTitle);
     try {
-      const {data} = await axiosInstance.post('/jobs', {client_id: selectedClient, title: jobTitle});
+      const { data } = await axiosInstance.post("/jobs", {
+        client_id: selectedClient,
+        title: jobTitle,
+      });
       setSelectedJob(data.job_id);
       setJobs((prev) => {
         const newJobs = [...prev, data];
         return newJobs;
-      })      
-      setDialogOpen(false)
+      });
+      setDialogOpen(false);
     } catch (error) {
-      setSaveJobErrorMsg(error.response.data.message)
-      setTimeout(setSaveJobErrorMsg(""), 5000)
       return false;
     }
   };
@@ -323,7 +323,6 @@ const BulkImageUploadForm = () => {
           dialogOpen={dialogOpen}
           handleCloseDialog={handleCloseDialog}
           handleSaveJob={handleSaveJob}
-          saveJobErrorMsg={saveJobErrorMsg}
         />
       )}
     </>

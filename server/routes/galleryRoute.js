@@ -69,12 +69,10 @@ galleryRouter.post(
         if (result === "commit") {
           res.status(201).json("The Image has been added as Main Image");
         } else {
-          return res
-            .status(500)
-            .json({
-              message:
-                "Something went wrong while trying to save the Image as main image in the Database",
-            });
+          return res.status(500).json({
+            message:
+              "Something went wrong while trying to save the Image as main image in the Database",
+          });
         }
       } else {
         const { affectedRows } = await addImage(
@@ -84,12 +82,10 @@ galleryRouter.post(
           public_id
         );
         if (!affectedRows) {
-          return res
-            .status(500)
-            .json({
-              message:
-                "Something went wrong while trying to save the Image in the Database",
-            });
+          return res.status(500).json({
+            message:
+              "Something went wrong while trying to save the Image in the Database",
+          });
         } else {
           return res.status(201).json({ message: "The Image has been added" });
         }
@@ -97,6 +93,20 @@ galleryRouter.post(
     } catch (error) {
       console.log(error);
       res.status(500).send("Error uploading image to Cloudinary.");
+    }
+  }
+);
+
+galleryRouter.post(
+  "/bulk-upload-images",
+  authenticateToken,
+  upload.array("file"),
+  async (req, res) => {
+    console.log(req);
+    
+    try {
+    } catch (error) {
+
     }
   }
 );

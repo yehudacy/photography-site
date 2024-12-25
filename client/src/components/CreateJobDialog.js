@@ -10,10 +10,11 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { btnTextTransformNone } from "../utils/utilityVars";
-import { Close as CloseIcon } from "@mui/icons-material";
+import { Close as CloseIcon, Height } from "@mui/icons-material";
 
-const CreateJobDialog = ({ dialogOpen, handleCloseDialog, handleSaveJob, saveJobErrorMsg }) => {
+const CreateJobDialog = ({ dialogOpen, handleCloseDialog, handleSaveJob }) => {
   const [newJobTitle, setNewJobTitle] = useState("");
+  const [errMsg, setErrMsg] = useState("");
   return (
     <Dialog open={dialogOpen} onClose={handleCloseDialog}>
       <DialogTitle>Create a New Job</DialogTitle>
@@ -29,7 +30,7 @@ const CreateJobDialog = ({ dialogOpen, handleCloseDialog, handleSaveJob, saveJob
       >
         <CloseIcon />
       </IconButton>
-      <DialogContent>
+      <DialogContent sx={{ minWidth: "350px" }}>
         <TextField
           id="new-job"
           label="Job Title"
@@ -40,15 +41,14 @@ const CreateJobDialog = ({ dialogOpen, handleCloseDialog, handleSaveJob, saveJob
           fullWidth
           autoFocus
         />
-        {console.log(saveJobErrorMsg)}
-        {saveJobErrorMsg && <Typography style={{ color: "red" }}>{saveJobErrorMsg}</Typography>}
+        {errMsg && <Typography style={{ color: "red" }}>{errMsg}</Typography>}
       </DialogContent>
       <DialogActions>
         <Button
           onClick={() => {
-            handleCloseDialog()
+            handleCloseDialog();
             setNewJobTitle("");
-        }}
+          }}
           color="primary"
           variant="contained"
           sx={btnTextTransformNone}
@@ -56,14 +56,14 @@ const CreateJobDialog = ({ dialogOpen, handleCloseDialog, handleSaveJob, saveJob
           Cancel
         </Button>
         <Button
-          onClick={async () => { 
-            if(newJobTitle === "") return
-            if(! await handleSaveJob(newJobTitle)) {
-              
-              return
+          onClick={async () => {
+            if (newJobTitle === "") return;
+            if (!(await handleSaveJob(newJobTitle))) {
+              setErrMsg("Save new job failed please try  again.");
+              return;
             }
             setNewJobTitle("");
-        }}
+          }}
           color="primary"
           variant="contained"
           sx={btnTextTransformNone}
