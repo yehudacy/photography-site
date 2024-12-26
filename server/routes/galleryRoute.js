@@ -4,6 +4,7 @@ const uniqid = require("uniqid");
 const {
   uploadImage,
   deleteImageFromCloud,
+  uploadImages,
 } = require("../cloudinary/cloudinary");
 const {
   getAllCategoryImages,
@@ -12,7 +13,10 @@ const {
 } = require("../../database/categoryDB");
 const { getClientByEmail } = require("../../database/usersDB");
 const { addImage, getImage, deleteImage } = require("../../database/imagesDB");
-const { addImageTransaction } = require("../../database/transactions");
+const {
+  addImageTransaction,
+  addJobImagesTransaction,
+} = require("../../database/transactions");
 const { authenticateToken } = require("../authentication/authentication");
 
 const galleryRouter = express.Router();
@@ -100,13 +104,29 @@ galleryRouter.post(
 galleryRouter.post(
   "/bulk-upload-images",
   authenticateToken,
-  upload.array("file"),
+  upload.array("files"),
   async (req, res) => {
-    console.log(req);
-    
     try {
-    } catch (error) {
+      if (req.files.length === 0) {
+        return res.status(400).send("No images uploaded.");
+      }
+      const resultsArr = await uploadImages(req.files);
 
+      const dbResults = await addJobImagesTransaction(
+        req.body.jobId,
+        req.body.clientId,
+        resultsArr
+      );
+      if (dbResults === "commit") {
+        res.status(201).json("The Images has been added successfully!");
+      } else {
+        throw new Error(
+          "Something went wrong while trying to save the Images please try again",
+          { cause: 400 }
+        );
+      }
+    } catch (error) {
+      return res.status(error.cause).json({ message: error.message });
     }
   }
 );

@@ -1,4 +1,5 @@
 const cloudinary = require("cloudinary").v2;
+const uniqid = require("uniqid");
 
 // Return "https" URLs by setting secure: true
 cloudinary.config({
@@ -15,11 +16,11 @@ const uploadImage = async (fileBuffer, fileName) => {
     };
     const uploadStream = cloudinary.uploader.upload_stream(
       options,
-      (error, {secure_url, public_id}) => {
+      (error, { secure_url, public_id }) => {
         if (error) {
           reject(error);
-        } else {          
-          resolve({secure_url, public_id});
+        } else {
+          resolve({ secure_url, public_id });
         }
       }
     );
@@ -27,6 +28,39 @@ const uploadImage = async (fileBuffer, fileName) => {
   });
 };
 
+const uploadImages = async (files) => {
+  return new Promise(async (resolve, reject) => {
+    const uploadPromises = files.map((file) => {
+      return new Promise((innerResolve, innerReject) => {
+        const fileName = `${uniqid()}${file.originalname}`;
+        const options = {
+          public_id: fileName,
+          use_filename: true,
+          unique_filename: true,
+          overwrite: true,
+        };
+        const uploadStream = cloudinary.uploader.upload_stream(
+          options,
+          (error, { secure_url, public_id }) => {
+            if (error) {
+              innerReject(error);
+            } else {
+              innerResolve({ secure_url, public_id });
+            }
+          }
+        );
+        uploadStream.end(file.buffer);
+      });
+    });
+    Promise.all(uploadPromises)
+      .then((results) => {
+        resolve(results);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
 
 const deleteImageFromCloud = async (publicId) => {
   return new Promise((resolve, reject) => {
@@ -40,6 +74,4 @@ const deleteImageFromCloud = async (publicId) => {
   });
 };
 
-
-module.exports = { uploadImage, deleteImageFromCloud };
- 
+module.exports = { uploadImage, uploadImages, deleteImageFromCloud };

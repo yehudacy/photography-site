@@ -19,10 +19,10 @@ import CreateJobDialog from "./CreateJobDialog";
 const BulkImageUploadForm = () => {
   const [clients, setClients] = useState([]);
   const [jobs, setJobs] = useState([]);
+  const [images, setImages] = useState([]);
   const [jobsError, setJobsError] = useState("");
   const [selectedClient, setSelectedClient] = useState("");
   const [selectedJob, setSelectedJob] = useState("");
-  const [images, setImages] = useState([]);
   const [previewUrls, setPreviewUrls] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [alert, setAlert] = useState("");
@@ -76,7 +76,7 @@ const BulkImageUploadForm = () => {
   const handleFileChange = (event) => {
     const selectedFiles = Array.from(event.target.files);
     const newImages = [...images, ...selectedFiles].slice(0, 10); // Limit to 10 images
-
+    
     setImages(newImages);
 
     const newPreviewUrls = newImages.map((file) => URL.createObjectURL(file));
@@ -102,17 +102,19 @@ const BulkImageUploadForm = () => {
 
   const uploadToServer = async (formData) => {
     try {
-      const { data, status } = await axiosInstance.post(
+      const {data, status} = await axiosInstance.post(
         "/gallery/bulk-upload-images",
         formData
       );
+ 
+      
       if (status === 201) {
         setSelectedClient("");
         setSelectedJob("");
         handleClearImages();
 
         setAlert("success");
-        setAlertMsg(data.message);
+        setAlertMsg(data);
 
         setTimeout(() => {
           setAlert("");
@@ -136,10 +138,9 @@ const BulkImageUploadForm = () => {
     const formData = new FormData();
     formData.append("clientId", selectedClient);
     formData.append("jobId", selectedJob);
-    images.forEach((image, index) => {
-      formData.append(`files[${index}]`, image);
-    });
-
+    images.forEach((image) => {
+      formData.append(`files`, image);
+    });    
     uploadToServer(formData);
   };
 

@@ -50,6 +50,49 @@ async function addImageTransaction(categoryId, clientId, src, publicId) {
     }
   }
 }
+async function addJobImagesTransaction(jobId, clientId, imagesDataArr) {
+  let connection;
+
+  try {
+    // Get a connection from the pool
+    connection = await pool.getConnection();
+
+    // Begin the transaction
+    await connection.beginTransaction();
+
+    const addJobImageQuery = `
+        INSERT INTO job_images (job_id, client_id, src, cloud_public_id) 
+        VALUES (?, ?, ?, ?);`;
+
+    // Perform multiple queries within the transaction
+    const results = imagesDataArr.map( (image) => (
+       connection.query(addJobImageQuery, [
+        jobId,
+        clientId,
+        image.secure_url,
+        image.public_id,
+        ])  
+    ))    
+    // If everything went well, commit the transaction
+    await connection.commit();
+
+    console.log("Transaction committed successfully!");
+    return "commit";
+  } catch (error) {
+    // If there was an error, rollback the transaction
+    if (connection) {
+      await connection.rollback();
+    }
+
+    console.error("Error in transaction:", error.message);
+    return "rollback";
+  } finally {
+    // Release the connection back to the pool
+    if (connection) {
+      connection.release();
+    }
+  }
+}
 
 async function addCategoryAndImageTransaction(category, imageUrl, publicId) {
   let connection;
@@ -168,4 +211,5 @@ module.exports = {
   addImageTransaction,
   addCategoryAndImageTransaction,
   editCategoryTransaction,
+  addJobImagesTransaction
 };
