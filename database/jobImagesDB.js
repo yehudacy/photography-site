@@ -12,4 +12,14 @@ const addImage = async (jobId, clientId, src, cloudPublicId) => {
     return addedImage;
 };
 
-module.exports = {addImage}
+
+//get images for a single job
+const getImagesOfOneJob = async (jobId) => {
+    const getImagesOfOneJobQuery = `
+    SELECT * FROM job_images
+    WHERE job_id = ?`;
+    const [images] = await pool.query(getImagesOfOneJobQuery, [jobId]);
+    // console.log(images)
+    return images;
+  }
+module.exports = {addImage, getImagesOfOneJob}

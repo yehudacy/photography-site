@@ -3,7 +3,6 @@ import {
   Box,
   Typography,
   List,
-  ListItem,
   ListItemText,
   Button,
   IconButton,
@@ -13,61 +12,60 @@ import {
 import { ArrowBack as ArrowBackIcon } from "@mui/icons-material";
 import JobCard from "./JobCard";
 import AdminImageGrid from "./AdminImageGrid";
+import axiosInstance from "../axiosInstance";
 
 const ManageUsers = () => {
-  const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [clients, setClients] = useState([]);
+  const [selectedClient, setSelectedClient] = useState(null);
   const [jobs, setJobs] = useState([]);
+  const [jobsError, setJobsError] = useState("");
   const [selectedJob, setSelectedJob] = useState(null);
   const [jobImages, setJobImages] = useState([]);
+  const [imagesError, setImagesError] = useState("");
 
   useEffect(() => {
-    // Fetch users from the API or mock data
-    const fetchUsers = async () => {
-      const mockUsers = [
-        { id: 1, name: "John Doe" },
-        { id: 2, name: "Jane Smith" },
-      ];
-      setUsers(mockUsers);
+    const fetchClients = async () => {
+      try {
+        const { data } = await axiosInstance.get("/users/clientList");
+        setClients(data);
+      } catch (error) {
+        console.error("Error fetching clients:", error);
+      }
     };
-
-    fetchUsers();
+    fetchClients();
   }, []);
 
-  const handleUserClick = async (user) => {
-    setSelectedUser(user);
+  const handleClientClick = async (client) => {
+    setSelectedClient(client);
     setSelectedJob(null);
     setJobImages([]);
     // Fetch jobs for the selected user from the API or mock data
-    const mockJobs = [
-      { id: 1, title: "Home design Photography" },
-      { id: 2, title: "Product Photography" },
-      { id: 3, title: "New Born Photography" },
-    ];
-    setJobs(mockJobs);
+    const clientId = client.client_id;
+    try {
+      const { data } = await axiosInstance.get(`/jobs/client/${clientId}`);
+      setJobs(data);
+    } catch (error) {
+      // console.error("Error fetching jobs:", error);
+      if (error.request.status === 404) {
+        setJobs([]);
+        setJobsError(
+          `No jobs found for ${
+            clients.find((client) => client.client_id === clientId)?.fullName
+          }`
+        );
+      }
+    }
   };
 
   const handleJobClick = async (job) => {
     setSelectedJob(job);
-    // Fetch images for the selected job from the API or mock data
-    const mockImages = [
-      {
-        image_id: 1,
-        src: "https://res.cloudinary.com/dzjsaikk1/image/upload/v1731498118/6ecgep8m3ft9txcpic%2011.jpg.jpg",
-        altText: "image1.jpg",
-      },
-      {
-        image_id: 2,
-        src: "https://res.cloudinary.com/dzjsaikk1/image/upload/v1731498159/6ecgep8m3ftapvopic%2012.jpg.jpg",
-        altText: "image2.jpg",
-      },
-      {
-        image_id: 3,
-        src: "https://res.cloudinary.com/dzjsaikk1/image/upload/v1731498177/6ecgep8m3ftb47bpic%2013.jpg.jpg",
-        altText: "image3.jpg",
-      },
-    ];
-    setJobImages(mockImages);
+    try {
+      const { data } = await axiosInstance.get(`/gallery/jobs/${job.job_id}`);
+      console.log(data);
+      setJobImages(data);
+    } catch (error) {
+      console.error("Error fetching images:", error);
+    }
   };
 
   const handleDeleteJobImages = () => {
@@ -79,7 +77,7 @@ const ManageUsers = () => {
   };
 
   const handleBackToUsers = () => {
-    setSelectedUser(null);
+    setSelectedClient(null);
     setJobs([]);
   };
 
@@ -93,6 +91,7 @@ const ManageUsers = () => {
   const handleDeleteClick = () => {};
 
   const handleSetMainClick = () => {};
+
   return (
     <Box
       sx={{
@@ -104,15 +103,14 @@ const ManageUsers = () => {
       <Typography variant="h6" align="center" gutterBottom>
         Manage Users
       </Typography>
-
-      {!selectedUser && (
+      {!selectedClient && (
         <Box>
           <Typography variant="subtitle1">Users:</Typography>
           <List>
-            {users.map((user) => (
+            {clients.map((client) => (
               <ListItemButton
-                key={user.id}
-                onClick={() => handleUserClick(user)}
+                key={client.client_id}
+                onClick={() => handleClientClick(client)}
                 sx={{
                   borderRadius: 3,
                   "&:hover": {
@@ -120,14 +118,14 @@ const ManageUsers = () => {
                   },
                 }}
               >
-                <ListItemText primary={user.name} color="primary" />
+                <ListItemText primary={client.fullName} color="primary" />
               </ListItemButton>
             ))}
           </List>
         </Box>
       )}
 
-      {selectedUser && !selectedJob && (
+      {selectedClient && !selectedJob && (
         <Box>
           <IconButton
             onClick={handleBackToUsers}
@@ -135,18 +133,24 @@ const ManageUsers = () => {
           >
             <ArrowBackIcon />
           </IconButton>
-          <Typography variant="subtitle1">
-            Jobs for {selectedUser.name}:
-          </Typography>
-          <List>
-            <Grid container spacing={3}>
-              {jobs.map((job) => (
-                <Grid item xs={12} sm={6} md={4} key={job.id}>
-                  <JobCard job={job} onClick={() => handleJobClick(job)} />
+          {jobs.length > 0 ? (
+            <>
+              <Typography variant="subtitle1">
+                Jobs for {selectedClient.name}:
+              </Typography>
+              <List>
+                <Grid container spacing={3}>
+                  {jobs.map((job) => (
+                    <Grid item xs={12} sm={6} md={4} key={job.id}>
+                      <JobCard job={job} onClick={() => handleJobClick(job)} />
+                    </Grid>
+                  ))}
                 </Grid>
-              ))}
-            </Grid>
-          </List>
+              </List>
+            </>
+          ) : (
+            <Typography variant="subtitle1">{jobsError}</Typography>
+          )}
         </Box>
       )}
 
@@ -158,30 +162,29 @@ const ManageUsers = () => {
           >
             <ArrowBackIcon />
           </IconButton>
-          <Typography variant="subtitle1">
-            Images for {selectedJob.title}:
-          </Typography>
-          {/* <List>
-            {jobImages.map((image, index) => (
-              <ListItem key={index}>
-                <ListItemText primary={image} />
-              </ListItem>
-            ))}
-          </List> */}
-          <AdminImageGrid
-            images={jobImages}
-            onImageClick={handleImageClick}
-            onDeleteClick={handleDeleteClick}
-            onSetMainClick={handleSetMainClick}
-          />
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handleDeleteJobImages}
-            sx={{ marginTop: 2, textTransform: "none" }}
-          >
-            Delete all images
-          </Button>
+          {jobImages.length > 0 ? (
+            <>
+              <Typography variant="subtitle1">
+                Images for {selectedJob.title}:
+              </Typography>
+              <AdminImageGrid
+                images={jobImages}
+                onImageClick={handleImageClick}
+                onDeleteClick={handleDeleteClick}
+                onSetMainClick={handleSetMainClick}
+              />
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleDeleteJobImages}
+                sx={{ marginTop: 2, textTransform: "none" }}
+              >
+                Delete all images
+              </Button>
+            </>
+          ) : (
+            <Typography variant="subtitle1">{imagesError}</Typography>
+          )}
         </Box>
       )}
     </Box>

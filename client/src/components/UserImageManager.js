@@ -2,12 +2,22 @@ import { Box, Grid, Tab, Tabs, Typography } from "@mui/material";
 import React, { useState } from "react";
 import BulkImageUploadForm from "./BulkImageUploadForm";
 import ManageUsers from "./ManageUsers";
+import axiosInstance from "../axiosInstance";
 
 const UserImageManager = () => {
   const [activeTab, setActiveTab] = useState(0);
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
+  };
+
+  const fetchClients = async () => {
+    try {
+      const { data } = await axiosInstance.get("/users/clientList");
+      return data;
+    } catch (error) {
+      console.error("Error fetching clients:", error);
+    }
   };
 
   return (
@@ -39,8 +49,10 @@ const UserImageManager = () => {
 
       <Grid item xs={12}>
         <Box style={{ padding: "16px" }}>
-          {activeTab === 0 && <BulkImageUploadForm />}
-          {activeTab === 1 && <ManageUsers />}
+          {activeTab === 0 && (
+            <BulkImageUploadForm fetchClients={fetchClients} />
+          )}
+          {activeTab === 1 && <ManageUsers fetchClients={fetchClients} />}
         </Box>
       </Grid>
     </Grid>

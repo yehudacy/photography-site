@@ -27,6 +27,7 @@ const BulkImageUploadForm = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [alert, setAlert] = useState("");
   const [alertMsg, setAlertMsg] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -37,7 +38,6 @@ const BulkImageUploadForm = () => {
         console.error("Error fetching clients:", error);
       }
     };
-
     fetchClients();
   }, []);
 
@@ -76,7 +76,7 @@ const BulkImageUploadForm = () => {
   const handleFileChange = (event) => {
     const selectedFiles = Array.from(event.target.files);
     const newImages = [...images, ...selectedFiles].slice(0, 10); // Limit to 10 images
-    
+
     setImages(newImages);
 
     const newPreviewUrls = newImages.map((file) => URL.createObjectURL(file));
@@ -101,13 +101,14 @@ const BulkImageUploadForm = () => {
   };
 
   const uploadToServer = async (formData) => {
+    setIsUploading(true);
+    setTimeout(() => {}, 2000);
     try {
-      const {data, status} = await axiosInstance.post(
+      const { data, status } = await axiosInstance.post(
         "/gallery/bulk-upload-images",
         formData
       );
- 
-      
+
       if (status === 201) {
         setSelectedClient("");
         setSelectedJob("");
@@ -120,6 +121,7 @@ const BulkImageUploadForm = () => {
           setAlert("");
           setAlertMsg("");
         }, 5000);
+        setIsUploading(false);
       } else {
         throw data;
       }
@@ -140,7 +142,7 @@ const BulkImageUploadForm = () => {
     formData.append("jobId", selectedJob);
     images.forEach((image) => {
       formData.append(`files`, image);
-    });    
+    });
     uploadToServer(formData);
   };
 
@@ -208,7 +210,7 @@ const BulkImageUploadForm = () => {
           <InputLabel htmlFor="job">Job</InputLabel>
           <Select
             id="job"
-            value={selectedJob}
+            value={selectedJob || ""}
             onChange={handleJobChange}
             label="Job"
             disabled={!selectedClient}
@@ -226,7 +228,7 @@ const BulkImageUploadForm = () => {
                   pointerEvents: "none",
                 }}
               >
-                {jobsError}
+                {jobsError || "No jobs found"}
                 <Button
                   variant="text"
                   sx={{ textTransform: "none", pointerEvents: "auto" }}
@@ -270,7 +272,7 @@ const BulkImageUploadForm = () => {
         </div>
 
         {previewUrls.length > 0 && (
-          <Grid container spacing={2} sx={{ marginBottom: 2 }}>
+          <Grid container spacing={2} sx={{ marginBottom: 2, marginTop: 1 }}>
             {previewUrls.map((url, index) => (
               <Grid
                 item
@@ -306,10 +308,15 @@ const BulkImageUploadForm = () => {
           variant="contained"
           color="primary"
           onClick={handleSave}
-          disabled={images.length === 0 || !selectedClient || !selectedJob}
+          disabled={
+            images.length === 0 ||
+            !selectedClient ||
+            !selectedJob ||
+            isUploading
+          }
           sx={{ textTransform: "none" }}
         >
-          Upload Images
+          {!isUploading ? "Upload Images" : "Uploading..."}
         </Button>
 
         {alert && (

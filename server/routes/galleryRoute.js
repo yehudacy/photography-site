@@ -18,6 +18,7 @@ const {
   addJobImagesTransaction,
 } = require("../../database/transactions");
 const { authenticateToken } = require("../authentication/authentication");
+const { getImagesOfOneJob } = require("../../database/jobImagesDB");
 
 const galleryRouter = express.Router();
 
@@ -27,6 +28,18 @@ const upload = multer({ storage: storage });
 galleryRouter.get("/", async (req, res) => {
   const [categoryImages] = await getAllCategoryImages();
   res.status(200).json(categoryImages);
+});
+
+galleryRouter.get("/jobs/:jobId", async (req, res) => {
+  try {
+    const jobId = req.params.jobId;
+    const jobImages = await getImagesOfOneJob(jobId);
+    console.log(jobImages)
+    res.status(200).json(jobImages);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error getting images fr the job.");
+  }
 });
 
 galleryRouter.get("/:category", async (req, res) => {
