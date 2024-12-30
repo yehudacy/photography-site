@@ -8,11 +8,16 @@ import {
   IconButton,
   ListItemButton,
   Grid,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import { ArrowBack as ArrowBackIcon } from "@mui/icons-material";
 import JobCard from "./JobCard";
 import AdminImageGrid from "./AdminImageGrid";
 import axiosInstance from "../axiosInstance";
+import { btnTextTransformNone } from "../utils/utilityVars";
 
 const ManageUsers = () => {
   const [clients, setClients] = useState([]);
@@ -61,7 +66,7 @@ const ManageUsers = () => {
     setSelectedJob(job);
     try {
       const { data } = await axiosInstance.get(`/gallery/jobs/${job.job_id}`);
-      console.log(data);
+      // console.log(data);
       setJobImages(data);
     } catch (error) {
       console.error("Error fetching images:", error);
@@ -88,7 +93,24 @@ const ManageUsers = () => {
 
   const handleImageClick = () => {};
 
-  const handleDeleteClick = () => {};
+  const handleDeleteClick = async (jobImage) => {
+    try {
+      const { data } = await axiosInstance.delete(
+        `/gallery/jobs/image/${jobImage.job_image_id}`
+      );
+      if (data) {
+        setJobImages((prev) =>
+          prev.filter((image) => image.job_image_id !== jobImage.job_image_id)
+        );
+        return data;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  };
 
   const handleSetMainClick = () => {};
 
@@ -141,7 +163,7 @@ const ManageUsers = () => {
               <List>
                 <Grid container spacing={3}>
                   {jobs.map((job) => (
-                    <Grid item xs={12} sm={6} md={4} key={job.id}>
+                    <Grid item xs={12} sm={6} md={4} key={job.job_id}>
                       <JobCard job={job} onClick={() => handleJobClick(job)} />
                     </Grid>
                   ))}
@@ -187,6 +209,70 @@ const ManageUsers = () => {
           )}
         </Box>
       )}
+
+
+
+      {/* Delete Confirmation Dialog */}
+      {/* <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+      >
+        <DialogTitle>Delete Image</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">
+            Are you sure you want to delete this image?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setDeleteDialogOpen(false)}
+            color="primary"
+            variant="contained"
+            sx={btnTextTransformNone}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={() => handleDelete(selectedImage)}
+            color="error"
+            variant="contained"
+            sx={btnTextTransformNone}
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog> */}
+
+      {/* Set Main Image Confirmation Dialog */}
+      {/* <Dialog
+        open={mainImageDialogOpen}
+        onClose={() => setMainImageDialogOpen(false)}
+      >
+        <DialogTitle>Set as Main Image</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">
+            Are you sure you want to set this image as the main image?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setMainImageDialogOpen(false)}
+            color="primary"
+            variant="contained"
+            sx={btnTextTransformNone}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={() => handleSetMainImage(selectedImage)}
+            color="primary"
+            variant="contained"
+            sx={btnTextTransformNone}
+          >
+            Set as Main Image
+          </Button>
+        </DialogActions>
+      </Dialog> */}
     </Box>
   );
 };

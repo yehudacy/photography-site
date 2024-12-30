@@ -12,6 +12,15 @@ const addImage = async (jobId, clientId, src, cloudPublicId) => {
     return addedImage;
 };
 
+const getJobImage = async (imageId) => {
+  const getJobImageByIdQuery = `
+    SELECT * FROM job_images
+    WHERE job_image_id = ?`;
+  const [[image]] = await pool.query(getJobImageByIdQuery, [imageId]);
+    // console.log(image);
+  return image;
+};
+
 
 //get images for a single job
 const getImagesOfOneJob = async (jobId) => {
@@ -22,4 +31,16 @@ const getImagesOfOneJob = async (jobId) => {
     // console.log(images)
     return images;
   }
-module.exports = {addImage, getImagesOfOneJob}
+
+  const deleteJobImage = async (imageId) => {
+    const jobImageToDelete = await getJobImage(imageId);
+    const deleteJobImageQuery = `
+    DELETE FROM job_images WHERE job_image_id = ?;`
+    const [{ affectedRows }] = await pool.query(deleteJobImageQuery, [imageId]);
+    if(!affectedRows && !jobImageToDelete){
+        throw new Error(`No image with the Id of ${imageId}`);
+    }
+    // console.log(imageToDelete)
+    return jobImageToDelete
+  }
+module.exports = {addImage, getImagesOfOneJob, getJobImage, deleteJobImage}

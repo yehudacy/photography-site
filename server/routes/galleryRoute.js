@@ -18,7 +18,7 @@ const {
   addJobImagesTransaction,
 } = require("../../database/transactions");
 const { authenticateToken } = require("../authentication/authentication");
-const { getImagesOfOneJob } = require("../../database/jobImagesDB");
+const { getImagesOfOneJob, getJobImage, deleteJobImage } = require("../../database/jobImagesDB");
 
 const galleryRouter = express.Router();
 
@@ -34,7 +34,7 @@ galleryRouter.get("/jobs/:jobId", async (req, res) => {
   try {
     const jobId = req.params.jobId;
     const jobImages = await getImagesOfOneJob(jobId);
-    console.log(jobImages)
+    // console.log(jobImages)
     res.status(200).json(jobImages);
   } catch (error) {
     console.log(error);
@@ -144,6 +144,32 @@ galleryRouter.post(
   }
 );
 
+galleryRouter.delete("/jobs/image/:imageId", async (req, res) => {
+  try {
+    const imageId = req.params.imageId;
+    const jobImageToDelete = await getJobImage(imageId);
+    if (!jobImageToDelete) {
+      res
+        .status(404)
+        .json({ message: `No image with the id ${imageId} was found` });
+    }
+    const { result } = await deleteImageFromCloud(
+      jobImageToDelete.cloud_public_id
+    );
+    if (!(result === "not found")) {
+      const deletedJobImage = await deleteJobImage(jobImageToDelete.job_image_id);
+      if (deletedJobImage) {
+        res.status(200).json(deletedJobImage);
+      }
+    } else {
+      res.status(404).json({ message: "The image doesn't exist on the cloud" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
 galleryRouter.delete("/image/:imageId", async (req, res) => {
   try {
     const imageId = req.params.imageId;
@@ -170,12 +196,5 @@ galleryRouter.delete("/image/:imageId", async (req, res) => {
   }
 });
 
-const removeFileExtension = (fileName) => {
-  const lastDotIndex = fileName.lastIndexOf(".");
-  if (lastDotIndex !== -1) {
-    return fileName.substring(0, lastDotIndex);
-  }
-  return fileName;
-};
 
 module.exports = { galleryRouter };
