@@ -1,25 +1,24 @@
-import React, { useState, useEffect } from "react";
+import { ArrowBack as ArrowBackIcon } from "@mui/icons-material";
 import {
   Box,
-  Typography,
-  List,
-  ListItemText,
   Button,
-  IconButton,
-  ListItemButton,
-  Grid,
   Dialog,
-  DialogTitle,
-  DialogContent,
   DialogActions,
-  Alert,
-  AlertTitle,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  IconButton,
+  List,
+  ListItemButton,
+  ListItemText,
+  Typography
 } from "@mui/material";
-import { ArrowBack as ArrowBackIcon } from "@mui/icons-material";
-import JobCard from "./JobCard";
-import AdminImageGrid from "./AdminImageGrid";
+import React, { useEffect, useState } from "react";
 import axiosInstance from "../axiosInstance";
 import { btnTextTransformNone } from "../utils/utilityVars";
+import AdminImageGrid from "./AdminImageGrid";
+import JobCard from "./JobCard";
+import eventEmitter from '../utils/eventEmitter'
 
 const ManageUsers = () => {
   const [clients, setClients] = useState([]);
@@ -32,6 +31,8 @@ const ManageUsers = () => {
   const [pendingUi, setPendingUi] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [setMainImageDialogOpen, setSetMainImageDialogOpen] = useState(false);
+  const [deleteError, setDeleteError] = useState(null);
+  const [setMainError, setSetMainError] = useState(null);
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -105,6 +106,7 @@ const ManageUsers = () => {
 
   const handleDeleteSingleJobImage = async (jobImage) => {
     setPendingUi(true);
+    setDeleteError(null);
     try {
       const { data } = await axiosInstance.delete(
         `/gallery/jobs/image/${jobImage.job_image_id}`
@@ -123,6 +125,9 @@ const ManageUsers = () => {
       }
     } catch (error) {
       console.log(error);
+      setDeleteError(
+        "An error occurred while deleting the image. Please try again."
+      );
       setPendingUi(false);
       return false;
     }
@@ -135,6 +140,8 @@ const ManageUsers = () => {
 
   const handleSetMainJobImage = async (jobImage) => {
     setPendingUi(true);
+    setSetMainError(null); // Clear any previous error
+
     try {
       const { data } = await axiosInstance.put(`/jobs/img/${jobImage.job_id}`, {
         jobImageId: jobImage.job_image_id,
@@ -142,10 +149,13 @@ const ManageUsers = () => {
       setSetMainImageDialogOpen(false);
       setSelectedImage(null);
       setPendingUi(false);
+      eventEmitter.emit('mainImageUpdated', jobImage.job_image_id)
     } catch (error) {
       console.log(error);
-      setSetMainImageDialogOpen(false);
-      setSelectedImage(null);
+      setSetMainError(
+        "An error occurred while setting the main image. Please try again."
+      );
+      setPendingUi(false);
     }
   };
 
@@ -255,6 +265,11 @@ const ManageUsers = () => {
           <Typography variant="body1">
             Are you sure you want to delete this image?
           </Typography>
+          {deleteError && (
+            <Typography variant="body2" color="error">
+              {deleteError}
+            </Typography>
+          )}
         </DialogContent>
         <DialogActions>
           <Button
@@ -287,6 +302,11 @@ const ManageUsers = () => {
           <Typography variant="body1">
             Are you sure you want to set this image as the main image?
           </Typography>
+          {setMainError && (
+            <Typography variant="body2" color="error">
+              {setMainError}
+            </Typography>
+          )}
         </DialogContent>
         <DialogActions>
           <Button

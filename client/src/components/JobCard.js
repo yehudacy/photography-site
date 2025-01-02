@@ -1,28 +1,59 @@
-import React, { useEffect, useState } from "react";
 import {
-  Card,
-  CardContent,
-  Typography,
-  CardActionArea,
-  CardMedia,
   Box,
+  Card,
+  CardActionArea,
+  CardContent,
+  Typography
 } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import axiosInstance from "../axiosInstance";
+import eventEmitter from "../utils/eventEmitter";
 
 const JobCard = ({ job, onClick }) => {
   const [jobImage, setJobImage] = useState(null);
   useEffect(() => {
-    const fetchJobImage = async () => {
+    const fetchJobImage = async (jobImageId) => {
       try {
         const { data } = await axiosInstance.get(
-          `/gallery/jobs/mainimg/${job.job_image_id}`
+         `/gallery/jobs/mainimg/${jobImageId}`
         );
-        setJobImage(data);
+        setJobImage(data); 
       } catch (error) {
-        console.log(error);
+        console.log("Error fetching job image:", error); 
       }
     };
-    fetchJobImage();
+  
+    const handleMainImageUpdate = async () => {
+      try {
+        const { data } = await axiosInstance.get(`/gallery/jobs/mainImg/${job.job_image_id}`); 
+        const newMainImageId = data.job_image_id; 
+  
+        // Log to verify if this function is being called
+        console.log("handleMainImageUpdate called with newMainImageId:", newMainImageId); 
+  
+        fetchJobImage(newMainImageId); 
+      } catch (error) {
+        console.log("Error fetching main image ID:", error);
+      }
+    };
+  
+    const fetchAndDisplayMainImage = async () => {
+      try {
+        const { data } = await axiosInstance.get(`/gallery/jobs/mainImg/${job.job_image_id}`); 
+        const initialMainImageId = data.job_image_id; 
+        fetchJobImage(initialMainImageId); 
+      } catch (error) {
+        console.log("Error fetching initial main image ID:", error);
+      }
+    };
+  
+    fetchAndDisplayMainImage(); 
+  
+    eventEmitter.on("mainImageUpdated", handleMainImageUpdate);
+  
+    return () => {
+      eventEmitter.off("mainImageUpdated", handleMainImageUpdate);
+    };
   }, [job]);
   return (
     <Card
