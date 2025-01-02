@@ -19,16 +19,29 @@ const getJob = async (jobId) => {
     SELECT * FROM jobs
     WHERE job_id = ?`;
   const [[job]] = await pool.query(getJobByIdQuery, [jobId]);
-  console.log(job)
+  // console.log(job);
   return job;
+};
+
+const setJobImage = async (jobImageId, jobId) => {
+  const setJobImageQuery = `
+    UPDATE jobs
+    SET job_image_id = ?
+    WHERE job_id = ?`;
+
+  const [{ affectedRows }] = await pool.query(setJobImageQuery, [
+    jobImageId,
+    jobId,
+  ]);
+  return getJob(jobId);
 };
 
 const getJobsPerClient = async (clientId) => {
   const getJobsPerClientQuery = `
-    SELECT job_id, title FROM jobs
+    SELECT job_id, job_image_id, title FROM jobs
     WHERE client_id = ?`;
   const [jobs] = await pool.query(getJobsPerClientQuery, [clientId]);
-//   console.log(jobs);
+  //   console.log(jobs);
   return jobs;
 };
 
@@ -40,4 +53,4 @@ const getJobsPerClient = async (clientId) => {
 // }
 // b();
 
-module.exports = { addJob, getJob, getJobsPerClient };
+module.exports = { addJob, getJob, getJobsPerClient, setJobImage };

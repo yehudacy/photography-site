@@ -1,6 +1,11 @@
 const express = require("express");
 const { authenticateToken } = require("../authentication/authentication");
-const { getJobsPerClient, getJob, addJob } = require("../../database/jobsDB");
+const {
+  getJobsPerClient,
+  getJob,
+  addJob,
+  setJobImage,
+} = require("../../database/jobsDB");
 
 const jobsRouter = express.Router();
 
@@ -9,22 +14,22 @@ jobsRouter.post("/", authenticateToken, async ({ body }, res) => {
   const jobToAdd = body;
   try {
     const addedJob = await addJob(body);
-    if(addedJob){
+    if (addedJob) {
       res.status(201).json(addedJob);
     } else {
-      throw new Error(`Failed to add job!`, {cause: 400})
+      throw new Error(`Failed to add job!`, { cause: 400 });
     }
   } catch (error) {
     // console.log(error);
-    
-    res.status(error.cause).json({ message: error.message})
+
+    res.status(error.cause).json({ message: error.message });
   }
 });
 
 //get single job by id
 jobsRouter.get("/:jobId", authenticateToken, async ({ params }, res) => {
   try {
-   const { jobId } = params;
+    const { jobId } = params;
     const job = await getJob(jobId);
     // console.log(job);
     if (job) {
@@ -60,6 +65,28 @@ jobsRouter.get(
       }
     } catch (error) {
       res.status(error.cause).json({ message: error.message });
+    }
+  }
+);
+
+jobsRouter.put(
+  "/img/:jobId",
+  authenticateToken,
+  async ({ body, params: { jobId } }, res) => {
+    try {
+      const jobToEdit = await getJob(jobId);
+      if (jobToEdit) {
+        const data = await setJobImage(body.jobImageId, jobId);
+        // console.log(data);
+        res.status(200).json(data);
+      } else {
+        throw new Error(`No job found with the id ${jobId}`, {
+          cause: 404,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(error.cause || 500).json({ message: error.message });
     }
   }
 );

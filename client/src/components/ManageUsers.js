@@ -12,6 +12,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Alert,
+  AlertTitle,
 } from "@mui/material";
 import { ArrowBack as ArrowBackIcon } from "@mui/icons-material";
 import JobCard from "./JobCard";
@@ -27,6 +29,11 @@ const ManageUsers = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [jobImages, setJobImages] = useState([]);
   const [imagesError, setImagesError] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [pendingUi, setPendingUi] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [setMainImageDialogOpen, setSetMainImageDialogOpen] = useState(false);
+  const [alert, setAlert] = useState(null);
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -93,7 +100,13 @@ const ManageUsers = () => {
 
   const handleImageClick = () => {};
 
-  const handleDeleteClick = async (jobImage) => {
+  const handleDeleteClick = (jobImage) => {
+    setSelectedImage(jobImage);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteSingleJobImage = async (jobImage) => {
+    setPendingUi(true);
     try {
       const { data } = await axiosInstance.delete(
         `/gallery/jobs/image/${jobImage.job_image_id}`
@@ -102,17 +115,45 @@ const ManageUsers = () => {
         setJobImages((prev) =>
           prev.filter((image) => image.job_image_id !== jobImage.job_image_id)
         );
+        setPendingUi(false);
+        setDeleteDialogOpen(false);
+        setSelectedImage(null);
+        setPendingUi(false);
         return data;
       } else {
         return false;
       }
     } catch (error) {
       console.log(error);
+      setPendingUi(false);
       return false;
     }
   };
 
-  const handleSetMainClick = () => {};
+  const handleSetMainClick = (jobImage) => {
+    setSelectedImage(jobImage);
+    setSetMainImageDialogOpen(true);
+  };
+
+  const handleSetMainJobImage = async (jobImage) => {
+    setPendingUi(true);
+    try {
+      const { data } = await axiosInstance.put(`/jobs/img/${jobImage.job_id}`, {
+        jobImageId: jobImage.job_image_id,
+      });
+      setAlert("success");
+      setTimeout(setAlert(null), 4000);
+      setSetMainImageDialogOpen(false);
+      setSelectedImage(null);
+      setPendingUi(false);
+    } catch (error) {
+      console.log(error);
+      setAlert("error");
+      setTimeout(setAlert(null), 4000);
+      setSetMainImageDialogOpen(false);
+      setSelectedImage(null);
+    }
+  };
 
   return (
     <Box
@@ -210,10 +251,23 @@ const ManageUsers = () => {
         </Box>
       )}
 
-
+      <Box>
+        {alert &&
+          (alert === "error" ? (
+            <Alert severity="error">
+              <AlertTitle>{alert}</AlertTitle>
+              Main image is not set — <strong>please try again!</strong>
+            </Alert>
+          ) : (
+            <Alert severity="success">
+              <AlertTitle>{alert}</AlertTitle>
+              Main image is set — <strong>successfully!</strong>
+            </Alert>
+          ))}
+      </Box>
 
       {/* Delete Confirmation Dialog */}
-      {/* <Dialog
+      <Dialog
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
       >
@@ -233,19 +287,20 @@ const ManageUsers = () => {
             Cancel
           </Button>
           <Button
-            onClick={() => handleDelete(selectedImage)}
+            onClick={() => handleDeleteSingleJobImage(selectedImage)}
+            disabled={pendingUi}
             color="error"
             variant="contained"
             sx={btnTextTransformNone}
           >
-            Delete
+            {pendingUi ? "Deleting..." : "Delete"}
           </Button>
         </DialogActions>
-      </Dialog> */}
+      </Dialog>
 
       {/* Set Main Image Confirmation Dialog */}
-      {/* <Dialog
-        open={mainImageDialogOpen}
+      <Dialog
+        open={setMainImageDialogOpen}
         onClose={() => setMainImageDialogOpen(false)}
       >
         <DialogTitle>Set as Main Image</DialogTitle>
@@ -256,7 +311,7 @@ const ManageUsers = () => {
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={() => setMainImageDialogOpen(false)}
+            onClick={() => setSetMainImageDialogOpen(false)}
             color="primary"
             variant="contained"
             sx={btnTextTransformNone}
@@ -264,15 +319,16 @@ const ManageUsers = () => {
             Cancel
           </Button>
           <Button
-            onClick={() => handleSetMainImage(selectedImage)}
+            onClick={() => handleSetMainJobImage(selectedImage)}
             color="primary"
             variant="contained"
+            disabled={pendingUi}
             sx={btnTextTransformNone}
           >
-            Set as Main Image
+            {pendingUi ? "Saving..." : "Set as Main Image"}
           </Button>
         </DialogActions>
-      </Dialog> */}
+      </Dialog>
     </Box>
   );
 };

@@ -1,14 +1,19 @@
-const { pool } = require('./dbConnection');
-const { getCategoryIdByName } = require('./categoryDB')
+const { pool } = require("./dbConnection");
+const { getCategoryIdByName } = require("./categoryDB");
 
 //add an image to the data base
 const addImage = async (categoryId, src, clientId = null, cloudPublicId) => {
-        let addImageQuery = `
+  let addImageQuery = `
         INSERT INTO images (category_id, client_id, src, cloud_public_id) 
         VALUES (?, ?, ?, ?);`;
-        const [addedImage] = await pool.query(addImageQuery, [categoryId, clientId, src, cloudPublicId]);
-        // console.log({addedImage});
-        return addedImage;
+  const [addedImage] = await pool.query(addImageQuery, [
+    categoryId,
+    clientId,
+    src,
+    cloudPublicId,
+  ]);
+  // console.log({addedImage});
+  return addedImage;
 };
 
 const getImage = async (imageId) => {
@@ -16,7 +21,7 @@ const getImage = async (imageId) => {
     SELECT * FROM images
     WHERE image_id = ?`;
   const [[image]] = await pool.query(getImageByIdQuery, [imageId]);
-    // console.log(image);
+  // console.log(image);
   return image;
 };
 
@@ -29,7 +34,6 @@ const getAllImages = async () => {
   return images;
 };
 
-
 //get images of one client by client id
 const getImagesOfOneClient = async (clientId) => {
   const getImagesOfOneClientQuery = `
@@ -39,24 +43,26 @@ const getImagesOfOneClient = async (clientId) => {
   const [images] = await pool.query(getImagesOfOneClientQuery, [clientId]);
   // console.log(images)
   return images;
-}
+};
 
 const deleteImage = async (imageId) => {
   const imageToDelete = await getImage(imageId);
   const deleteImageQuery = `
-  DELETE FROM images WHERE image_id = ?;`
+  DELETE FROM images WHERE image_id = ?;`;
   const [{ affectedRows }] = await pool.query(deleteImageQuery, [imageId]);
-  if(!affectedRows && !orderToDelete){
-      throw new Error(`No image with the Id of ${imageId}`);
+  if (!affectedRows && !orderToDelete) {
+    throw new Error(`No image with the Id of ${imageId}`);
   }
   // console.log(imageToDelete)
-  return imageToDelete
-}
- 
+  return imageToDelete;
+};
 
-
-
- 
-  // getAllImages();
-  // getImagesOfOneClient(2)
-  module.exports = {addImage, getAllImages, getImagesOfOneClient, getImage, deleteImage}
+// getAllImages();
+// getImagesOfOneClient(2)
+module.exports = {
+  addImage,
+  getAllImages,
+  getImagesOfOneClient,
+  getImage,
+  deleteImage,
+};

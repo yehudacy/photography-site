@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -7,8 +7,23 @@ import {
   CardMedia,
   Box,
 } from "@mui/material";
+import axiosInstance from "../axiosInstance";
 
 const JobCard = ({ job, onClick }) => {
+  const [jobImage, setJobImage] = useState(null);
+  useEffect(() => {
+    const fetchJobImage = async () => {
+      try {
+        const { data } = await axiosInstance.get(
+          `/gallery/jobs/mainimg/${job.job_image_id}`
+        );
+        setJobImage(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchJobImage();
+  }, [job]);
   return (
     <Card
       onClick={onClick}
@@ -48,11 +63,12 @@ const JobCard = ({ job, onClick }) => {
               justifyContent: "center",
               border: "1px solid #ddd",
               overflow: "hidden",
+              borderRadius: 3,
             }}
           >
-            {job.src ? (
+            {jobImage ? (
               <img
-                src={job.src}
+                src={jobImage.src}
                 alt={job.title}
                 style={{
                   width: "100%",

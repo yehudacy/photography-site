@@ -38,7 +38,17 @@ galleryRouter.get("/jobs/:jobId", async (req, res) => {
     res.status(200).json(jobImages);
   } catch (error) {
     console.log(error);
-    res.status(500).send("Error getting images fr the job.");
+    res.status(500).send("Error getting images for the job.");
+  }
+});
+galleryRouter.get("/jobs/mainimg/:jobImageId", async (req, res) => {
+  try {
+    const jobImageId = req.params.jobImageId;
+    const jobImage = await getJobImage(jobImageId);
+    res.status(200).json(jobImage);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error getting image for the job.");
   }
 });
 

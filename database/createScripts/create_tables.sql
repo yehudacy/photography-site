@@ -156,9 +156,9 @@ CREATE TABLE `job_images` (
   `client_id` int NOT NULL,
   `src` varchar(255) NOT NULL,
   `cloud_public_id` varchar(255) NOT NULL,
-  `is_main_image` tinyint NOT NULL DEFAULT '0',
   PRIMARY KEY (`job_image_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 
 ALTER TABLE
