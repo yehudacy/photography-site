@@ -28,12 +28,10 @@ const ManageUsers = () => {
   const [jobsError, setJobsError] = useState("");
   const [selectedJob, setSelectedJob] = useState(null);
   const [jobImages, setJobImages] = useState([]);
-  const [imagesError, setImagesError] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
   const [pendingUi, setPendingUi] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [setMainImageDialogOpen, setSetMainImageDialogOpen] = useState(false);
-  const [alert, setAlert] = useState(null);
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -141,15 +139,11 @@ const ManageUsers = () => {
       const { data } = await axiosInstance.put(`/jobs/img/${jobImage.job_id}`, {
         jobImageId: jobImage.job_image_id,
       });
-      setAlert("success");
-      setTimeout(setAlert(null), 4000);
       setSetMainImageDialogOpen(false);
       setSelectedImage(null);
       setPendingUi(false);
     } catch (error) {
       console.log(error);
-      setAlert("error");
-      setTimeout(setAlert(null), 4000);
       setSetMainImageDialogOpen(false);
       setSelectedImage(null);
     }
@@ -246,25 +240,10 @@ const ManageUsers = () => {
               </Button>
             </>
           ) : (
-            <Typography variant="subtitle1">{imagesError}</Typography>
+            <Typography variant="subtitle1">No images found.</Typography>
           )}
         </Box>
       )}
-
-      <Box>
-        {alert &&
-          (alert === "error" ? (
-            <Alert severity="error">
-              <AlertTitle>{alert}</AlertTitle>
-              Main image is not set — <strong>please try again!</strong>
-            </Alert>
-          ) : (
-            <Alert severity="success">
-              <AlertTitle>{alert}</AlertTitle>
-              Main image is set — <strong>successfully!</strong>
-            </Alert>
-          ))}
-      </Box>
 
       {/* Delete Confirmation Dialog */}
       <Dialog
