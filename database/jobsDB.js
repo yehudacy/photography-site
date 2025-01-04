@@ -22,6 +22,19 @@ const getJob = async (jobId) => {
   // console.log(job);
   return job;
 };
+const getAllMainJobImagesIds = async () => {
+  const getAllMainJobImagesIdsQuery = `
+    SELECT job_id, job_image_id FROM jobs`;
+  const [mainImageIds] = await pool.query(getAllMainJobImagesIdsQuery);
+  const mappedMainImageIds = mainImageIds.reduce((acc, curr) => {
+    if(curr.job_image_id){
+      acc[curr.job_id] = curr.job_image_id
+    } 
+    return acc;
+  }, {})
+  // console.log(mappedMainImageIds);
+  return mappedMainImageIds;
+};
 
 const setJobImage = async (jobImageId, jobId) => {
   const setJobImageQuery = `
@@ -52,5 +65,6 @@ const getJobsPerClient = async (clientId) => {
 //     console.log(a)
 // }
 // b();
+// getAllMainJobImagesIds()
 
-module.exports = { addJob, getJob, getJobsPerClient, setJobImage };
+module.exports = { addJob, getJob, getJobsPerClient, setJobImage, getAllMainJobImagesIds };

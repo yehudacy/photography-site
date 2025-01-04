@@ -11,14 +11,14 @@ import {
   List,
   ListItemButton,
   ListItemText,
-  Typography
+  Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../axiosInstance";
 import { btnTextTransformNone } from "../utils/utilityVars";
 import AdminImageGrid from "./AdminImageGrid";
 import JobCard from "./JobCard";
-import eventEmitter from '../utils/eventEmitter'
+import { useMainJobImage } from "../hooks/useMainJobImage";
 
 const ManageUsers = () => {
   const [clients, setClients] = useState([]);
@@ -33,6 +33,8 @@ const ManageUsers = () => {
   const [setMainImageDialogOpen, setSetMainImageDialogOpen] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
   const [setMainError, setSetMainError] = useState(null);
+
+  const { mainJobImageIds, setMainJobImageIds } = useMainJobImage();
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -149,7 +151,10 @@ const ManageUsers = () => {
       setSetMainImageDialogOpen(false);
       setSelectedImage(null);
       setPendingUi(false);
-      eventEmitter.emit('mainImageUpdated', jobImage.job_image_id)
+      setMainJobImageIds((prevIds) => ({
+        ...prevIds,
+        [jobImage.job_id]: jobImage.job_image_id,
+      }));
     } catch (error) {
       console.log(error);
       setSetMainError(

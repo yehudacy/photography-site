@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import BulkImageUploadForm from "./BulkImageUploadForm";
 import ManageUsers from "./ManageUsers";
 import axiosInstance from "../axiosInstance";
+import { MainJobImageProvider } from "../hooks/useMainJobImage";
 
 const UserImageManager = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -52,7 +53,11 @@ const UserImageManager = () => {
           {activeTab === 0 && (
             <BulkImageUploadForm fetchClients={fetchClients} />
           )}
-          {activeTab === 1 && <ManageUsers fetchClients={fetchClients} />}
+          {activeTab === 1 && (
+            <MainJobImageProvider>
+              <ManageUsers fetchClients={fetchClients} />
+            </MainJobImageProvider>
+          )}
         </Box>
       </Grid>
     </Grid>

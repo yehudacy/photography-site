@@ -5,6 +5,7 @@ const {
   getJob,
   addJob,
   setJobImage,
+  getAllMainJobImagesIds,
 } = require("../../database/jobsDB");
 
 const jobsRouter = express.Router();
@@ -23,6 +24,15 @@ jobsRouter.post("/", authenticateToken, async ({ body }, res) => {
     // console.log(error);
 
     res.status(error.cause).json({ message: error.message });
+  }
+});
+
+jobsRouter.get("/mainimgIds", authenticateToken, async (req, res) => {
+  try {
+    const mainImgIds = await getAllMainJobImagesIds();
+    res.status(200).json(mainImgIds);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to get main job images ids" });
   }
 });
 

@@ -3,58 +3,35 @@ import {
   Card,
   CardActionArea,
   CardContent,
-  Typography
+  Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../axiosInstance";
-import eventEmitter from "../utils/eventEmitter";
+import { useMainJobImage } from "../hooks/useMainJobImage";
 
 const JobCard = ({ job, onClick }) => {
+  const { mainJobImageIds, setMainJobImageIds } = useMainJobImage();
   const [jobImage, setJobImage] = useState(null);
+  
   useEffect(() => {
-    const fetchJobImage = async (jobImageId) => {
+    const fetchJobImage = async () => {
       try {
-        const { data } = await axiosInstance.get(
-         `/gallery/jobs/mainimg/${jobImageId}`
-        );
-        setJobImage(data); 
+        const mainImageId = mainJobImageIds[job.job_id]; 
+        if (mainImageId) { 
+          const { data } = await axiosInstance.get(
+            `/gallery/jobs/mainimg/${mainImageId}`
+          );
+          setJobImage(data);
+        } else {
+          setJobImage(null); 
+        }
       } catch (error) {
-        console.log("Error fetching job image:", error); 
+        console.log("Error fetching job image:", error);
       }
     };
-  
-    const handleMainImageUpdate = async () => {
-      try {
-        const { data } = await axiosInstance.get(`/gallery/jobs/mainImg/${job.job_image_id}`); 
-        const newMainImageId = data.job_image_id; 
-  
-        // Log to verify if this function is being called
-        console.log("handleMainImageUpdate called with newMainImageId:", newMainImageId); 
-  
-        fetchJobImage(newMainImageId); 
-      } catch (error) {
-        console.log("Error fetching main image ID:", error);
-      }
-    };
-  
-    const fetchAndDisplayMainImage = async () => {
-      try {
-        const { data } = await axiosInstance.get(`/gallery/jobs/mainImg/${job.job_image_id}`); 
-        const initialMainImageId = data.job_image_id; 
-        fetchJobImage(initialMainImageId); 
-      } catch (error) {
-        console.log("Error fetching initial main image ID:", error);
-      }
-    };
-  
-    fetchAndDisplayMainImage(); 
-  
-    eventEmitter.on("mainImageUpdated", handleMainImageUpdate);
-  
-    return () => {
-      eventEmitter.off("mainImageUpdated", handleMainImageUpdate);
-    };
-  }, [job]);
+
+    fetchJobImage();
+  }, [job.job_id, mainJobImageIds]);
   return (
     <Card
       onClick={onClick}
