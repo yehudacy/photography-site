@@ -255,7 +255,7 @@ const ManageUsers = () => {
               </Button>
             </>
           ) : (
-            <Typography variant="subtitle1">No images found.</Typography>
+            <Typography variant="subtitle1">{`No images found for ${selectedJob.title}.`}</Typography>
           )}
         </Box>
       )}
