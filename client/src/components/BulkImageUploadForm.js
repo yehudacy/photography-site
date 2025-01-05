@@ -48,8 +48,7 @@ const BulkImageUploadForm = () => {
 
     try {
       const { data } = await axiosInstance.get(`/jobs/client/${clientId}`);
-      console.log(data);
-      
+      // console.log(data);
       setJobs(data);
     } catch (error) {
       // console.error("Error fetching jobs:", error);
@@ -231,15 +230,22 @@ const BulkImageUploadForm = () => {
                 }}
               >
                 {jobsError || "No jobs found"}
-                <Button
-                  variant="text"
-                  sx={{ textTransform: "none", pointerEvents: "auto" }}
-                  onClick={handleCreateNewJob}
-                >
-                  Create job
-                </Button>
               </MenuItem>
             )}
+            <MenuItem
+              style={{
+                opacity: "1",
+                pointerEvents: "auto",
+              }}
+            >
+              <Button
+                variant="text"
+                sx={{ textTransform: "none", pointerEvents: "auto" }}
+                onClick={handleCreateNewJob}
+              >
+                Create job
+              </Button>
+            </MenuItem>
           </Select>
         </FormControl>
 

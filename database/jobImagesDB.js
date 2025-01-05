@@ -28,6 +28,16 @@ const getImagesOfOneJob = async (jobId) => {
     return images;
   }
 
+  //get images of one client by client id
+const getJobImagesOfOneClient = async (clientId) => {
+  const getJobImagesOfOneClientQuery = `
+  SELECT * FROM job_images
+  WHERE client_id = ?`;
+  const [images] = await pool.query(getJobImagesOfOneClientQuery, [clientId]);
+  // console.log(images)
+  return images;
+};
+
   const deleteJobImage = async (imageId) => {
     const jobImageToDelete = await getJobImage(imageId);
     const deleteJobImageQuery = `
@@ -40,4 +50,4 @@ const getImagesOfOneJob = async (jobId) => {
     return jobImageToDelete
   }
 
-module.exports = {addImage, getImagesOfOneJob, getJobImage, deleteJobImage}
+module.exports = {addImage, getImagesOfOneJob, getJobImage, deleteJobImage, getJobImagesOfOneClient}

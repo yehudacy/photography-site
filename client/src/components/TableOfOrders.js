@@ -128,6 +128,7 @@ const TableOfOrders = ({ type }) => {
                         </IconButton> */}
                         <IconButton
                           onClick={() => handleDelete(order.order_id)}
+                          color="secondary"
                         >
                           <DeleteIcon />
                         </IconButton>

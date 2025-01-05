@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Grid, Paper, Typography, Button } from "@mui/material";
+import { Grid, Paper, Typography, Button, Box } from "@mui/material";
 import TableOfOrders from "../components/TableOfOrders";
 import ContactRequestsTable from "../components/ContactRequestsTable";
 import ImageUploadForm from "../components/ImageUploadForm";
@@ -20,6 +20,7 @@ const AdminDashboard = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [componentToRender, setComponentToRender] = useState("");
 
+  
   useEffect(() => {
     // console.log(user)
     if (!user || !user?.isAdmin) navigate("/login", { replace: true });
@@ -42,9 +43,17 @@ const AdminDashboard = () => {
   };
 
   return (
-    <Grid container>
-      <Grid item xs={12} md={2}>
-        <Paper style={{ padding: "16px" }}>
+    <Box sx={{ display: "flex" }}>
+      {/* Sidebar */}
+      <Box
+        sx={{
+          width: "250px", // Fixed width for the sidebar
+          height: "100vh",
+          overflowY: "hidden",
+          position: "fixed", // Fix the sidebar
+        }}
+      >
+        <Paper sx={{ padding: "16px", height: "100%" }}>
           <Typography variant="h6" gutterBottom>
             Admin Panel
           </Typography>
@@ -112,8 +121,16 @@ const AdminDashboard = () => {
             User Management
           </Button>
         </Paper>
-      </Grid>
-      <Grid item xs={12} md={10}>
+      </Box>
+
+      {/* Main Content */}
+      <Box
+        sx={{
+          marginLeft: "250px", // Align main content next to the sidebar
+          padding: "16px", // Add padding for better spacing
+          flexGrow: 1, // Allow the main content to grow
+        }}
+      >
         {componentToRender === "Account details" && <AccountDetails />}
         {componentToRender === "orders" && <TableOfOrders />}
         {componentToRender === "contactMe" && <ContactRequestsTable />}
@@ -121,8 +138,8 @@ const AdminDashboard = () => {
         {componentToRender === "categories" && <CategoryManagement />}
         {componentToRender === "portfolio" && <Portfolio />}
         {componentToRender === "user management" && <UserImageManager />}
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 };
 
