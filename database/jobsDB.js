@@ -58,13 +58,4 @@ const getJobsPerClient = async (clientId) => {
   return jobs;
 };
 
-// getJobsPerClient(5)
-// getJob(5)
-// const b = async() => {
-//     const a = await addJob({client_id :3, title: "advertising campaign"})
-//     console.log(a)
-// }
-// b();
-// getAllMainJobImagesIds()
-
 module.exports = { addJob, getJob, getJobsPerClient, setJobImage, getAllMainJobImagesIds };

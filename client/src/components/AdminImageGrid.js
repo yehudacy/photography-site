@@ -42,7 +42,7 @@ const AdminImageGrid = ({
                 sx={{ p: 1, backgroundColor: "#e6f2ff" }}
               >
                 <IconButton
-                size="small"
+                  size="small"
                   onClick={() => onDeleteClick(image)}
                   sx={{
                     color: "white",

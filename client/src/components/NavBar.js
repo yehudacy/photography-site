@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 import {useUser} from '../hooks/useUser';
 
 
-const pages = ["Home", "About", "Gallery", "Pricing", "Contact me"];
+const pages = ["Home", "Gallery", "Pricing", "Contact me"];
 const settings = [ "Login", "Signup", "Dashboard", "Logout" ];
 
 const pageNamesStyle = {textTransform: "none"}

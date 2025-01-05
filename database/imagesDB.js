@@ -57,8 +57,6 @@ const deleteImage = async (imageId) => {
   return imageToDelete;
 };
 
-// getAllImages();
-// getImagesOfOneClient(2)
 module.exports = {
   addImage,
   getAllImages,

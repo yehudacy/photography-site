@@ -28,7 +28,7 @@ const AdminImagesGallery = () => {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const { data } = await axiosInstance.get("/images");        
+        const { data } = await axiosInstance.get("/images");
         setImages(data);
       } catch (error) {
         console.error(error);
@@ -98,7 +98,7 @@ const AdminImagesGallery = () => {
 
   return (
     <Box sx={{ padding: 2, maxWidth: 1200, margin: "0 auto" }}>
-      <Typography variant="h4" align="center" gutterBottom>
+      <Typography variant="h6" align="center" gutterBottom>
         Admin Images Gallery
       </Typography>
 

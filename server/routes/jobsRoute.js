@@ -67,7 +67,7 @@ jobsRouter.get(
     try {
       const jobListPerClient = await getJobsPerClient(clientId);
       if (jobListPerClient.length > 0) {
-        res.status(200).json(jobListPerClient);
+        res.status(200).json(jobListPerClient.filter((job) => job.delete_date === null));
       } else {
         throw new Error(`No jobs war found for user ${clientId}!`, {
           cause: 404,

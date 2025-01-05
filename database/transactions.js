@@ -1,50 +1,51 @@
 const { pool } = require("./dbConnection");
-const { addImage } = require("./imagesDB");
+
+/*
+instructions for transactions
+1.  Get a connection from the pool =  connection = await pool.getConnection();
+2.  Begin the transaction =  await connection.beginTransaction();
+3.  Perform the operations = e.g.  await connection.query("INSERT INTO ... (column 1, column 2) VALUES (value 1, value 2)";
+
+  if everything went as expected
+4.  Commit the transaction =  await connection.commit();
+5.  Release the connection =  await connection.release();
+  If an error occurred
+4.  roll back the transaction =  await connection.rollback();
+5.  Release the connection =  await connection.release();
+*/
 
 async function addImageTransaction(categoryId, clientId, src, publicId) {
   let connection;
-
   try {
-    // Get a connection from the pool
     connection = await pool.getConnection();
-
-    // Begin the transaction
     await connection.beginTransaction();
 
     const addImageQuery = `
         INSERT INTO images (category_id, client_id, src, cloud_public_id) 
         VALUES (?, ?, ?, ?);`;
-
-    // Perform multiple queries within the transaction
     const [{ insertId }] = await connection.query(addImageQuery, [
       categoryId,
       clientId,
       src,
-      publicId
+      publicId,
     ]);
 
     const setMainImageQuery = `
         UPDATE categories
         SET category_image_id = ${insertId}
         WHERE category_id = ?`;
-
     await connection.query(setMainImageQuery, [categoryId]);
 
-    // If everything went well, commit the transaction
     await connection.commit();
-
     console.log("Transaction committed successfully!");
     return "commit";
   } catch (error) {
-    // If there was an error, rollback the transaction
     if (connection) {
       await connection.rollback();
     }
-
     console.error("Error in transaction:", error.message);
     return "rollback";
   } finally {
-    // Release the connection back to the pool
     if (connection) {
       connection.release();
     }
@@ -52,61 +53,76 @@ async function addImageTransaction(categoryId, clientId, src, publicId) {
 }
 async function addJobImagesTransaction(jobId, clientId, imagesDataArr) {
   let connection;
-
   try {
-    // Get a connection from the pool
     connection = await pool.getConnection();
-
-    // Begin the transaction
     await connection.beginTransaction();
 
     const addJobImageQuery = `
         INSERT INTO job_images (job_id, client_id, src, cloud_public_id) 
         VALUES (?, ?, ?, ?);`;
-
-    // Perform multiple queries within the transaction
-    const results = imagesDataArr.map( (image) => (
-       connection.query(addJobImageQuery, [
+    const results = imagesDataArr.map((image) =>
+      connection.query(addJobImageQuery, [
         jobId,
         clientId,
         image.secure_url,
         image.public_id,
-        ])  
-    ))    
-    // If everything went well, commit the transaction
+      ])
+    );
     await connection.commit();
-
     console.log("Transaction committed successfully!");
     return "commit";
   } catch (error) {
-    // If there was an error, rollback the transaction
     if (connection) {
       await connection.rollback();
     }
-
     console.error("Error in transaction:", error.message);
     return "rollback";
   } finally {
-    // Release the connection back to the pool
     if (connection) {
       connection.release();
     }
   }
 }
+async function deleteJobImagesTransaction(jobId, imagesIds = []) {
+  let connection;
+  try {
+    connection = await pool.getConnection();
+    await connection.beginTransaction();
 
+    const deleteJobImageQuery = `DELETE FROM job_images WHERE job_image_id = ?`;
+    const results = imagesIds.map((imageId) =>
+      connection.query(deleteJobImageQuery, [imageId])
+    );
+    const editJobQuery = `
+    UPDATE jobs
+    SET delete_date = ?, job_image_id = ?
+    WHERE job_id = ?`;
+    const result = connection.query(editJobQuery, [new Date(), null, jobId]);
+
+    await connection.commit();
+    console.log("Transaction committed successfully!");
+    return "commit";
+  } catch (error) {
+    if (connection) {
+      await connection.rollback();
+    }
+    console.error("Error in transaction:", error.message);
+    return "rollback";
+  } finally {
+    if (connection) {
+      connection.release();
+    }
+  }
+}
 async function addCategoryAndImageTransaction(category, imageUrl, publicId) {
   let connection;
-
   try {
-    // Get a connection from the pool
     connection = await pool.getConnection();
-    // Begin the transaction
     await connection.beginTransaction();
-    // Perform multiple queries within the transaction
+
     const addCategoryQuery = `
     INSERT INTO categories (name, category_image_id) 
     VALUES (?, ?)`;
-
     const [{ insertId }] = await connection.query(addCategoryQuery, [
       category.name,
       0,
@@ -115,7 +131,6 @@ async function addCategoryAndImageTransaction(category, imageUrl, publicId) {
     let addImageQuery = `
     INSERT INTO images (category_id, src, cloud_public_id) 
     VALUES (?, ?, ?);`;
-
     const [addedImageInfo] = await connection.query(addImageQuery, [
       insertId,
       imageUrl,
@@ -126,90 +141,86 @@ async function addCategoryAndImageTransaction(category, imageUrl, publicId) {
     UPDATE categories
     SET category_image_id = ?
     WHERE category_id = ?`;
-
     const [{ affectedRows }] = await connection.query(editCategoryQuery, [
       addedImageInfo.insertId,
       insertId,
     ]);
-    // If everything went well, commit the transaction
-    await connection.commit();
 
+    await connection.commit();
     console.log("Transaction committed successfully!");
     return { status: "commit", categoryId: insertId };
   } catch (error) {
-    // If there was an error, rollback the transaction
     if (connection) {
       await connection.rollback();
     }
     console.error("Error in transaction:", error.message);
     return { status: "rollback" };
   } finally {
-    // Release the connection back to the pool
     if (connection) {
       connection.release();
     }
   }
 }
 
-async function editCategoryTransaction(categoryId, category, imageUrl, publicId, imgChanged) {
+async function editCategoryTransaction(
+  categoryId,
+  category,
+  imageUrl,
+  publicId,
+  imgChanged
+) {
   let connection;
-
   try {
-    // Get a connection from the pool
     connection = await pool.getConnection();
-    // Begin the transaction
     await connection.beginTransaction();
-    // Perform multiple queries within the transaction
+
     let insertedId;
-    if(category.imgChanged){      
+    if (category.imgChanged) {
       let addImageQuery = `
       INSERT INTO images (category_id, src, cloud_public_id) 
       VALUES (?, ?, ?);`;
-      const [{insertId}] = await connection.query(addImageQuery, [
+      const [{ insertId }] = await connection.query(addImageQuery, [
         categoryId,
         imageUrl,
         publicId,
       ]);
       insertedId = insertId;
-    }    
-    const categoryImageId = category.imgChanged ? insertedId : category.category_image_id;
-    
+    }
+    const categoryImageId = category.imgChanged
+      ? insertedId
+      : category.category_image_id;
+
     let editCategoryQuery = `
     UPDATE categories
     SET name = ?, 
       category_image_id = ?
     WHERE category_id = ?`;
-    const  [{affectedRows}]  = await pool.query(editCategoryQuery, [
+    const [{ affectedRows }] = await pool.query(editCategoryQuery, [
       category.name,
       categoryImageId,
       categoryId,
     ]);
 
-    // If everything went well, commit the transaction
     await connection.commit();
-
     console.log("Transaction committed successfully!");
-    return { status: "commit"};
+    return { status: "commit" };
   } catch (error) {
-    // If there was an error, rollback the transaction
     if (connection) {
       await connection.rollback();
     }
     console.error("Error in transaction:", error.message);
     return { status: "rollback" };
   } finally {
-    // Release the connection back to the pool
     if (connection) {
       connection.release();
     }
   }
 }
 
-// addImageTransaction(7, null, 'https://res.cloudinary.com/dzjsaikk1/image/upload/v1704411348/15sdpy4q8lqzui02jIMG_3013.JPG.jpg')
-
 module.exports = {
   addImageTransaction,
   addCategoryAndImageTransaction,
   editCategoryTransaction,
-  addJobImagesTransaction
+  addJobImagesTransaction,
+  deleteJobImagesTransaction,
 };

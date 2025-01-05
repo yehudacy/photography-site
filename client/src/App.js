@@ -6,7 +6,6 @@ import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import { Route, Routes } from "react-router-dom";
 import SingleCategoryGallery from "./pages/SingleCategoryGallery";
-import About from "./pages/About";
 import Pricing from "./pages/Pricing";
 import ContactMe from "./pages/ContactMe";
 import Order from "./pages/Order";
@@ -23,7 +22,6 @@ import SuccessPayment from "./pages/SuccessPayment";
 import CancelPayment from "./pages/CancelPayment";
 
 function App() {
-  // {console.log(process.env.REACT_APP_PAYPAL_CLIENT_ID)}
   return (
     <>
       <UserProvider>
@@ -35,7 +33,6 @@ function App() {
             <Route path="/logout" element={<Logout />}></Route>
             <Route path="/signup" element={<SignUp />}></Route>
             <Route path="/client" element={<ClientDashboard />}></Route>
-            <Route path="/about" element={<About />}></Route>
             <Route path="/gallery" element={<Gallery />}></Route>
             <Route path="/gallery/:category" element={<SingleCategoryGallery />}></Route>
             <Route path="/pricing" element={<Pricing />}></Route>

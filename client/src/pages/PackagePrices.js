@@ -57,7 +57,7 @@ const PackagePrices = () => {
 
   const saveNewPackage = async (packageDetails) => {
     try {
-      const { data } = await axiosInstance.post("/pricing", packageDetails);      
+      const { data } = await axiosInstance.post("/pricing", packageDetails);
       HandleCloseDialog();
       setPackages((prev) => [...prev, data]);
     } catch (error) {
@@ -104,133 +104,152 @@ const PackagePrices = () => {
 
   return (
     <>
-      <Grid
-        item
-        container
-        xs={12}
-        md={9}
+      <Box
         sx={{
-          margin: "auto",
-          padding: "24px",
-          textAlign: "center",
-          border: "2px solid #ccc",
-          borderRadius: "8px",
-          transition: "background-color 0.3s ease",
-          height: "100%",
-          width: "100%",
-          marginTop: "100px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: "16px",
         }}
       >
-        <Typography
-          variant="h5"
-          sx={{ marginBottom: "16px", width: "100%", textAlign: "center" }}
+        <Grid
+          item
+          container
+          xs={12}
+          md={9}
+          minWidth={"100%"}
+          sx={{
+            paddingTop: "16px",
+            textAlign: "center",
+            borderRadius: "8px",
+            transition: "background-color 0.3s ease",
+            height: "100%",
+          }}
         >
-          Packages
-        </Typography>
-        <Grid item container spacing={3} sx={{ margin: "auto" }}>
-          {packages.map((pack) => {
-            return (
-              <Grid
-                item
-                key={pack.package_id}
-                xs={12}
-                sm={6}
-                md={4}
-                sx={{ p: "24px" }}
-              >
-                <Card>
-                  <CardHeader
-                    title={pack.title}
-                    titleTypographyProps={{ align: "center" }}
-                    action={pack.title === "Gold" ? <StarIcon /> : null}
-                    subheaderTypographyProps={{
-                      align: "center",
-                    }}
-                    sx={{
-                      backgroundColor: (theme) =>
-                        theme.palette.mode === "light"
-                          ? theme.palette.grey[200]
-                          : theme.palette.grey[700],
-                    }}
-                  />
-                  <CardContent>
-                    <Box
+          <Typography
+            variant="h5"
+            sx={{ marginBottom: "16px", width: "100%", textAlign: "center" }}
+          >
+            Packages
+          </Typography>
+          <Grid
+            item
+            container
+            spacing={2}
+            sx={{
+              margin: "auto",
+            }}
+          >
+            {packages.map((pack) => {
+              return (
+                <Grid
+                  item
+                  key={pack.package_id}
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  sx={{
+                    transition: "transform 0.3s ease",
+                    "&:hover": {
+                      transform: "scale(1.05)",
+                    },
+                    p: 2,
+                  }}
+                >
+                  <Card>
+                    <CardHeader
+                      title={pack.title}
+                      titleTypographyProps={{ align: "center" }}
+                      action={pack.title === "Gold" ? <StarIcon /> : null}
+                      subheaderTypographyProps={{
+                        align: "center",
+                      }}
+                      sx={{
+                        backgroundColor: (theme) =>
+                          theme.palette.mode === "light"
+                            ? theme.palette.grey[200]
+                            : theme.palette.grey[700],
+                      }}
+                    />
+                    <CardContent>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "baseline",
+                          mb: 1,
+                        }}
+                      >
+                        <Typography
+                          component="h2"
+                          variant="h3"
+                          color="text.primary"
+                        >
+                          {pack.currency}-{pack.price}
+                        </Typography>
+                      </Box>
+                      <PricingList>
+                        {pack.details.split(",").map((line) => (
+                          <Typography
+                            component="li"
+                            variant="subtitle1"
+                            align="center"
+                            key={line}
+                          >
+                            {line}
+                          </Typography>
+                        ))}
+                      </PricingList>
+                    </CardContent>
+                    <CardActions
                       sx={{
                         display: "flex",
+                        alignItems: "center",
                         justifyContent: "center",
-                        alignItems: "baseline",
-                        mb: 2,
                       }}
                     >
-                      <Typography
-                        component="h2"
-                        variant="h3"
-                        color="text.primary"
-                      >
-                        {pack.currency}-{pack.price}
-                      </Typography>
-                    </Box>
-                    <PricingList>
-                      {pack.details.split(",").map((line) => (
-                        <Typography
-                          component="li"
-                          variant="subtitle1"
-                          align="center"
-                          key={line}
-                        >
-                          {line}
-                        </Typography>
-                      ))}
-                    </PricingList>
-                  </CardContent>
-                  <CardActions
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <IconButton onClick={() => handleEdit(pack.package_id)}>
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton onClick={() => handleDelete(pack.package_id)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </CardActions>
-                </Card>
-              </Grid>
-            );
-          })}
+                      <IconButton onClick={() => handleEdit(pack.package_id)}>
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton onClick={() => handleDelete(pack.package_id)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              );
+            })}
+          </Grid>
+          <Grid item sx={{ width: "100%" }}>
+            <IconButton onClick={() => setOpenDialog(true)}>
+              <AddIcon sx={{ fontSize: "50px" }} color="primary" />
+            </IconButton>
+          </Grid>
         </Grid>
-        <Grid item sx={{ width: "100%" }}>
-          <IconButton onClick={() => setOpenDialog(true)}>
-            <AddIcon sx={{ fontSize: "50px" }} color="primary" />
-          </IconButton>
-        </Grid>
-      </Grid>
-      {openDialog && (
-        <PackageDialog
-          open={openDialog}
-          handleClose={HandleCloseDialog}
-          handleSave={handleSave}
-          currentPackage={
-            editId
-              ? packages.filter((pack) => {
-                  return pack.package_id === editId;
-                })
-              : null
-          }
-        />
-      )}
-      {error && (
-        <Snackbar
-          open={Boolean(error)}
-          onClose={() => setError(null)}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        >
-          <Alert severity="error">{error}</Alert>
-        </Snackbar>
-      )}
+        {openDialog && (
+          <PackageDialog
+            open={openDialog}
+            handleClose={HandleCloseDialog}
+            handleSave={handleSave}
+            currentPackage={
+              editId
+                ? packages.filter((pack) => {
+                    return pack.package_id === editId;
+                  })
+                : null
+            }
+          />
+        )}
+        {error && (
+          <Snackbar
+            open={Boolean(error)}
+            onClose={() => setError(null)}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          >
+            <Alert severity="error">{error}</Alert>
+          </Snackbar>
+        )}
+      </Box>
     </>
   );
 };

@@ -149,7 +149,7 @@ const ImageUploadForm = () => {
 
   return (
     <Box sx={{ padding: 2, maxWidth: 1200, margin: "0 auto" }}>
-      <Grid item >
+      <Grid item>
         <Box
           sx={{
             display: "flex",
@@ -158,11 +158,9 @@ const ImageUploadForm = () => {
             padding: "16px",
           }}
         >
-          
-
-          <Typography variant="h4" align="center" gutterBottom>
-                Upload Image
-              </Typography>
+          <Typography variant="h6" align="center" gutterBottom>
+            Upload Image
+          </Typography>
           <FormControl fullWidth style={{ marginBottom: "16px" }}>
             <InputLabel htmlFor="category">Category</InputLabel>
             <Select
@@ -270,7 +268,7 @@ const ImageUploadForm = () => {
             </Alert>
           ))}
       </Grid>
-      </Box>
+    </Box>
   );
 };
 

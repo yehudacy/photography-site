@@ -1,7 +1,5 @@
 const { pool } = require('./dbConnection');
 
-
-
 //add an image to the data base
 const addImage = async (jobId, clientId, src, cloudPublicId) => {
     let addJobImageQuery = `
@@ -20,8 +18,6 @@ const getJobImage = async (imageId) => {
     // console.log(image);
   return image;
 };
-
-
 //get images for a single job
 const getImagesOfOneJob = async (jobId) => {
     const getImagesOfOneJobQuery = `
@@ -40,7 +36,8 @@ const getImagesOfOneJob = async (jobId) => {
     if(!affectedRows && !jobImageToDelete){
         throw new Error(`No image with the Id of ${imageId}`);
     }
-    // console.log(imageToDelete)
+    // console.log(jobImageToDelete)
     return jobImageToDelete
   }
+
 module.exports = {addImage, getImagesOfOneJob, getJobImage, deleteJobImage}

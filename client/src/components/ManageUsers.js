@@ -31,6 +31,7 @@ const ManageUsers = () => {
   const [pendingUi, setPendingUi] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [setMainImageDialogOpen, setSetMainImageDialogOpen] = useState(false);
+  const [deleteAllError, setDeleteAllError] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
   const [setMainError, setSetMainError] = useState(null);
 
@@ -56,7 +57,15 @@ const ManageUsers = () => {
     const clientId = client.client_id;
     try {
       const { data } = await axiosInstance.get(`/jobs/client/${clientId}`);
-      setJobs(data);
+      if (data.length > 0) {
+        setJobs(data);
+      } else {
+        setJobsError(
+          `No active jobs found for ${
+            clients.find((client) => client.client_id === clientId)?.fullName
+          }`
+        );
+      }
     } catch (error) {
       // console.error("Error fetching jobs:", error);
       if (error.request.status === 404) {
@@ -81,11 +90,30 @@ const ManageUsers = () => {
     }
   };
 
-  const handleDeleteJobImages = () => {
+  const handleDeleteJobImages = async () => {
     if (selectedJob) {
       console.log(`Deleting images for job: ${selectedJob.title}`);
-      setJobImages([]);
-      alert("All images for the selected job have been deleted.");
+      try {
+        setDeleteAllError(false);
+        setPendingUi(true);
+        const publicIds = [];
+        const imagesIds = [];
+        jobImages.forEach((image) => {
+          publicIds.push(image.cloud_public_id);
+          imagesIds.push(image.job_image_id);
+        });
+        const { data } = await axiosInstance.post(
+          "/gallery/jobs/delete/bulkimages",
+          { jobId: selectedJob.job_id, publicIds, imagesIds }
+        );
+        console.log(data);
+        setPendingUi(false);
+        setJobImages([]);
+      } catch (error) {
+        console.log(error);
+        setDeleteAllError(true);
+        setPendingUi(false);
+      }
     }
   };
 
@@ -250,9 +278,15 @@ const ManageUsers = () => {
                 color="secondary"
                 onClick={handleDeleteJobImages}
                 sx={{ marginTop: 2, textTransform: "none" }}
+                disabled={pendingUi}
               >
-                Delete all images
+                {pendingUi ? "Deleting..." : "Delete all images"}
               </Button>
+              <Typography variant="subtitle1" color="red" sx={{ marginTop: 1 }}>
+                {deleteAllError
+                  ? `Failed to delete ${selectedJob.title} images please try again!`
+                  : ""}
+              </Typography>
             </>
           ) : (
             <Typography variant="subtitle1">{`No images found for ${selectedJob.title}.`}</Typography>

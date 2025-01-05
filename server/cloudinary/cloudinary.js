@@ -74,4 +74,16 @@ const deleteImageFromCloud = async (publicId) => {
   });
 };
 
-module.exports = { uploadImage, uploadImages, deleteImageFromCloud };
+const deleteImagesFromCloud = async (publicIds) => {
+  return new Promise(async (resolve, reject) => {
+    cloudinary.api.delete_resources(publicIds, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+};
+
+module.exports = { uploadImage, uploadImages, deleteImageFromCloud, deleteImagesFromCloud };

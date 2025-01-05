@@ -5,6 +5,7 @@ const {
   uploadImage,
   deleteImageFromCloud,
   uploadImages,
+  deleteImagesFromCloud,
 } = require("../cloudinary/cloudinary");
 const {
   getAllCategoryImages,
@@ -16,9 +17,14 @@ const { addImage, getImage, deleteImage } = require("../../database/imagesDB");
 const {
   addImageTransaction,
   addJobImagesTransaction,
+  deleteJobImagesTransaction,
 } = require("../../database/transactions");
 const { authenticateToken } = require("../authentication/authentication");
-const { getImagesOfOneJob, getJobImage, deleteJobImage } = require("../../database/jobImagesDB");
+const {
+  getImagesOfOneJob,
+  getJobImage,
+  deleteJobImage,
+} = require("../../database/jobImagesDB");
 
 const galleryRouter = express.Router();
 
@@ -154,6 +160,34 @@ galleryRouter.post(
   }
 );
 
+//delete bulk of images
+galleryRouter.post(
+  "/jobs/delete/bulkimages",
+  async ({ body: { jobId, publicIds, imagesIds } }, res) => {
+    try {
+      console.log(publicIds);
+      console.log(imagesIds);
+      console.log(jobId);
+
+      const result = await deleteImagesFromCloud(publicIds);
+      console.log(result);
+
+      const dbResults = await deleteJobImagesTransaction(jobId, imagesIds);
+
+      if (dbResults === "commit") {
+        res.status(201).json("The Images has been deleted successfully!");
+      } else {
+        throw new Error(
+          "Something went wrong while trying to delete the Images please try again",
+          { cause: 400 }
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: error.message });
+    }
+  }
+);
 galleryRouter.delete("/jobs/image/:imageId", async (req, res) => {
   try {
     const imageId = req.params.imageId;
@@ -167,7 +201,9 @@ galleryRouter.delete("/jobs/image/:imageId", async (req, res) => {
       jobImageToDelete.cloud_public_id
     );
     if (!(result === "not found")) {
-      const deletedJobImage = await deleteJobImage(jobImageToDelete.job_image_id);
+      const deletedJobImage = await deleteJobImage(
+        jobImageToDelete.job_image_id
+      );
       if (deletedJobImage) {
         res.status(200).json(deletedJobImage);
       }
@@ -205,6 +241,5 @@ galleryRouter.delete("/image/:imageId", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-
 
 module.exports = { galleryRouter };

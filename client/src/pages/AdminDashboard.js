@@ -117,10 +117,10 @@ const AdminDashboard = () => {
         {componentToRender === "Account details" && <AccountDetails />}
         {componentToRender === "orders" && <TableOfOrders />}
         {componentToRender === "contactMe" && <ContactRequestsTable />}
-        {componentToRender === "portfolio" && <Portfolio />}
         {componentToRender === "pricing" && <PackagePrices />}
         {componentToRender === "categories" && <CategoryManagement />}
-        {componentToRender === "user management" && <UserImageManager></UserImageManager>}
+        {componentToRender === "portfolio" && <Portfolio />}
+        {componentToRender === "user management" && <UserImageManager />}
       </Grid>
     </Grid>
   );

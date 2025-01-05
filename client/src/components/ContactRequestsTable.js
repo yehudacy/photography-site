@@ -12,6 +12,7 @@ import {
   Typography,
   Alert,
   AlertTitle,
+  Box,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axiosInstance from "../axiosInstance";
@@ -38,12 +39,14 @@ const ContactRequestsTable = () => {
 
   const onDelete = async (index) => {
     try {
-      const { data } = await axiosInstance.delete(`/contactme/${contactRequests[index].contact_me_id}`);
+      const { data } = await axiosInstance.delete(
+        `/contactme/${contactRequests[index].contact_me_id}`
+      );
       let newArr = [...contactRequests];
       const filteredArr = newArr.filter((item) => {
-        return !(item.contact_me_id === contactRequests[index].contact_me_id)
+        return !(item.contact_me_id === contactRequests[index].contact_me_id);
       });
-      console.log(filteredArr)
+      console.log(filteredArr);
       if (!filteredArr.length) {
         setContactMeErrorMsg("No contact me requests to be found");
       }
@@ -51,70 +54,82 @@ const ContactRequestsTable = () => {
     } catch (error) {
       setContactMeErrorMsg(error.message);
       setTimeout(() => {
-        setContactMeErrorMsg("")
-      console.log(error)
-    }, 6000)
-  }
-};
+        setContactMeErrorMsg("");
+        console.log(error);
+      }, 6000);
+    }
+  };
 
-return (
-  <Grid item xs={12} md={9}>
-    <Typography variant="h4" gutterBottom>
-      Contact Me Requests
-    </Typography>
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell style={{ width: "20%" }}>Name</TableCell>
-            <TableCell style={{ width: "20%" }}>Phone Number</TableCell>
-            <TableCell style={{ width: "20%" }}>Email</TableCell>
-            <TableCell style={{ width: "30%" }}>Message</TableCell>
-            <TableCell style={{ width: "10%" }}>Delete</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {contactRequests.length > 0 ? (
-            contactRequests.map((request, index) => (
-              <TableRow key={index}>
-                <TableCell>{request.name}</TableCell>
-                <TableCell>{request.phone_number}</TableCell>
-                <TableCell>{request.email}</TableCell>
-                <TableCell>{request.message}</TableCell>
-                <TableCell>
-                  <IconButton
-                    onClick={() => onDelete(index)}
-                    color="secondary"
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={5}>
-                <Typography variant="h6" color="error">
-                  {contactMeErrorMsg}
-                </Typography>
-              </TableCell>
-            </TableRow>
-          )}
-          {(contactMeErrorMsg && contactRequests.length > 0) &&
-            <TableRow>
-              <TableCell colSpan={5}>
-                <Alert severity="error">
-                  <AlertTitle>{"ERROR"}</AlertTitle>
-                  {contactMeErrorMsg}<strong>please try again!</strong>
-                </Alert>
-              </TableCell>
-            </TableRow>
-          }
-        </TableBody>
-      </Table>
-    </TableContainer>
-  </Grid>
-);
+  return (
+    <>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: "16px",
+        }}
+      >
+        <Grid item xs={12} md={9} minWidth={"100%"}>
+          <Typography variant="h5" textAlign={"center"} gutterBottom>
+            Contact Me Requests
+          </Typography>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell style={{ width: "20%" }}>Name</TableCell>
+                  <TableCell style={{ width: "20%" }}>Phone Number</TableCell>
+                  <TableCell style={{ width: "20%" }}>Email</TableCell>
+                  <TableCell style={{ width: "30%" }}>Message</TableCell>
+                  <TableCell style={{ width: "10%" }}>Delete</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {contactRequests.length > 0 ? (
+                  contactRequests.map((request, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{request.name}</TableCell>
+                      <TableCell>{request.phone_number}</TableCell>
+                      <TableCell>{request.email}</TableCell>
+                      <TableCell>{request.message}</TableCell>
+                      <TableCell>
+                        <IconButton
+                          onClick={() => onDelete(index)}
+                          color="secondary"
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={5}>
+                      <Typography variant="h6" color="error">
+                        {contactMeErrorMsg}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                )}
+                {contactMeErrorMsg && contactRequests.length > 0 && (
+                  <TableRow>
+                    <TableCell colSpan={5}>
+                      <Alert severity="error">
+                        <AlertTitle>{"ERROR"}</AlertTitle>
+                        {contactMeErrorMsg}
+                        <strong>please try again!</strong>
+                      </Alert>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
+      </Box>
+    </>
+  );
 };
 
 export default ContactRequestsTable;

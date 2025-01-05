@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Grid, Typography } from "@mui/material";
 import { useUser } from "../hooks/useUser";
 import axiosInstance from "../axiosInstance";
-import ResponsiveImageGrid from './ResponsiveImageGrid';
-import ImageLightboxModal from './ImageLightboxModal';
+import ResponsiveImageGrid from "./ResponsiveImageGrid";
+import ImageLightboxModal from "./ImageLightboxModal";
 
 const ClientImageList = () => {
-  const { user } = useUser ();
+  const { user } = useUser();
 
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -32,19 +32,20 @@ const ClientImageList = () => {
   };
 
   const handleNext = () => {
-    setSelectedImage((prev) => 
-      prev === images.length - 1 ? 0 : prev + 1
-    );
+    setSelectedImage((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
 
   const handlePrev = () => {
-    setSelectedImage((prev) => 
-      prev === 0 ? images.length - 1 : prev - 1
-    );
+    setSelectedImage((prev) => (prev === 0 ? images.length - 1 : prev - 1));
   };
 
   return (
-    <Grid item xs={12} md={9} sx={{ padding: "16px" }}>
+    <Grid
+      item
+      xs={12}
+      md={9}
+      sx={{ padding: "16px", minWidth: "100%", margin: "auto" }}
+    >
       <Typography variant="h6" align="center" sx={{ marginBottom: "16px" }}>
         Your Images
       </Typography>
@@ -55,10 +56,7 @@ const ClientImageList = () => {
         </Typography>
       )}
 
-      <ResponsiveImageGrid 
-        images={images} 
-        onImageClick={handleImageClick} 
-      />
+      <ResponsiveImageGrid images={images} onImageClick={handleImageClick} />
 
       <ImageLightboxModal
         open={selectedImage !== null}

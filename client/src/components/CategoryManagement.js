@@ -18,8 +18,6 @@ import {
   AddCircle as AddIcon,
 } from "@mui/icons-material";
 const CategoryManagement = () => {
-  //link to a library that is passible to hl=ep me with the images
-  //https://www.npmjs.com/package/mui-image?activeTab=readme
   const [categories, setCategories] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -72,10 +70,12 @@ const CategoryManagement = () => {
     formData.append("imgChanged", imgChanged);
     if (isEditing) {
       // Edit existing category
-      try {   
+      try {
+        console.log(formData.get("name"));
+
         const { data } = await axiosInstance.put(
           `/category/${selectedCategory.category_id}`,
-          formData,
+          formData
         );
 
         setCategories((prevCategories) => {
@@ -118,105 +118,127 @@ const CategoryManagement = () => {
 
   return (
     <>
-      <Grid
-        item
-        container
-        xs={12}
-        md={9}
+      <Box
         sx={{
-          margin: "auto",
-          padding: "24px",
-          textAlign: "center",
-          border: "2px solid #ccc",
-          borderRadius: "8px",
-          transition: "background-color 0.3s ease",
-          height: "100%",
-          width: "100%",
-          marginTop: "100px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: "16px",
         }}
       >
-        <Typography
-          variant="h5"
-          sx={{ marginBottom: "16px", width: "100%", textAlign: "center" }}
+        <Grid
+          item
+          container
+          xs={12}
+          md={9}
+          minWidth={"100%"}
+          sx={{
+            padding: "16px",
+            textAlign: "center",
+            borderRadius: "8px",
+            transition: "background-color 0.3s ease",
+            height: "100%",
+          }}
         >
-          Categories
-        </Typography>
-        <Grid container spacing={2} style={{ marginTop: "20px" }}>
-          {categories.map((category) => (
-            <Grid item xs={12} sm={4} key={category.category_id}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6">{category.name}</Typography>
-                  <Box
+          <Typography
+            variant="h5"
+            sx={{ marginBottom: "16px", width: "100%", textAlign: "center" }}
+          >
+            Categories
+          </Typography>
+          <Grid container spacing={2} style={{ marginTop: 2 }}>
+            {categories.map((category) => (
+              <Grid
+                item
+                xs={12}
+                sm={4}
+                key={category.category_id}
+                sx={{
+                  transition: "transform 0.3s ease",
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                  },
+                }}
+              >
+                <Card>
+                  <CardContent>
+                    <Typography variant="h6" p={1}>
+                      {category.name}
+                    </Typography>
+                    <Box
+                      sx={{
+                        width: "100%",
+                        height: "175px",
+                        backgroundColor: category.src
+                          ? "transparent"
+                          : "#f0f0f0",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        border: "1px solid #ddd",
+                        borderRadius: "8px",
+                        overflow: "hidden",
+                      }}
+                    >
+                      {category.src ? (
+                        <img
+                          src={category.src}
+                          alt={category.name}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                      ) : (
+                        <Typography variant="body2" color="textSecondary">
+                          No Image Available
+                        </Typography>
+                      )}
+                    </Box>
+                  </CardContent>
+                  <CardActions
                     sx={{
-                      width: "100%",
-                      height: "175px",
-                      backgroundColor: category.src ? "transparent" : "#f0f0f0",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      border: "1px solid #ddd",
-                      overflow: "hidden",
                     }}
                   >
-                    {category.src ? (
-                      <img
-                        src={category.src}
-                        alt={category.name}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                        }}
-                      />
-                    ) : (
-                      <Typography variant="body2" color="textSecondary">
-                        No Image Available
-                      </Typography>
-                    )}
-                  </Box>
-                </CardContent>
-                <CardActions
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <IconButton onClick={() => handleEdit(category)}>
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => handleDelete(category.category_id)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
+                    <IconButton onClick={() => handleEdit(category)}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => handleDelete(category.category_id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+          <Grid item sx={{ width: "100%" }}>
+            <IconButton onClick={handleAdd}>
+              <AddIcon sx={{ fontSize: "50px" }} color="primary" />
+            </IconButton>
+          </Grid>
+          <CategoryDialog
+            open={dialogOpen}
+            onClose={handleClose}
+            handleSave={handleSave}
+            category={selectedCategory}
+          />
         </Grid>
-        <Grid item sx={{ width: "100%" }}>
-          <IconButton onClick={handleAdd}>
-            <AddIcon sx={{ fontSize: "50px" }} color="primary" />
-          </IconButton>
-        </Grid>
-        <CategoryDialog
-          open={dialogOpen}
-          onClose={handleClose}
-          handleSave={handleSave}
-          category={selectedCategory}
-        />
-      </Grid>
-      {error && (
-        <Snackbar
-          open={Boolean(error)}
-          onClose={() => setError(null)}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert severity="error">{error}</Alert>
-        </Snackbar>
-      )}
+        {error && (
+          <Snackbar
+            open={Boolean(error)}
+            onClose={() => setError(null)}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          >
+            <Alert severity="error">{error}</Alert>
+          </Snackbar>
+        )}
+      </Box>
     </>
   );
 };

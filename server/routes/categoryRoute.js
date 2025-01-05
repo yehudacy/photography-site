@@ -92,7 +92,7 @@ categoryRouter.put(
         imageUrl = secure_url;
         publicId = public_id;
       }
-
+      
       const url = body.imgChanged === "true" ? imageUrl : body.image;
 
       const { status } = await editCategoryTransaction(
