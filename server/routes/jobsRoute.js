@@ -65,9 +65,9 @@ jobsRouter.get(
       throw new Error("Client ID is required", { cause: 400 });
     }
     try {
-      const jobListPerClient = await getJobsPerClient(clientId);
+      const jobListPerClient = await getJobsPerClient(clientId);      
       if (jobListPerClient.length > 0) {
-        res.status(200).json(jobListPerClient.filter((job) => job.delete_date === null));
+        res.status(200).json(jobListPerClient);
       } else {
         throw new Error(`No jobs war found for user ${clientId}!`, {
           cause: 404,

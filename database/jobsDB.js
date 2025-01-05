@@ -52,9 +52,10 @@ const setJobImage = async (jobImageId, jobId) => {
 const getJobsPerClient = async (clientId) => {
   const getJobsPerClientQuery = `
     SELECT job_id, job_image_id, title FROM jobs
-    WHERE client_id = ?`;
+    WHERE client_id = ?
+    AND delete_date IS NULL`;
   const [jobs] = await pool.query(getJobsPerClientQuery, [clientId]);
-  //   console.log(jobs);
+    // console.log(jobs);
   return jobs;
 };
 

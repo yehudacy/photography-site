@@ -122,7 +122,7 @@ categoryRouter.put(
       if(categoryToEdit){
         const {category_id, name} = categoryToEdit;
         const data = await editCategory(category_id, name, body.image_id);
-        console.log(data);
+        // console.log(data);
         res.status(200).json({message: "Added as main image successfully!"})
       }
     } catch (error) {

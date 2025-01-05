@@ -1,6 +1,8 @@
 import React from "react";
 import { Box, Grid } from "@mui/material";
 
+
+
 const ResponsiveImageGrid = ({
   images,
   onImageClick,
@@ -12,11 +14,10 @@ const ResponsiveImageGrid = ({
       <Grid container spacing={2}>
         {images.map((image, index) => (
           <Grid
-            // item
+            item
             xs={4} // 3 images per row
             key={image.id || index}
             sx={{
-              margin: "8px",
               cursor: "pointer",
               transition: "transform 0.3s ease",
               "&:hover": {

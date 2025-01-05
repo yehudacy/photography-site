@@ -92,7 +92,7 @@ galleryRouter.post(
       }
       const clientId = await getClientByEmail(req.body.clientEmail);
 
-      if (req.body.isMainImage) {
+      if (req.body.isMainImage === "true") {
         const result = await addImageTransaction(
           categoryId,
           clientId,

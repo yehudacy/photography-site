@@ -84,7 +84,6 @@ const ImageUploadForm = () => {
         "/gallery/image",
         formData
       );
-      console.log(data, status);
       if (status === 201) {
         if (previewUrl) {
           URL.revokeObjectURL(previewUrl);
@@ -123,10 +122,7 @@ const ImageUploadForm = () => {
     formData.append("clientEmail", clientEmail);
     formData.append("isMainImage", isMainImage);
     formData.append("file", file);
-    console.log("file", formData.get("file"));
     uploadToServer(formData);
-
-    // Revoke the object URL after saving
   };
 
   const buttonStyle = {
@@ -179,13 +175,13 @@ const ImageUploadForm = () => {
             </Select>
           </FormControl>
 
-          <TextField
+          {/* <TextField
             label="Client Email"
             fullWidth
             value={clientEmail}
             onChange={handleClientEmailChange}
             style={{ marginBottom: "16px" }}
-          />
+          /> */}
 
           <div style={{ marginBottom: "16px", position: "relative" }}>
             {previewUrl && (

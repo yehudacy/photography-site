@@ -100,7 +100,7 @@ const CategoryManagement = () => {
       // Add new category
       try {
         const { data } = await axiosInstance.post(`/category`, formData);
-        console.log(data);
+        // console.log(data);
 
         setCategories([...categories, data]);
         setDialogOpen(false);

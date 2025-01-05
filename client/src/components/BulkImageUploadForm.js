@@ -48,6 +48,8 @@ const BulkImageUploadForm = () => {
 
     try {
       const { data } = await axiosInstance.get(`/jobs/client/${clientId}`);
+      console.log(data);
+      
       setJobs(data);
     } catch (error) {
       // console.error("Error fetching jobs:", error);
